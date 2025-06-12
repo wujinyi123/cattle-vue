@@ -11,102 +11,157 @@ export default new Router({
         },
         {
             path: '/',
-            component: () => import(/* webpackChunkName: "home" */ '../components/common/Home.vue'),
+            component: () => import('@/components/common/Home.vue'),
             meta: { title: '自述文件' },
             children: [
                 {
                     path: '/dashboard',
-                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/Dashboard.vue'),
+                    component: () => import('@/components/page/Dashboard.vue'),
                     meta: { title: '系统首页' }
                 },
                 {
+                    path: '/cattleFarmInfoManage',
+                    component: () => import('@/components/page/baseInfoManage/cattleFarmInfoManage.vue'),
+                    meta: { title: '牛场信息管理' }
+                },
+                {
+                    path: '/employeeInfoManage',
+                    component: () => import('@/components/page/baseInfoManage/employeeInfoManage.vue'),
+                    meta: { title: '员工档案管理' }
+                },
+                {
+                    path: '/cattleInfoManage',
+                    component: () => import('@/components/page/baseInfoManage/cattleInfoManage.vue'),
+                    meta: { title: '牛只档案管理' }
+                },
+                {
+                    path: '/breedTrack',
+                    component: () => import('@/components/page/breedManage/breedTrack.vue'),
+                    meta: { title: '繁殖跟踪' }
+                },
+                {
+                    path: '/produceManage',
+                    component: () => import('@/components/page/breedManage/produceManage.vue'),
+                    meta: { title: '产仔管理' }
+                },
+                {
+                    path: '/inInventoryManage',
+                    component: () => import('@/components/page/dynamicInventoryManage/inInventoryManage.vue'),
+                    meta: { title: '入库管理' }
+                },
+                {
+                    path: '/outInventoryManage',
+                    component: () => import('@/components/page/dynamicInventoryManage/outInventoryManage.vue'),
+                    meta: { title: '出库管理' }
+                },
+                {
+                    path: '/diseaseMonitor',
+                    component: () => import('@/components/page/healthDiseaseManage/diseaseMonitor.vue'),
+                    meta: { title: '疾病监控' }
+                },
+                {
+                    path: '/epidemicPreventionPlan',
+                    component: () => import('@/components/page/healthDiseaseManage/epidemicPreventionPlan.vue'),
+                    meta: { title: '防疫计划' }
+                },
+                {
+                    path: '/realTimeBoard',
+                    component: () => import('@/components/page/intelligentStatisticsAnalysis/realTimeBoard.vue'),
+                    meta: { title: '实时看板' }
+                },
+                {
+                    path: '/generateReport',
+                    component: () => import('@/components/page/intelligentStatisticsAnalysis/generateReport.vue'),
+                    meta: { title: '报表生成' }
+                },
+                {
                     path: '/icon',
-                    component: () => import(/* webpackChunkName: "icon" */ '../components/page/Icon.vue'),
+                    component: () => import(/* webpackChunkName: "icon" */ '@/components/page/Icon.vue'),
                     meta: { title: '自定义图标' }
                 },
                 {
                     path: '/table',
-                    component: () => import(/* webpackChunkName: "table" */ '../components/page/BaseTable.vue'),
+                    component: () => import(/* webpackChunkName: "table" */ '@/components/page/BaseTable.vue'),
                     meta: { title: '基础表格' }
                 },
                 {
                     path: '/tabs',
-                    component: () => import(/* webpackChunkName: "tabs" */ '../components/page/Tabs.vue'),
+                    component: () => import(/* webpackChunkName: "tabs" */ '@/components/page/Tabs.vue'),
                     meta: { title: 'tab选项卡' }
                 },
                 {
                     path: '/form',
-                    component: () => import(/* webpackChunkName: "form" */ '../components/page/BaseForm.vue'),
+                    component: () => import(/* webpackChunkName: "form" */ '@/components/page/BaseForm.vue'),
                     meta: { title: '基本表单' }
                 },
                 {
                     // 富文本编辑器组件
                     path: '/editor',
-                    component: () => import(/* webpackChunkName: "editor" */ '../components/page/VueEditor.vue'),
+                    component: () => import(/* webpackChunkName: "editor" */ '@/components/page/VueEditor.vue'),
                     meta: { title: '富文本编辑器' }
                 },
                 {
                     // markdown组件
                     path: '/markdown',
-                    component: () => import(/* webpackChunkName: "markdown" */ '../components/page/Markdown.vue'),
+                    component: () => import(/* webpackChunkName: "markdown" */ '@/components/page/Markdown.vue'),
                     meta: { title: 'markdown编辑器' }
                 },
                 {
                     // 图片上传组件
                     path: '/upload',
-                    component: () => import(/* webpackChunkName: "upload" */ '../components/page/Upload.vue'),
+                    component: () => import(/* webpackChunkName: "upload" */ '@/components/page/Upload.vue'),
                     meta: { title: '文件上传' }
                 },
                 {
                     // vue-schart组件
                     path: '/charts',
-                    component: () => import(/* webpackChunkName: "chart" */ '../components/page/BaseCharts.vue'),
+                    component: () => import(/* webpackChunkName: "chart" */ '@/components/page/BaseCharts.vue'),
                     meta: { title: 'schart图表' }
                 },
                 {
                     // 拖拽列表组件
                     path: '/drag',
-                    component: () => import(/* webpackChunkName: "drag" */ '../components/page/DragList.vue'),
+                    component: () => import(/* webpackChunkName: "drag" */ '@/components/page/DragList.vue'),
                     meta: { title: '拖拽列表' }
                 },
                 {
                     // 拖拽Dialog组件
                     path: '/dialog',
-                    component: () => import(/* webpackChunkName: "dragdialog" */ '../components/page/DragDialog.vue'),
+                    component: () => import(/* webpackChunkName: "dragdialog" */ '@/components/page/DragDialog.vue'),
                     meta: { title: '拖拽弹框' }
                 },
                 {
                     // 国际化组件
                     path: '/i18n',
-                    component: () => import(/* webpackChunkName: "i18n" */ '../components/page/I18n.vue'),
+                    component: () => import(/* webpackChunkName: "i18n" */ '@/components/page/I18n.vue'),
                     meta: { title: '国际化' }
                 },
                 {
                     // 权限页面
                     path: '/permission',
-                    component: () => import(/* webpackChunkName: "permission" */ '../components/page/Permission.vue'),
+                    component: () => import(/* webpackChunkName: "permission" */ '@/components/page/Permission.vue'),
                     meta: { title: '权限测试', permission: true }
                 },
                 {
                     path: '/404',
-                    component: () => import(/* webpackChunkName: "404" */ '../components/page/404.vue'),
+                    component: () => import(/* webpackChunkName: "404" */ '@/components/page/404.vue'),
                     meta: { title: '404' }
                 },
                 {
                     path: '/403',
-                    component: () => import(/* webpackChunkName: "403" */ '../components/page/403.vue'),
+                    component: () => import(/* webpackChunkName: "403" */ '@/components/page/403.vue'),
                     meta: { title: '403' }
                 },
                 {
                     path: '/donate',
-                    component: () => import(/* webpackChunkName: "donate" */ '../components/page/Donate.vue'),
+                    component: () => import(/* webpackChunkName: "donate" */ '@/components/page/Donate.vue'),
                     meta: { title: '支持作者' }
                 }
             ]
         },
         {
             path: '/login',
-            component: () => import(/* webpackChunkName: "login" */ '../components/page/Login.vue'),
+            component: () => import(/* webpackChunkName: "login" */ '@/components/page/Login.vue'),
             meta: { title: '登录' }
         },
         {

@@ -36,6 +36,7 @@ service.interceptors.response.use(
         return data.body;
     },
     error => {
+        console.log(error);
         Message.error(error);
     }
 );
