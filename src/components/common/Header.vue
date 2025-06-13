@@ -50,6 +50,8 @@
 </template>
 <script>
 import bus from '../common/bus';
+import currentUser from '@/utils/currentUser'
+
 export default {
     data() {
         return {
@@ -61,7 +63,7 @@ export default {
     },
     computed: {
         username() {
-            let username = localStorage.getItem('username');
+            let username = currentUser.getUsername();
             return username ? username : this.name;
         }
     },
@@ -69,7 +71,8 @@ export default {
         // 用户名下拉菜单选择事件
         handleCommand(command) {
             if (command == 'loginout') {
-                localStorage.removeItem('username');
+                this.$message.success('退出登录');
+                currentUser.remove();
                 this.$router.push('/login');
             }
         },

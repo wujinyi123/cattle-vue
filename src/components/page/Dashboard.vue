@@ -112,11 +112,13 @@
 <script>
 import Schart from 'vue-schart';
 import bus from '../common/bus';
+import currentUser from '@/utils/currentUser'
+
 export default {
     name: 'dashboard',
     data() {
         return {
-            name: localStorage.getItem('username'),
+            name: currentUser.getUsername(),
             todoList: [
                 {
                     title: '今天要修复100个bug',

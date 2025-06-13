@@ -28,6 +28,7 @@
 
 <script>
 import {loginApi} from '@/api/user';
+import currentUser from '@/utils/currentUser'
 
 export default {
     data: function() {
@@ -47,12 +48,11 @@ export default {
             this.$refs.login.validate(valid => {
                 if (valid) {
                     loginApi(this.param).then(res => {
-                        console.log(res);
-                        this.$message.success('登录成功');
-                        localStorage.setItem('token', res.token);
-                        localStorage.setItem('username', res.username);
-                        localStorage.setItem('name', res.name);
-                        this.$router.push('/');
+                        if (res && res.token) {
+                            this.$message.success('登录成功');
+                            currentUser.set(res);
+                            this.$router.push('/');
+                        }
                     });
                 } else {
                     this.$message.error('请输入账号和密码');
