@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import {loginApi} from '@/api/user';
+import {login} from '@/api/user';
 import currentUser from '@/utils/currentUser'
 
 export default {
@@ -47,7 +47,7 @@ export default {
         submitForm() {
             this.$refs.login.validate(valid => {
                 if (valid) {
-                    loginApi(this.param).then(res => {
+                    login(this.param).then(res => {
                         if (res && res.token) {
                             this.$message.success('登录成功');
                             currentUser.set(res);

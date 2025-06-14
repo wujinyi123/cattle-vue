@@ -68,13 +68,13 @@ export default {
                     subs:[
                         {
                             icon: 'el-icon-lx-home',
-                            index: 'cattleFarmInfoManage',
-                            title: '牛场信息管理',
+                            index: 'employeeInfoManage',
+                            title: '员工档案管理',
                         },
                         {
                             icon: 'el-icon-lx-home',
-                            index: 'employeeInfoManage',
-                            title: '员工档案管理',
+                            index: 'cattleFarmInfoManage',
+                            title: '牛场信息管理',
                         },
                         {
                             icon: 'el-icon-lx-home',

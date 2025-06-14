@@ -30,7 +30,10 @@
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="username" label="账号"></el-table-column>
                 <el-table-column prop="name" label="姓名"></el-table-column>
+                <el-table-column prop="job" label="工种"></el-table-column>
                 <el-table-column prop="roleName" label="角色"></el-table-column>
+                <el-table-column prop="phone" label="联系方式"></el-table-column>
+                <el-table-column prop="status" label="状态"></el-table-column>
             </el-table>
             <div class="pagination">
                 <el-pagination
@@ -48,12 +51,14 @@
 </template>
 
 <script>
-import {pageUser} from '@/api/user';
+import {listRole, pageUser} from '@/api/user';
 
 export default {
     name: 'employeeInfoManage',
     data() {
         return {
+            roleList:[],
+            roleMap:{},
             query: {
                 username: '',
                 name: '',
@@ -71,6 +76,10 @@ export default {
         };
     },
     created() {
+        listRole().then(res=>{
+            this.roleList=res || [];
+            this.roleList.forEach(item=>this.roleMap[item.roleCode]=item.roleName);
+        });
         this.getData();
     },
     methods: {
@@ -78,6 +87,7 @@ export default {
         getData() {
             pageUser(this.query).then(res => {
                 this.tableData = res.list;
+                this.tableData.forEach(item=>item.roleName=this.roleMap[item.roleCode]);
                 this.pageTotal = res.total;
             });
         },

@@ -20,14 +20,14 @@ export default new Router({
                     meta: { title: '系统首页' }
                 },
                 {
-                    path: '/cattleFarmInfoManage',
-                    component: () => import('@/components/page/baseInfoManage/cattleFarmInfoManage.vue'),
-                    meta: { title: '牛场信息管理' }
-                },
-                {
                     path: '/employeeInfoManage',
                     component: () => import('@/components/page/baseInfoManage/employeeInfoManage.vue'),
                     meta: { title: '员工档案管理' }
+                },
+                {
+                    path: '/cattleFarmInfoManage',
+                    component: () => import('@/components/page/baseInfoManage/cattleFarmInfoManage.vue'),
+                    meta: { title: '牛场信息管理' }
                 },
                 {
                     path: '/cattleInfoManage',
