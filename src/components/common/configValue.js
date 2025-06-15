@@ -1,22 +1,22 @@
 export default {
-    whetherOrNot:[
+    whetherOrNot: [
         {
-            key:'Y',
-            value:'是'
+            key: 'Y',
+            value: '是'
         },
         {
-            key:'N',
-            value:'否'
+            key: 'N',
+            value: '否'
         }
     ],
-    userStatus:[
+    userStatus: [
         {
-            key:'incumbent',
-            value:'在职'
+            key: 'incumbent',
+            value: '在职'
         },
         {
-            key:'resign',
-            value:'离职'
+            key: 'resign',
+            value: '离职'
         }
     ]
 }

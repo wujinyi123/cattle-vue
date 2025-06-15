@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Message } from "element-ui";
+import {Message} from "element-ui";
 import currentUser from '@/utils/currentUser'
 
 const service = axios.create({
@@ -24,7 +24,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     response => {
         let data = getResponseData(response);
-        if (data.statusCodeValue!=200) {
+        if (data.statusCodeValue != 200) {
             Message.error(data.body || '系统异常');
         }
         return data.body;
@@ -32,7 +32,7 @@ service.interceptors.response.use(
     error => {
         let data = getResponseData(error.response);
         Message.error(data.body || '系统异常');
-        if (data.statusCodeValue==401) {
+        if (data.statusCodeValue == 401) {
             currentUser.remove();
             window.app.$router.push('/login');
         }
@@ -41,7 +41,7 @@ service.interceptors.response.use(
 
 let getResponseData = response => {
     let data = response && response.data;
-    if (data && typeof(data)=='string') {
+    if (data && typeof (data) == 'string') {
         try {
             data = JSON.parse(data);
         } catch {

@@ -13,15 +13,15 @@ export const pageUser = params => {
 };
 
 export const getUser = username => {
-    return service.get("/user/getUser", {params:{username}});
+    return service.get("/user/getUser", {params: {username}});
 };
 
-export const saveUser = (type,data) => {
-    return service.post("/user/saveUser?type="+type, data);
+export const saveUser = (type, data) => {
+    return service.post("/user/saveUser?type=" + type, data);
 };
 
-export const setUserStatus = (status,data) => {
-    return service.post("/user/setUserStatus?status="+status, data);
+export const setUserStatus = (status, data) => {
+    return service.post("/user/setUserStatus?status=" + status, data);
 };
 
 export const resetPassword = data => {
