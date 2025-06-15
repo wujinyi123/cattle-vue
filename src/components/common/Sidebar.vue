@@ -75,6 +75,18 @@ export default {
                             icon: 'el-icon-lx-home',
                             index: 'cattleFarmInfoManage',
                             title: '牛场信息管理',
+                            subs:[
+                                {
+                                    icon: 'el-icon-lx-home',
+                                    index: 'farmInfoManage',
+                                    title: '牧场基础信息'
+                                },
+                                {
+                                    icon: 'el-icon-lx-home',
+                                    index: 'farmZoneManage',
+                                    title: '牛舍分区管理'
+                                }
+                            ]
                         },
                         {
                             icon: 'el-icon-lx-home',

@@ -1,12 +1,5 @@
 <template>
     <div>
-        <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item>
-                    <i class="el-icon-lx-cascades"></i> 员工档案管理
-                </el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
         <div class="container">
             <div class="handle-box">
                 <el-form :model="query.form">
@@ -57,7 +50,7 @@
                         </el-col>
                     </el-row>
                     <el-row :gutter="20" class="handle-el-row">
-                        <el-col :span="24">
+                        <el-col :span="24" style="text-align:right">
                             <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                         </el-col>
                     </el-row>
@@ -102,7 +95,7 @@
         <el-dialog :title="saveDialog.title" :visible.sync="saveDialog.visible">
             <el-form :model="saveDialog.form">
                 <el-form-item label="账号" :label-width="formLabelWidth">
-                    <el-input v-model="saveDialog.form.username" :disabled="saveDialog.title=='修改'" autocomplete="off"></el-input>
+                    <el-input v-model="saveDialog.form.username" :disabled="saveDialog.type=='update'" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="姓名" :label-width="formLabelWidth">
                     <el-input v-model="saveDialog.form.name" autocomplete="off"></el-input>
@@ -186,6 +179,7 @@ export default {
             formLabelWidth:'100px',
             saveDialog:{
                 title:'',
+                type:'add',
                 visible:false,
                 form: {
                     username: '',
@@ -243,6 +237,7 @@ export default {
         },
         addUser() {
             this.saveDialog.title='新增';
+            this.saveDialog.type='add';
             this.saveDialog.form.username='';
             this.saveDialog.form.name='';
             this.saveDialog.form.job='';
@@ -257,6 +252,7 @@ export default {
                 return;
             }
             this.saveDialog.title='修改';
+            this.saveDialog.type='update';
             getUser(this.multipleSelection[0].username).then(res=>{
                 this.saveDialog.form.username=res.username;
                 this.saveDialog.form.name=res.name;
@@ -268,8 +264,7 @@ export default {
             this.saveDialog.visible=true;
         },
         saveUser() {
-            let type = this.saveDialog.title=='新增'?'add':'update';
-            saveUser(type, this.saveDialog.form).then(res=>{
+            saveUser(this.saveDialog.type, this.saveDialog.form).then(res=>{
                 if (res>0) {
                     this.saveDialog.visible=false;
                     this.$message.success('保存成功');

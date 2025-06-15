@@ -25,9 +25,14 @@ export default new Router({
                     meta: { title: '员工档案管理' }
                 },
                 {
-                    path: '/cattleFarmInfoManage',
-                    component: () => import('@/components/page/baseInfoManage/cattleFarmInfoManage.vue'),
-                    meta: { title: '牛场信息管理' }
+                    path: '/farmInfoManage',
+                    component: () => import('@/components/page/baseInfoManage/cattleFarmInfoManage/farmInfoManage.vue'),
+                    meta: { title: '牧场基础信息' }
+                },
+                {
+                    path: '/farmZoneManage',
+                    component: () => import('@/components/page/baseInfoManage/cattleFarmInfoManage/farmZoneManage.vue'),
+                    meta: { title: '牛舍分区管理' }
                 },
                 {
                     path: '/cattleInfoManage',
