@@ -9,60 +9,66 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-row :gutter="20" class="handle-el-row">
-                    <el-col :span="10">
-                        <span class="title">账号：</span>
-                        <el-input v-model="query.username" placeholder="账号" class="handle-input mr10"></el-input>
-                    </el-col>
-                    <el-col :span="10">
-                        <span class="title">姓名：</span>
-                        <el-input v-model="query.name" placeholder="姓名" class="handle-input mr10"></el-input>
-                    </el-col>
-                    <el-col :span="4" style="text-align: left;">
-                        <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="20" class="handle-el-row">
-                    <el-col :span="10">
-                        <span class="title">工种：</span>
-                        <el-input v-model="query.job" placeholder="工种" class="handle-input mr10"></el-input>
-                    </el-col>
-                    <el-col :span="10">
-                        <span class="title">联系方式：</span>
-                        <el-input v-model="query.phone" placeholder="联系方式" class="handle-input mr10"></el-input>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="20" class="handle-el-row">
-                    <el-col :span="10">
-                        <span class="title">是否管理员：</span>
-                        <el-select v-model="query.isSysAdmin" placeholder="是否管理员" class="handle-input mr10">
-                            <el-option v-for="item in isSysAdminList"
-                            :key="item.key"
-                            :label="item.value"
-                            :value="item.key">
-                            </el-option>
-                        </el-select>
-                    </el-col>
-                    <el-col :span="10">
-                        <span class="title">状态：</span>
-                        <el-select v-model="query.status" placeholder="状态" class="handle-input mr10">
-                            <el-option v-for="item in userStatusList"
-                            :key="item.key"
-                            :label="item.value"
-                            :value="item.key">
-                            </el-option>
-                        </el-select>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="20" class="handle-el-row">
-                    <el-col :span="24" style="text-align: left;">
-                        <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addUser">添加</el-button>
-                        <el-button type="primary" icon="el-icon-edit" @click="updateUser">修改</el-button>
-                        <el-button type="primary" icon="el-icon-refresh" @click="patchUserStatus">批量修改状态</el-button>
-                        <el-button type="primary" icon="el-icon-delete" @click="resetPassword">批量重置密码</el-button>
-                        <el-button type="primary" icon="el-icon-delete" @click="delUser">批量删除</el-button>
-                    </el-col>
-                </el-row>
+                <el-form :model="query.form">
+                    <el-row :gutter="20" class="handle-el-row">
+                        <el-col :span="8">
+                            <el-form-item label="账号" :label-width="formLabelWidth">
+                                <el-input v-model="query.form.username" autocomplete="off" class="handle-input"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="姓名" :label-width="formLabelWidth">
+                                <el-input v-model="query.form.name" autocomplete="off" class="handle-input"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="工种" :label-width="formLabelWidth">
+                                <el-input v-model="query.form.job" autocomplete="off" class="handle-input"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="20" class="handle-el-row">
+                        <el-col :span="8">
+                            <el-form-item label="联系方式" :label-width="formLabelWidth">
+                                <el-input v-model="query.form.phone" autocomplete="off" class="handle-input"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="是否管理员" :label-width="formLabelWidth">
+                                <el-select v-model="query.form.isSysAdmin" class="handle-input">
+                                    <el-option v-for="item in isSysAdminList"
+                                    :key="item.key"
+                                    :label="item.value"
+                                    :value="item.key">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="状态" :label-width="formLabelWidth">
+                                <el-select v-model="query.form.status" class="handle-input">
+                                    <el-option v-for="item in userStatusList"
+                                    :key="item.key"
+                                    :label="item.value"
+                                    :value="item.key">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="20" class="handle-el-row">
+                        <el-col :span="24">
+                            <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                        </el-col>
+                    </el-row>
+                </el-form>
+                <div>
+                    <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addUser">添加</el-button>
+                    <el-button type="primary" icon="el-icon-edit" @click="updateUser">修改</el-button>
+                    <el-button type="primary" icon="el-icon-refresh" @click="patchUserStatus">批量修改状态</el-button>
+                    <el-button type="primary" icon="el-icon-delete" @click="resetPassword">批量重置密码</el-button>
+                    <el-button type="primary" icon="el-icon-delete" @click="delUser">批量删除</el-button>
+                </div>
             </div>
             <el-table
                 :data="tableData"
@@ -162,14 +168,16 @@ export default {
             isSysAdminList:[],
             userStatusList:[],
             query: {
-                username: '',
-                name: '',
-                job:'',
-                phone:'',
-                isSysAdmin:'',
-                status:'incumbent',
-                pageNum: 1,
-                pageSize: 10
+                form: {
+                    username: '',
+                    name: '',
+                    job:'',
+                    phone:'',
+                    isSysAdmin:'',
+                    status:'incumbent',
+                    pageNum: 1,
+                    pageSize: 10
+                }
             },
             tableData: [],
             multipleSelection: [],
@@ -218,7 +226,7 @@ export default {
         },
         // 获取 easy-mock 的模拟数据
         getData() {
-            pageUser(this.query).then(res => {
+            pageUser(this.query.form).then(res => {
                 let userStatusMap = {};
                 this.userStatusList.forEach(item=>userStatusMap[item.key]=item.value);
                 let isSysAdminMap = {};
