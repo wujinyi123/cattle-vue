@@ -6,29 +6,29 @@
           <el-row :gutter="20" class="handle-el-row">
             <el-col :span="8">
               <el-form-item label="账号" :label-width="formLabelWidth">
-                <el-input v-model="query.form.username" autocomplete="off"></el-input>
+                <el-input v-model="query.form.username" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="姓名" :label-width="formLabelWidth">
-                <el-input v-model="query.form.name" autocomplete="off"></el-input>
+                <el-input v-model="query.form.name" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="工种" :label-width="formLabelWidth">
-                <el-input v-model="query.form.job" autocomplete="off"></el-input>
+                <el-input v-model="query.form.job" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20" class="handle-el-row">
             <el-col :span="8">
               <el-form-item label="联系方式" :label-width="formLabelWidth">
-                <el-input v-model="query.form.phone" autocomplete="off"></el-input>
+                <el-input v-model="query.form.phone" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="是否管理员" :label-width="formLabelWidth">
-                <el-select v-model="query.form.isSysAdmin" style="width:100%">
+                <el-select v-model="query.form.isSysAdmin" style="width:100%" placeholder="请选择">
                   <el-option key="all" label="全部" value=""></el-option>
                   <el-option v-for="item in isSysAdminList"
                              :key="item.key"
@@ -40,7 +40,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="状态" :label-width="formLabelWidth">
-                <el-select v-model="query.form.status" style="width:100%">
+                <el-select v-model="query.form.status" style="width:100%" placeholder="请选择">
                   <el-option key="all" label="全部" value=""></el-option>
                   <el-option v-for="item in userStatusList"
                              :key="item.key"
@@ -98,19 +98,19 @@
     <el-dialog :title="saveDialog.title" :visible.sync="saveDialog.visible">
       <el-form :model="saveDialog.form">
         <el-form-item label="账号" :label-width="formLabelWidth">
-          <el-input v-model="saveDialog.form.username" :disabled="saveDialog.type=='update'" autocomplete="off"></el-input>
+          <el-input v-model="saveDialog.form.username" :disabled="saveDialog.type=='update'" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="姓名" :label-width="formLabelWidth">
-          <el-input v-model="saveDialog.form.name" autocomplete="off"></el-input>
+          <el-input v-model="saveDialog.form.name" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="工种" :label-width="formLabelWidth">
-          <el-input v-model="saveDialog.form.job" autocomplete="off"></el-input>
+          <el-input v-model="saveDialog.form.job" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="联系方式" :label-width="formLabelWidth">
-          <el-input v-model="saveDialog.form.phone" autocomplete="off"></el-input>
+          <el-input v-model="saveDialog.form.phone" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="是否管理员" :label-width="formLabelWidth">
-          <el-select v-model="saveDialog.form.isSysAdmin" style="width:100%">
+          <el-select v-model="saveDialog.form.isSysAdmin" style="width:100%" placeholder="请选择">
             <el-option v-for="item in isSysAdminList"
                        :key="item.key"
                        :label="item.value"
@@ -119,7 +119,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="状态" :label-width="formLabelWidth">
-          <el-select v-model="saveDialog.form.status" style="width:100%">
+          <el-select v-model="saveDialog.form.status" style="width:100%" placeholder="请选择">
             <el-option v-for="item in userStatusList"
                        :key="item.key"
                        :label="item.value"

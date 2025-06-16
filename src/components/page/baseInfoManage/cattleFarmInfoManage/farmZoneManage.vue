@@ -6,24 +6,24 @@
           <el-row :gutter="20" class="handle-el-row">
             <el-col :span="8">
               <el-form-item label="账号" :label-width="formLabelWidth">
-                <el-input v-model="query.form.username" autocomplete="off"></el-input>
+                <el-input v-model="query.form.username"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="姓名" :label-width="formLabelWidth">
-                <el-input v-model="query.form.name" autocomplete="off"></el-input>
+                <el-input v-model="query.form.name"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="工种" :label-width="formLabelWidth">
-                <el-input v-model="query.form.job" autocomplete="off"></el-input>
+                <el-input v-model="query.form.job"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20" class="handle-el-row">
             <el-col :span="8">
               <el-form-item label="联系方式" :label-width="formLabelWidth">
-                <el-input v-model="query.form.phone" autocomplete="off"></el-input>
+                <el-input v-model="query.form.phone"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -95,16 +95,16 @@
     <el-dialog :title="saveDialog.title" :visible.sync="saveDialog.visible">
       <el-form :model="saveDialog.form">
         <el-form-item label="账号" :label-width="formLabelWidth">
-          <el-input v-model="saveDialog.form.username" :disabled="saveDialog.title=='修改'" autocomplete="off"></el-input>
+          <el-input v-model="saveDialog.form.username" :disabled="saveDialog.title=='修改'"></el-input>
         </el-form-item>
         <el-form-item label="姓名" :label-width="formLabelWidth">
-          <el-input v-model="saveDialog.form.name" autocomplete="off"></el-input>
+          <el-input v-model="saveDialog.form.name"></el-input>
         </el-form-item>
         <el-form-item label="工种" :label-width="formLabelWidth">
-          <el-input v-model="saveDialog.form.job" autocomplete="off"></el-input>
+          <el-input v-model="saveDialog.form.job"></el-input>
         </el-form-item>
         <el-form-item label="联系方式" :label-width="formLabelWidth">
-          <el-input v-model="saveDialog.form.phone" autocomplete="off"></el-input>
+          <el-input v-model="saveDialog.form.phone"></el-input>
         </el-form-item>
         <el-form-item label="是否管理员" :label-width="formLabelWidth">
           <el-select v-model="saveDialog.form.isSysAdmin" style="width:100%">

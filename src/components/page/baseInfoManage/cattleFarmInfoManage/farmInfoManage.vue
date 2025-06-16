@@ -6,34 +6,34 @@
           <el-row :gutter="20" class="handle-el-row">
             <el-col :span="8">
               <el-form-item label="名称" :label-width="formLabelWidth">
-                <el-input v-model="query.form.farmName" autocomplete="off"></el-input>
+                <el-input v-model="query.form.farmName" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="负责人" :label-width="formLabelWidth">
-                <el-input v-model="query.form.owner" autocomplete="off"></el-input>
+                <el-input v-model="query.form.owner" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="管理员" :label-width="formLabelWidth">
-                <el-input v-model="query.form.admin" autocomplete="off"></el-input>
+                <el-input v-model="query.form.admin" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20" class="handle-el-row">
             <el-col :span="8">
               <el-form-item label="地址" :label-width="formLabelWidth">
-                <el-input v-model="query.form.address" autocomplete="off"></el-input>
+                <el-input v-model="query.form.address" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="面积" :label-width="formLabelWidth">
-                <el-input v-model="query.form.area" autocomplete="off"></el-input>
+                <el-input v-model="query.form.area" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="养殖规模" :label-width="formLabelWidth">
-                <el-input v-model="query.form.scale" autocomplete="off"></el-input>
+                <el-input v-model="query.form.scale" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -83,25 +83,46 @@
     <el-dialog :title="saveDialog.title" :visible.sync="saveDialog.visible">
       <el-form :model="saveDialog.form">
         <el-form-item label="名称" :label-width="formLabelWidth">
-          <el-input v-model="saveDialog.form.farmName" :disabled="saveDialog.type=='update'" autocomplete="off"></el-input>
+          <el-input v-model="saveDialog.form.farmName" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="负责人" :label-width="formLabelWidth">
-          <el-input v-model="saveDialog.form.owner" autocomplete="off"></el-input>
+          <el-select v-model="saveDialog.form.owner" filterable placeholder="请选择" style="width:100%">
+            <el-option
+                v-for="item in listUser"
+                :key="item.username"
+                :label="item.title"
+                :value="item.username">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="管理员" :label-width="formLabelWidth">
-          <el-input v-model="saveDialog.form.admin" autocomplete="off"></el-input>
+          <el-select v-model="saveDialog.form.admin" filterable multiple placeholder="请选择" style="width:100%">
+            <el-option
+                v-for="item in listUser"
+                :key="item.username"
+                :label="item.title"
+                :value="item.username">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="员工" :label-width="formLabelWidth">
-          <el-input v-model="saveDialog.form.employee" autocomplete="off"></el-input>
+          <el-select v-model="saveDialog.form.employee" filterable multiple placeholder="请选择" style="width:100%">
+            <el-option
+                v-for="item in listUser"
+                :key="item.username"
+                :label="item.title"
+                :value="item.username">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="地址" :label-width="formLabelWidth">
-          <el-input v-model="saveDialog.form.address" autocomplete="off"></el-input>
+          <el-input v-model="saveDialog.form.address" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="面积" :label-width="formLabelWidth">
-          <el-input v-model="saveDialog.form.area" autocomplete="off"></el-input>
+          <el-input v-model="saveDialog.form.area" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="养殖规模" :label-width="formLabelWidth">
-          <el-input v-model="saveDialog.form.scale" autocomplete="off"></el-input>
+          <el-input v-model="saveDialog.form.scale" placeholder="请输入"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -115,12 +136,14 @@
 <script>
 import currentUser from "@/utils/currentUser";
 import {pageFarm, getFarm, saveFarm, delFarm} from '@/api/farm';
+import {listUser} from '@/api/user';
 
 export default {
   name: 'farmInfoManage',
   data() {
     return {
       isSysAdmin: 'N',
+      listUser: [],
       query: {
         form: {
           farmName: '',
@@ -148,6 +171,7 @@ export default {
   },
   created() {
     this.isSysAdmin = currentUser.getIsSysAdmin();
+    listUser().then(res => this.listUser = res);
     this.getData();
   },
   methods: {
@@ -191,12 +215,17 @@ export default {
       this.saveDialog.title = '修改';
       this.saveDialog.type = 'update';
       getFarm(this.multipleSelection[0].farmId).then(res => {
+        res.admin = res.admin && res.admin.split(',');
+        res.employee = res.employee && res.employee.split(',');
         this.saveDialog.form = res;
       });
       this.saveDialog.visible = true;
     },
     saveFarm() {
-      saveFarm(this.saveDialog.type, this.saveDialog.form).then(res => {
+      let data = {...this.saveDialog.form};
+      data.admin = data.admin && data.admin.join(',');
+      data.employee = data.employee && data.employee.join(',');
+      saveFarm(this.saveDialog.type, data).then(res => {
         if (res > 0) {
           this.saveDialog.visible = false;
           this.saveDialog.form = {};

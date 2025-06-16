@@ -12,6 +12,10 @@ export const pageUser = params => {
     return service.get("/user/pageUser", {params});
 };
 
+export const listUser = () => {
+    return service.get("/user/listUser");
+};
+
 export const getUser = username => {
     return service.get("/user/getUser", {params: {username}});
 };
