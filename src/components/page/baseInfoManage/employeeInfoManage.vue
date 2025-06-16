@@ -245,12 +245,7 @@ export default {
     addUser() {
       this.saveDialog.title = '新增';
       this.saveDialog.type = 'add';
-      this.saveDialog.form.username = '';
-      this.saveDialog.form.name = '';
-      this.saveDialog.form.job = '';
-      this.saveDialog.form.phone = '';
-      this.saveDialog.form.isSysAdmin = 'N';
-      this.saveDialog.form.status = 'incumbent';
+      this.saveDialog.form = {isSysAdmin:'N',status:'incumbent'};
       this.saveDialog.visible = true;
     },
     updateUser() {
@@ -261,12 +256,7 @@ export default {
       this.saveDialog.title = '修改';
       this.saveDialog.type = 'update';
       getUser(this.multipleSelection[0].username).then(res => {
-        this.saveDialog.form.username = res.username;
-        this.saveDialog.form.name = res.name;
-        this.saveDialog.form.job = res.job;
-        this.saveDialog.form.phone = res.phone;
-        this.saveDialog.form.isSysAdmin = res.isSysAdmin;
-        this.saveDialog.form.status = res.status;
+        this.saveDialog.form = res;
       });
       this.saveDialog.visible = true;
     },
@@ -274,6 +264,7 @@ export default {
       saveUser(this.saveDialog.type, this.saveDialog.form).then(res => {
         if (res > 0) {
           this.saveDialog.visible = false;
+          this.saveDialog.form = {};
           this.$message.success('保存成功');
           this.getData();
         } else {

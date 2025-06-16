@@ -142,16 +142,7 @@ export default {
         title: '',
         type: 'add',
         visible: false,
-        form: {
-          farmId: '',
-          farmName: '',
-          owner: '',
-          admin: '',
-          employee: '',
-          address: '',
-          area: '',
-          scale: ''
-        }
+        form: {}
       }
     };
   },
@@ -189,14 +180,7 @@ export default {
     addFarm() {
       this.saveDialog.title = '新增';
       this.saveDialog.type = 'add';
-      this.saveDialog.form.farmId = '';
-      this.saveDialog.form.farmName = '';
-      this.saveDialog.form.owner = '';
-      this.saveDialog.form.admin = '';
-      this.saveDialog.form.employee = '';
-      this.saveDialog.form.address = '';
-      this.saveDialog.form.area = '';
-      this.saveDialog.form.scale = '';
+      this.saveDialog.form = {};
       this.saveDialog.visible = true;
     },
     updateFarm() {
@@ -207,14 +191,7 @@ export default {
       this.saveDialog.title = '修改';
       this.saveDialog.type = 'update';
       getFarm(this.multipleSelection[0].farmId).then(res => {
-        this.saveDialog.form.farmId = res.farmId;
-        this.saveDialog.form.farmName = res.farmName;
-        this.saveDialog.form.owner = res.owner;
-        this.saveDialog.form.admin = res.admin;
-        this.saveDialog.form.employee = res.employee;
-        this.saveDialog.form.address = res.address;
-        this.saveDialog.form.area = res.area;
-        this.saveDialog.form.scale = res.scale;
+        this.saveDialog.form = res;
       });
       this.saveDialog.visible = true;
     },
@@ -222,6 +199,7 @@ export default {
       saveFarm(this.saveDialog.type, this.saveDialog.form).then(res => {
         if (res > 0) {
           this.saveDialog.visible = false;
+          this.saveDialog.form = {};
           this.$message.success('保存成功');
           this.getData();
         } else {
