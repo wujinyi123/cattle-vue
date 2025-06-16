@@ -29,6 +29,7 @@
             <el-col :span="8">
               <el-form-item label="是否管理员" :label-width="formLabelWidth">
                 <el-select v-model="query.form.isSysAdmin" style="width:100%">
+                  <el-option key="all" label="全部" value=""></el-option>
                   <el-option v-for="item in isSysAdminList"
                              :key="item.key"
                              :label="item.value"
@@ -40,6 +41,7 @@
             <el-col :span="8">
               <el-form-item label="状态" :label-width="formLabelWidth">
                 <el-select v-model="query.form.status" style="width:100%">
+                  <el-option key="all" label="全部" value=""></el-option>
                   <el-option v-for="item in userStatusList"
                              :key="item.key"
                              :label="item.value"
@@ -55,7 +57,7 @@
             </el-col>
           </el-row>
         </el-form>
-        <div v-if="currentUser.isSysAdmin==='Y'">
+        <div v-if="isSysAdmin==='Y'">
           <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addUser">添加</el-button>
           <el-button type="primary" icon="el-icon-edit" @click="updateUser">修改</el-button>
           <el-button type="primary" icon="el-icon-refresh" @click="patchUserStatus">批量修改状态</el-button>
@@ -65,6 +67,7 @@
       </div>
       <el-table
           :data="tableData"
+          v-loading="loading"
           current-row-key="id"
           border
           class="table"
@@ -151,14 +154,15 @@
 </template>
 
 <script>
-import {pageUser, getCurrentUser, getUser, saveUser, setUserStatus, resetPassword, delUser} from '@/api/user';
+import currentUser from "@/utils/currentUser";
+import {pageUser, getUser, saveUser, setUserStatus, resetPassword, delUser} from '@/api/user';
 import configValue from '@/components/common/configValue';
 
 export default {
   name: 'employeeInfoManage',
   data() {
     return {
-      currentUser: {},
+      isSysAdmin:'N',
       isSysAdminList: [],
       userStatusList: [],
       query: {
@@ -174,6 +178,7 @@ export default {
         }
       },
       tableData: [],
+      loading: false,
       multipleSelection: [],
       pageTotal: 0,
       formLabelWidth: '100px',
@@ -199,7 +204,7 @@ export default {
     };
   },
   created() {
-    getCurrentUser().then(res => this.currentUser = res);
+    this.isSysAdmin = currentUser.getIsSysAdmin();
     this.isSysAdminList = configValue.whetherOrNot;
     this.userStatusList = configValue.userStatus;
     this.getData();
@@ -218,6 +223,7 @@ export default {
     },
     // 获取 easy-mock 的模拟数据
     getData() {
+      this.loading = true;
       pageUser(this.query.form).then(res => {
         let userStatusMap = {};
         this.userStatusList.forEach(item => userStatusMap[item.key] = item.value);
@@ -228,6 +234,7 @@ export default {
         this.tableData = res.list;
         this.pageTotal = res.total;
         this.multipleSelection = [];
+        this.loading = false;
       });
     },
     // 触发搜索按钮
