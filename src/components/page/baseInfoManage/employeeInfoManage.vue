@@ -98,7 +98,7 @@
     <el-dialog :title="saveDialog.title" :visible.sync="saveDialog.visible">
       <el-form :model="saveDialog.form">
         <el-form-item label="账号" :label-width="formLabelWidth">
-          <el-input v-model="saveDialog.form.username" :disabled="saveDialog.type=='update'" placeholder="请输入"></el-input>
+          <el-input v-model="saveDialog.form.username" :disabled="saveDialog.type==='update'" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="姓名" :label-width="formLabelWidth">
           <el-input v-model="saveDialog.form.name" placeholder="请输入"></el-input>
@@ -249,7 +249,7 @@ export default {
       this.saveDialog.visible = true;
     },
     updateUser() {
-      if (this.multipleSelection.length != 1) {
+      if (this.multipleSelection.length !== 1) {
         this.$message.error('仅请选择一条数据');
         return;
       }
@@ -273,7 +273,7 @@ export default {
       });
     },
     patchUserStatus() {
-      if (this.multipleSelection.length == 0) {
+      if (this.multipleSelection.length === 0) {
         this.$message.error('至少选择一条数据');
         return;
       }
@@ -295,7 +295,7 @@ export default {
       });
     },
     resetPassword() {
-      if (this.multipleSelection.length == 0) {
+      if (this.multipleSelection.length === 0) {
         this.$message.error('至少选择一条数据');
         return;
       }
@@ -315,7 +315,7 @@ export default {
       });
     },
     delUser() {
-      if (this.multipleSelection.length == 0) {
+      if (this.multipleSelection.length === 0) {
         this.$message.error('至少选择一条数据');
         return;
       }
@@ -351,20 +351,5 @@ export default {
 .table {
   width: 100%;
   font-size: 14px;
-}
-
-.red {
-  color: #ff0000;
-}
-
-.mr10 {
-  margin-right: 10px;
-}
-
-.table-td-thumb {
-  display: block;
-  margin: auto;
-  width: 40px;
-  height: 40px;
 }
 </style>

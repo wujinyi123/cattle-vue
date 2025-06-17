@@ -43,10 +43,13 @@
             </el-col>
           </el-row>
         </el-form>
-        <div v-if="isSysAdmin==='Y'">
-          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addFarm">添加</el-button>
-          <el-button type="primary" icon="el-icon-edit" @click="updateFarm">修改</el-button>
-          <el-button type="primary" icon="el-icon-delete" @click="delFarm">批量删除</el-button>
+        <div>
+          <template v-if="isSysAdmin==='Y'">
+            <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addFarm">添加</el-button>
+            <el-button type="primary" icon="el-icon-edit" @click="updateFarm">修改</el-button>
+            <el-button type="primary" icon="el-icon-delete" @click="delFarm">批量删除</el-button>
+          </template>
+          <el-button type="primary" icon="el-icon-edit" @click="updateAdminEmployee">修改管理员/员工</el-button>
         </div>
       </div>
       <el-table
@@ -130,12 +133,40 @@
         <el-button type="primary" @click="saveFarm">保 存</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="修改管理员/员工" :visible.sync="adminEmployeeDialog.visible">
+      <el-form :model="adminEmployeeDialog.form">
+        <el-form-item label="管理员" :label-width="formLabelWidth">
+          <el-select v-model="adminEmployeeDialog.form.admin" filterable multiple placeholder="请选择" style="width:100%">
+            <el-option
+                v-for="item in listUser"
+                :key="item.username"
+                :label="item.title"
+                :value="item.username">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="员工" :label-width="formLabelWidth">
+          <el-select v-model="adminEmployeeDialog.form.employee" filterable multiple placeholder="请选择" style="width:100%">
+            <el-option
+                v-for="item in listUser"
+                :key="item.username"
+                :label="item.title"
+                :value="item.username">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="saveDialog.visible = false">取 消</el-button>
+        <el-button type="primary" @click="saveAdminEmployee">保 存</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import currentUser from "@/utils/currentUser";
-import {pageFarm, getFarm, saveFarm, delFarm} from '@/api/farm';
+import {pageFarm, getFarm, saveFarm, saveAdminEmployee, delFarm} from '@/api/farm';
 import {listUser} from '@/api/user';
 
 export default {
@@ -164,6 +195,10 @@ export default {
       saveDialog: {
         title: '',
         type: 'add',
+        visible: false,
+        form: {}
+      },
+      adminEmployeeDialog: {
         visible: false,
         form: {}
       }
@@ -208,7 +243,7 @@ export default {
       this.saveDialog.visible = true;
     },
     updateFarm() {
-      if (this.multipleSelection.length != 1) {
+      if (this.multipleSelection.length !== 1) {
         this.$message.error('仅请选择一条数据');
         return;
       }
@@ -237,7 +272,7 @@ export default {
       });
     },
     delFarm() {
-      if (this.multipleSelection.length == 0) {
+      if (this.multipleSelection.length === 0) {
         this.$message.error('至少选择一条数据');
         return;
       }
@@ -254,6 +289,40 @@ export default {
             this.$message.error('删除失败');
           }
         });
+      });
+    },
+    updateAdminEmployee() {
+      if (this.multipleSelection.length !== 1) {
+        this.$message.error('仅请选择一条数据');
+        return;
+      }
+      let farmOwner = this.multipleSelection[0].owner;
+      if (this.isSysAdmin !== 'Y' && farmOwner !== currentUser.getUsername()) {
+        this.$message.error('仅系统管理员或牧场负责人可以操作');
+        return;
+      }
+      getFarm(this.multipleSelection[0].farmId).then(res => {
+        this.adminEmployeeDialog.form = {
+          farmId: res.farmId,
+          admin: res.admin && res.admin.split(','),
+          employee: res.employee && res.employee.split(',')
+        };
+      });
+      this.adminEmployeeDialog.visible = true;
+    },
+    saveAdminEmployee() {
+      let data = {...this.adminEmployeeDialog.form};
+      data.admin = data.admin && data.admin.join(',');
+      data.employee = data.employee && data.employee.join(',');
+      saveAdminEmployee(data).then(res => {
+        if (res > 0) {
+          this.adminEmployeeDialog.visible = false;
+          this.adminEmployeeDialog.form = {};
+          this.$message.success('保存成功');
+          this.getData();
+        } else {
+          this.$message.error('保存失败');
+        }
       });
     }
   }
@@ -273,20 +342,5 @@ export default {
 .table {
   width: 100%;
   font-size: 14px;
-}
-
-.red {
-  color: #ff0000;
-}
-
-.mr10 {
-  margin-right: 10px;
-}
-
-.table-td-thumb {
-  display: block;
-  margin: auto;
-  width: 40px;
-  height: 40px;
 }
 </style>
