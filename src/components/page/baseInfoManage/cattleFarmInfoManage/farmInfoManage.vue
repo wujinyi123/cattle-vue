@@ -45,9 +45,9 @@
         </el-form>
         <div>
           <template v-if="isSysAdmin==='Y'">
-            <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addFarm">添加</el-button>
-            <el-button type="primary" icon="el-icon-edit" @click="updateFarm">修改</el-button>
-            <el-button type="primary" icon="el-icon-delete" @click="delFarm">批量删除</el-button>
+            <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
+            <el-button type="primary" icon="el-icon-edit" @click="updateInfo">修改</el-button>
+            <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
           </template>
           <el-button type="primary" icon="el-icon-edit" @click="updateAdminEmployee">修改管理员/员工</el-button>
         </div>
@@ -84,11 +84,11 @@
       </div>
     </div>
     <el-dialog :title="saveDialog.title" :visible.sync="saveDialog.visible">
-      <el-form :model="saveDialog.form">
-        <el-form-item label="名称" :label-width="formLabelWidth">
+      <el-form :model="saveDialog.form" ref="saveDialog.form" :rules="saveDialog.rules">
+        <el-form-item label="名称" :label-width="formLabelWidth" prop="farmName">
           <el-input v-model="saveDialog.form.farmName" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="负责人" :label-width="formLabelWidth">
+        <el-form-item label="负责人" :label-width="formLabelWidth" prop="owner">
           <el-select v-model="saveDialog.form.owner" filterable placeholder="请选择" style="width:100%">
             <el-option
                 v-for="item in listUser"
@@ -118,19 +118,19 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="地址" :label-width="formLabelWidth">
+        <el-form-item label="地址" :label-width="formLabelWidth" prop="address">
           <el-input v-model="saveDialog.form.address" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="面积" :label-width="formLabelWidth">
+        <el-form-item label="面积" :label-width="formLabelWidth" prop="area">
           <el-input v-model="saveDialog.form.area" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="养殖规模" :label-width="formLabelWidth">
+        <el-form-item label="养殖规模" :label-width="formLabelWidth" prop="scale">
           <el-input v-model="saveDialog.form.scale" placeholder="请输入"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="saveDialog.visible = false">取 消</el-button>
-        <el-button type="primary" @click="saveFarm">保 存</el-button>
+        <el-button type="primary" @click="saveInfo">保 存</el-button>
       </div>
     </el-dialog>
     <el-dialog title="修改管理员/员工" :visible.sync="adminEmployeeDialog.visible">
@@ -196,7 +196,14 @@ export default {
         title: '',
         type: 'add',
         visible: false,
-        form: {}
+        form: {},
+        rules: {
+          farmName: [{required: true, message: '名称不能为空', trigger: 'change'}],
+          owner: [{required: true, message: '负责人不能为空', trigger: 'change'}],
+          address: [{required: true, message: '地址不能为空', trigger: 'change'}],
+          area: [{required: true, message: '面积不能为空', trigger: 'change'}],
+          scale: [{required: true, message: '养殖规模不能为空', trigger: 'change'}]
+        }
       },
       adminEmployeeDialog: {
         visible: false,
@@ -236,13 +243,13 @@ export default {
       this.$set(this.query, 'pageNum', 1);
       this.getData();
     },
-    addFarm() {
+    addInfo() {
       this.saveDialog.title = '新增';
       this.saveDialog.type = 'add';
       this.saveDialog.form = {};
       this.saveDialog.visible = true;
     },
-    updateFarm() {
+    updateInfo() {
       if (this.multipleSelection.length !== 1) {
         this.$message.error('仅请选择一条数据');
         return;
@@ -256,22 +263,27 @@ export default {
       });
       this.saveDialog.visible = true;
     },
-    saveFarm() {
-      let data = {...this.saveDialog.form};
-      data.admin = data.admin && data.admin.join(',');
-      data.employee = data.employee && data.employee.join(',');
-      saveFarm(this.saveDialog.type, data).then(res => {
-        if (res > 0) {
-          this.saveDialog.visible = false;
-          this.saveDialog.form = {};
-          this.$message.success('保存成功');
-          this.getData();
-        } else {
-          this.$message.error('保存失败');
+    saveInfo() {
+      this.$refs['saveDialog.form'].validate((valid) => {
+        if (!valid) {
+          return false;
         }
+        let data = {...this.saveDialog.form};
+        data.admin = data.admin && data.admin.join(',');
+        data.employee = data.employee && data.employee.join(',');
+        saveFarm(this.saveDialog.type, data).then(res => {
+          if (res > 0) {
+            this.saveDialog.visible = false;
+            this.saveDialog.form = {};
+            this.$message.success('保存成功');
+            this.getData();
+          } else {
+            this.$message.error('保存失败');
+          }
+        });
       });
     },
-    delFarm() {
+    delInfo() {
       if (this.multipleSelection.length === 0) {
         this.$message.error('至少选择一条数据');
         return;

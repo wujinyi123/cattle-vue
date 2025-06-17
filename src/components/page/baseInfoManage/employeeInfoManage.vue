@@ -58,11 +58,11 @@
           </el-row>
         </el-form>
         <div v-if="isSysAdmin==='Y'">
-          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addUser">添加</el-button>
-          <el-button type="primary" icon="el-icon-edit" @click="updateUser">修改</el-button>
+          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
+          <el-button type="primary" icon="el-icon-edit" @click="updateInfo">修改</el-button>
+          <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
           <el-button type="primary" icon="el-icon-refresh" @click="patchUserStatus">批量修改状态</el-button>
           <el-button type="primary" icon="el-icon-delete" @click="resetPassword">批量重置密码</el-button>
-          <el-button type="primary" icon="el-icon-delete" @click="delUser">批量删除</el-button>
         </div>
       </div>
       <el-table
@@ -96,20 +96,20 @@
       </div>
     </div>
     <el-dialog :title="saveDialog.title" :visible.sync="saveDialog.visible">
-      <el-form :model="saveDialog.form">
-        <el-form-item label="账号" :label-width="formLabelWidth">
+      <el-form :model="saveDialog.form" ref="saveDialog.form" :rules="saveDialog.rules">
+        <el-form-item label="账号" :label-width="formLabelWidth" prop="username">
           <el-input v-model="saveDialog.form.username" :disabled="saveDialog.type==='update'" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="姓名" :label-width="formLabelWidth">
+        <el-form-item label="姓名" :label-width="formLabelWidth" prop="name">
           <el-input v-model="saveDialog.form.name" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="工种" :label-width="formLabelWidth">
+        <el-form-item label="工种" :label-width="formLabelWidth" prop="job">
           <el-input v-model="saveDialog.form.job" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="联系方式" :label-width="formLabelWidth">
+        <el-form-item label="联系方式" :label-width="formLabelWidth" prop="phone">
           <el-input v-model="saveDialog.form.phone" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="是否管理员" :label-width="formLabelWidth">
+        <el-form-item label="是否管理员" :label-width="formLabelWidth" prop="isSysAdmin">
           <el-select v-model="saveDialog.form.isSysAdmin" style="width:100%" placeholder="请选择">
             <el-option v-for="item in isSysAdminList"
                        :key="item.key"
@@ -118,7 +118,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="状态" :label-width="formLabelWidth">
+        <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
           <el-select v-model="saveDialog.form.status" style="width:100%" placeholder="请选择">
             <el-option v-for="item in userStatusList"
                        :key="item.key"
@@ -130,7 +130,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="saveDialog.visible = false">取 消</el-button>
-        <el-button type="primary" @click="saveUser">保 存</el-button>
+        <el-button type="primary" @click="saveInfo">保 存</el-button>
       </div>
     </el-dialog>
     <el-dialog title="批量修改状态" :visible.sync="setUserStatusDialog.visible">
@@ -162,7 +162,7 @@ export default {
   name: 'employeeInfoManage',
   data() {
     return {
-      isSysAdmin:'N',
+      isSysAdmin: 'N',
       isSysAdminList: [],
       userStatusList: [],
       query: {
@@ -193,6 +193,14 @@ export default {
           phone: '',
           isSysAdmin: 'N',
           status: 'incumbent'
+        },
+        rules: {
+          username: [{required: true, message: '账号不能为空', trigger: 'change'}],
+          name: [{required: true, message: '姓名不能为空', trigger: 'change'}],
+          job: [{required: true, message: '工种不能为空', trigger: 'change'}],
+          phone: [{required: true, message: '联系方式不能为空', trigger: 'change'}],
+          isSysAdmin: [{required: true, message: '是否系统管理员不能为空', trigger: 'change'}],
+          status: [{required: true, message: '状态不能为空', trigger: 'change'}]
         }
       },
       setUserStatusDialog: {
@@ -242,13 +250,13 @@ export default {
       this.$set(this.query, 'pageNum', 1);
       this.getData();
     },
-    addUser() {
+    addInfo() {
       this.saveDialog.title = '新增';
       this.saveDialog.type = 'add';
-      this.saveDialog.form = {isSysAdmin:'N',status:'incumbent'};
+      this.saveDialog.form = {isSysAdmin: 'N', status: 'incumbent'};
       this.saveDialog.visible = true;
     },
-    updateUser() {
+    updateInfo() {
       if (this.multipleSelection.length !== 1) {
         this.$message.error('仅请选择一条数据');
         return;
@@ -260,16 +268,21 @@ export default {
       });
       this.saveDialog.visible = true;
     },
-    saveUser() {
-      saveUser(this.saveDialog.type, this.saveDialog.form).then(res => {
-        if (res > 0) {
-          this.saveDialog.visible = false;
-          this.saveDialog.form = {};
-          this.$message.success('保存成功');
-          this.getData();
-        } else {
-          this.$message.error('保存失败');
+    saveInfo() {
+      this.$refs['saveDialog.form'].validate((valid) => {
+        if (!valid) {
+          return false;
         }
+        saveUser(this.saveDialog.type, this.saveDialog.form).then(res => {
+          if (res > 0) {
+            this.saveDialog.visible = false;
+            this.saveDialog.form = {};
+            this.$message.success('保存成功');
+            this.getData();
+          } else {
+            this.$message.error('保存失败');
+          }
+        });
       });
     },
     patchUserStatus() {
@@ -314,7 +327,7 @@ export default {
         });
       });
     },
-    delUser() {
+    delInfo() {
       if (this.multipleSelection.length === 0) {
         this.$message.error('至少选择一条数据');
         return;
