@@ -6,6 +6,7 @@ export default {
         let list = [];
         let keys = Object.keys(map);
         keys.forEach(key => list.push({key, value: map[key]}));
+        return list;
     },
     whetherOrNot: {
         Y: '是',
