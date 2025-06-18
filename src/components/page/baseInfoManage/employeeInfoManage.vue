@@ -213,8 +213,8 @@ export default {
   },
   created() {
     this.isSysAdmin = currentUser.getIsSysAdmin();
-    this.isSysAdminList = configValue.whetherOrNot;
-    this.userStatusList = configValue.userStatus;
+    this.isSysAdminList = configValue.getValueList(configValue.whetherOrNot);
+    this.userStatusList = configValue.getValueList(configValue.userStatus);
     this.getData();
   },
   methods: {
@@ -233,10 +233,8 @@ export default {
     getData() {
       this.loading = true;
       pageUser(this.query.form).then(res => {
-        let userStatusMap = {};
-        this.userStatusList.forEach(item => userStatusMap[item.key] = item.value);
-        let isSysAdminMap = {};
-        this.isSysAdminList.forEach(item => isSysAdminMap[item.key] = item.value);
+        let userStatusMap = configValue.userStatus;
+        let isSysAdminMap = configValue.whetherOrNot;
         res.list.forEach(item => item.isSysAdminValue = isSysAdminMap[item.isSysAdmin]);
         res.list.forEach(item => item.statusValue = userStatusMap[item.status]);
         this.tableData = res.list;

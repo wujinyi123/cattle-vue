@@ -254,8 +254,8 @@ export default {
   created() {
     this.isSysAdmin = currentUser.getIsSysAdmin();
     listFarm().then(res => this.listFarm = res);
-    this.cattleBreedList = configValue.cattleBreed;
-    this.cattleSexList = configValue.cattleSex;
+    this.cattleBreedList = configValue.getValueList(configValue.cattleBreed);
+    this.cattleSexList = configValue.getValueList(configValue.cattleSex);
     this.getData();
   },
   methods: {
@@ -288,10 +288,8 @@ export default {
     getData() {
       this.loading = true;
       pageCattle(this.query.form).then(res => {
-        let cattleBreedMap = {};
-        this.cattleBreedList.forEach(item => cattleBreedMap[item.key] = item.value);
-        let cattleSexMap = {};
-        this.cattleSexList.forEach(item => cattleSexMap[item.key] = item.value);
+        let cattleBreedMap = configValue.cattleBreed;
+        let cattleSexMap = configValue.cattleSex;
         res.list.forEach(item => {
           item.breedName = cattleBreedMap[item.breed];
           item.sexName = cattleSexMap[item.sex];
