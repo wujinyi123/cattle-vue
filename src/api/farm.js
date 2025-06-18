@@ -28,6 +28,10 @@ export const pageFarmZone = params => {
     return service.get("/farm/pageFarmZone", {params});
 };
 
+export const listFarmZone = farmId => {
+    return service.get("/farm/listFarmZone", {params: {farmId}});
+};
+
 export const getFarmZone = farmZoneId => {
     return service.get("/farm/getFarmZone", {params: {farmZoneId}});
 };

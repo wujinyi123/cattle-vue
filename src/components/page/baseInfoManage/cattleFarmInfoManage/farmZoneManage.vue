@@ -51,9 +51,9 @@
           @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="farmDTO.farmName" label="牧场"></el-table-column>
-        <el-table-column prop="farmDTO.owner" label="牧场负责人"></el-table-column>
-        <el-table-column prop="farmDTO.admin" label="牧场管理员"></el-table-column>
+        <el-table-column prop="farmName" label="牧场"></el-table-column>
+        <el-table-column prop="farmOwner" label="牧场负责人"></el-table-column>
+        <el-table-column prop="farmAdmin" label="牧场管理员"></el-table-column>
         <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
         <el-table-column prop="farmZoneRemark" label="圈舍编号"></el-table-column>
         <el-table-column prop="size" label="容量"></el-table-column>
