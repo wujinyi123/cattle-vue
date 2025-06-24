@@ -106,7 +106,7 @@ import currentUser from "@/utils/currentUser";
 import {listFarm, pageFarmZone, getFarmZone, saveFarmZone, delFarmZone} from '@/api/farm';
 
 export default {
-  name: 'farmZoneManage',
+  name: 'FarmZoneManage',
   data() {
     return {
       isSysAdmin: 'N',

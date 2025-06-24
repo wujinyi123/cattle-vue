@@ -21,28 +21,28 @@ export default new Router({
                 },
                 {
                     path: '/employeeInfoManage',
-                    component: () => import('@/components/page/baseInfoManage/employeeInfoManage.vue'),
+                    component: () => import('@/components/page/baseInfoManage/EmployeeInfoManage.vue'),
                     meta: {title: '员工档案管理'}
                 },
                 {
                     path: '/farmInfoManage',
-                    component: () => import('@/components/page/baseInfoManage/cattleFarmInfoManage/farmInfoManage.vue'),
+                    component: () => import('@/components/page/baseInfoManage/cattleFarmInfoManage/FarmInfoManage.vue'),
                     meta: {title: '牧场基础信息'}
                 },
                 {
                     path: '/farmZoneManage',
-                    component: () => import('@/components/page/baseInfoManage/cattleFarmInfoManage/farmZoneManage.vue'),
+                    component: () => import('@/components/page/baseInfoManage/cattleFarmInfoManage/FarmZoneManage.vue'),
                     meta: {title: '牛舍分区管理'}
                 },
                 {
                     path: '/cattleInfoManage',
-                    component: () => import('@/components/page/baseInfoManage/cattleInfoManage.vue'),
+                    component: () => import('@/components/page/baseInfoManage/CattleInfoManage.vue'),
                     meta: {title: '牛只档案管理'}
                 },
                 {
-                    path: '/breedTrack',
-                    component: () => import('@/components/page/breedManage/breedTrack.vue'),
-                    meta: {title: '繁殖跟踪'}
+                    path: '/breedRegister',
+                    component: () => import('@/components/page/breedManage/BreedRegister.vue'),
+                    meta: {title: '配种登记'}
                 },
                 {
                     path: '/produceManage',

@@ -15,3 +15,7 @@ export const saveCattle = (type, data) => {
 export const delCattle = data => {
     return service.post("/cattle/delCattle", data);
 };
+
+export const treeCattle = () => {
+    return service.get("/cattle/treeCattle");
+};

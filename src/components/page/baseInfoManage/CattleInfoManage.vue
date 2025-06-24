@@ -207,7 +207,7 @@ import {pageCattle, getCattle, saveCattle, delCattle} from '@/api/cattle';
 import configValue from '@/components/common/configValue';
 
 export default {
-  name: 'farmZoneManage',
+  name: 'CattleInfoManage',
   data() {
     return {
       isSysAdmin: 'N',
@@ -320,6 +320,7 @@ export default {
       this.saveDialog.type = 'update';
       getCattle(this.multipleSelection[0].cattleId).then(res => {
         this.saveDialog.form = res;
+        this.selectFarmZoneForSave();
       });
       this.saveDialog.visible = true;
     },

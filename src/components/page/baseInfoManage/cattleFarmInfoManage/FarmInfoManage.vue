@@ -170,7 +170,7 @@ import {pageFarm, getFarm, saveFarm, saveAdminEmployee, delFarm} from '@/api/far
 import {listUser} from '@/api/user';
 
 export default {
-  name: 'farmInfoManage',
+  name: 'FarmInfoManage',
   data() {
     return {
       isSysAdmin: 'N',

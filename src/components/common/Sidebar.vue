@@ -105,8 +105,8 @@ export default {
           subs: [
             {
               icon: 'el-icon-lx-home',
-              index: 'breedTrack',
-              title: '繁殖跟踪',
+              index: 'breedRegister',
+              title: '配种登记',
             },
             {
               icon: 'el-icon-lx-home',

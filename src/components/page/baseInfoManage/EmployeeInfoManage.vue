@@ -159,7 +159,7 @@ import {pageUser, getUser, saveUser, setUserStatus, resetPassword, delUser} from
 import configValue from '@/components/common/configValue';
 
 export default {
-  name: 'employeeInfoManage',
+  name: 'EmployeeInfoManage',
   data() {
     return {
       isSysAdmin: 'N',
