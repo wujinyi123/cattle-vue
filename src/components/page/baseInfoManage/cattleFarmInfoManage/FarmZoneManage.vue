@@ -55,7 +55,7 @@
         <el-table-column prop="farmOwner" label="牧场负责人"></el-table-column>
         <el-table-column prop="farmAdmin" label="牧场管理员"></el-table-column>
         <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
-        <el-table-column prop="farmZoneRemark" label="圈舍编号"></el-table-column>
+        <el-table-column prop="farmZoneRemark" label="圈舍备注"></el-table-column>
         <el-table-column prop="size" label="容量"></el-table-column>
         <el-table-column prop="currentSize" label="当前容量"></el-table-column>
       </el-table>
