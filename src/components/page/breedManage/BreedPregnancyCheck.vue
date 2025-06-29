@@ -27,51 +27,29 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="冻精号" :label-width="formLabelWidth">
-                <el-input v-model="query.form.frozenSemenCode" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="冻精品种" :label-width="formLabelWidth">
-                <el-select v-model="query.form.frozenSemenBreed" style="width:100%" placeholder="请选择">
-                  <el-option key="all" label="全部" value=""></el-option>
-                  <el-option v-for="item in listBreed"
-                             :key="item.key"
-                             :label="item.value"
-                             :value="item.key">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20" class="handle-el-row">
-            <el-col :span="8">
-              <el-form-item label="配种日期" :label-width="formLabelWidth">
+              <el-form-item label="检查日期" :label-width="formLabelWidth">
                 <el-date-picker
-                    v-model="query.form.breedingDay"
-                    type="date"
+                    v-model="query.form.checkDay"
+                    type="daterange"
                     format="yyyy-MM-dd"
                     value-format="yyyy-MM-dd"
-                    placeholder="选择日期"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
                     style="width:100%">
                 </el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="配种方式" :label-width="formLabelWidth">
-                <el-select v-model="query.form.breedingMethod" style="width:100%" placeholder="请选择">
-                  <el-option key="all" label="全部" value=""></el-option>
-                  <el-option v-for="item in listMethod"
-                             :key="item.key"
-                             :label="item.value"
-                             :value="item.key">
-                  </el-option>
-                </el-select>
+              <el-form-item label="检查员" :label-width="formLabelWidth">
+                <el-input v-model="query.form.checkUser" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row :gutter="20" class="handle-el-row">
             <el-col :span="8">
-              <el-form-item label="输配员" :label-width="formLabelWidth">
-                <el-input v-model="query.form.operateUser" placeholder="请输入"></el-input>
+              <el-form-item label="检查结果" :label-width="formLabelWidth">
+                <el-input v-model="query.form.result" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -101,11 +79,9 @@
         <el-table-column prop="farmName" label="牧场"></el-table-column>
         <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
         <el-table-column prop="cattleCode" label="牛只耳牌号"></el-table-column>
-        <el-table-column prop="frozenSemenCode" label="冻精号"></el-table-column>
-        <el-table-column prop="frozenSemenBreedName" label="冻精品种"></el-table-column>
-        <el-table-column prop="breedingDay" label="配种日期"></el-table-column>
-        <el-table-column prop="breedingMethodName" label="配种方式"></el-table-column>
-        <el-table-column prop="operateUser" label="输配员"></el-table-column>
+        <el-table-column prop="checkDay" label="检查日期"></el-table-column>
+        <el-table-column prop="checkUser" label="检查员"></el-table-column>
+        <el-table-column prop="result" label="检查结果"></el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination
@@ -121,24 +97,12 @@
     </div>
     <el-dialog title="新增" :visible.sync="saveDialog.visible">
       <el-form :model="saveDialog.form" ref="saveDialog.form" :rules="saveDialog.rules">
-        <el-form-item label="牛只耳牌号" :label-width="formLabelWidth" prop="cattleCode">
-          <el-input v-model="saveDialog.form.cattleCode" placeholder="请输入"></el-input>
+        <el-form-item label="登记号" :label-width="formLabelWidth" prop="registerId">
+          <el-input v-model="saveDialog.form.registerId" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="冻精号" :label-width="formLabelWidth" prop="frozenSemenCode">
-          <el-input v-model="saveDialog.form.frozenSemenCode" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="冻精品种" :label-width="formLabelWidth" prop="frozenSemenBreed">
-          <el-select v-model="saveDialog.form.frozenSemenBreed" style="width:100%" placeholder="请选择">
-            <el-option v-for="item in listBreed"
-                       :key="item.key"
-                       :label="item.value"
-                       :value="item.key">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="配种日期" :label-width="formLabelWidth" prop="breedingDay">
+        <el-form-item label="检查日期" :label-width="formLabelWidth" prop="checkDay">
           <el-date-picker
-              v-model="saveDialog.form.breedingDay"
+              v-model="saveDialog.form.checkDay"
               type="date"
               format="yyyy-MM-dd"
               value-format="yyyy-MM-dd"
@@ -146,23 +110,17 @@
               style="width:100%">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="配种方式" :label-width="formLabelWidth" prop="breedingMethod">
-          <el-select v-model="saveDialog.form.breedingMethod" style="width:100%" placeholder="请选择">
-            <el-option v-for="item in listMethod"
-                       :key="item.key"
-                       :label="item.value"
-                       :value="item.key">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="输配员" :label-width="formLabelWidth" prop="operateUser">
-          <el-select v-model="saveDialog.form.operateUser" filterable style="width:100%" placeholder="请选择">
+        <el-form-item label="检查员" :label-width="formLabelWidth" prop="checkUser">
+          <el-select v-model="saveDialog.form.checkUser" filterable style="width:100%" placeholder="请选择">
             <el-option v-for="item in listUser"
                        :key="item.username"
                        :label="item.name"
                        :value="item.username">
             </el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="检查结果" :label-width="formLabelWidth" prop="result">
+          <el-input type="textarea" :rows="2" v-model="saveDialog.form.result" placeholder="请输入"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -174,16 +132,13 @@
 </template>
 
 <script>
-import configValue from '@/components/common/configValue';
-import {pageBeedRegister, addBeedRegister, delBeedRegister} from '@/api/breed';
+import {pageBeedPregnancyCheck, addBeedPregnancyCheck, delBeedPregnancyCheck} from '@/api/breed';
 import {listUser} from '@/api/user';
 
 export default {
-  name: 'BreedRegister',
+  name: 'BreedPregnancyCheck',
   data() {
     return {
-      listBreed: [],
-      listMethod: [],
       listUser: [],
       query: {
         form: {
@@ -200,20 +155,16 @@ export default {
         visible: false,
         form: {},
         rules: {
-          cattleCode: [{required: true, message: '牛只耳牌号不能为空', trigger: 'change'}],
-          frozenSemenCode: [{required: true, message: '冻精号不能为空', trigger: 'change'}],
-          frozenSemenBreed: [{required: true, message: '冻精品种不能为空', trigger: 'change'}],
-          breedingDay: [{required: true, message: '配种日期不能为空', trigger: 'change'}],
-          breedingMethod: [{required: true, message: '配种日期不能为空', trigger: 'change'}],
-          operateUser: [{required: true, message: '输配员不能为空', trigger: 'change'}]
+          registerId: [{required: true, message: '登记号不能为空', trigger: 'change'}],
+          checkDay: [{required: true, message: '检查日期不能为空', trigger: 'change'}],
+          checkUser: [{required: true, message: '检查员不能为空', trigger: 'change'}],
+          result: [{required: true, message: '检查结果不能为空', trigger: 'change'}]
         }
       }
     };
   },
   created() {
     listUser().then(res => this.listUser = res);
-    this.listBreed = configValue.getValueList(configValue.cattleBreed);
-    this.listMethod = configValue.getValueList(configValue.breedingMethod);
     this.getData();
   },
   methods: {
@@ -231,13 +182,13 @@ export default {
     // 获取 easy-mock 的模拟数据
     getData() {
       this.loading = true;
-      pageBeedRegister(this.query.form).then(res => {
-        let breedMap = configValue.cattleBreed;
-        let methodMap = configValue.breedingMethod;
-        res.list.forEach(item => {
-          item.frozenSemenBreedName = breedMap[item.frozenSemenBreed];
-          item.breedingMethodName = methodMap[item.breedingMethod];
-        });
+      let params = {...this.query.form};
+      if (params.checkDay && params.checkDay.length) {
+        params.checkDayStart = params.checkDay[0];
+        params.checkDayEnd = params.checkDay[1];
+        params.checkDay = undefined;
+      }
+      pageBeedPregnancyCheck(params).then(res => {
         this.tableData = res.list;
         this.pageTotal = res.total;
         this.multipleSelection = [];
@@ -259,7 +210,7 @@ export default {
           return false;
         }
         console.log({...this.saveDialog.form});
-        addBeedRegister(this.saveDialog.form).then(res => {
+        addBeedPregnancyCheck(this.saveDialog.form).then(res => {
           if (res > 0) {
             this.saveDialog.visible = false;
             this.saveDialog.form = {};
@@ -281,7 +232,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delBeedRegister(this.multipleSelection.map(item => item.id)).then(res => {
+        delBeedPregnancyCheck(this.multipleSelection.map(item => item.id)).then(res => {
           if (res > 0) {
             this.$message.success('删除成功');
             this.getData();

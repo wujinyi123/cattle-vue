@@ -45,9 +45,9 @@ export default new Router({
                     meta: {title: '配种登记'}
                 },
                 {
-                    path: '/produceManage',
-                    component: () => import('@/components/page/breedManage/produceManage.vue'),
-                    meta: {title: '产仔管理'}
+                    path: '/breedPregnancyCheck',
+                    component: () => import('@/components/page/breedManage/BreedPregnancyCheck.vue'),
+                    meta: {title: '妊检登记'}
                 },
                 {
                     path: '/inInventoryManage',

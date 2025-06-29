@@ -16,10 +16,6 @@ export const delCattle = data => {
     return service.post("/cattle/delCattle", data);
 };
 
-export const listCattle = () => {
-    return service.get("/cattle/listCattle");
-};
-
-export const treeCattle = () => {
-    return service.get("/cattle/treeCattle");
+export const listCattle = params => {
+    return service.get("/cattle/listCattle", {params});
 };

@@ -110,8 +110,8 @@ export default {
             },
             {
               icon: 'el-icon-lx-home',
-              index: 'produceManage',
-              title: '产仔管理',
+              index: 'breedPregnancyCheck',
+              title: '妊检登记',
             }
           ]
         },
