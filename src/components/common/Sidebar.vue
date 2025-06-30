@@ -112,6 +112,11 @@ export default {
               icon: 'el-icon-lx-home',
               index: 'breedPregnancyCheck',
               title: '妊检登记',
+            },
+            {
+              icon: 'el-icon-lx-home',
+              index: 'breedPregnancyResult',
+              title: '妊娠结果',
             }
           ]
         },

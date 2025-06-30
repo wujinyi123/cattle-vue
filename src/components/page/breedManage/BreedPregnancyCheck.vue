@@ -82,6 +82,8 @@
         <el-table-column prop="checkDay" label="检查日期"></el-table-column>
         <el-table-column prop="checkUser" label="检查员"></el-table-column>
         <el-table-column prop="result" label="检查结果"></el-table-column>
+        <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
+        <el-table-column prop="updateUser" label="修改人"></el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination
@@ -95,7 +97,7 @@
         ></el-pagination>
       </div>
     </div>
-    <el-dialog title="新增" :visible.sync="saveDialog.visible">
+    <el-dialog :destroy-on-close="true" title="新增" :visible.sync="saveDialog.visible">
       <el-form :model="saveDialog.form" ref="saveDialog.form" :rules="saveDialog.rules">
         <el-form-item label="登记号" :label-width="formLabelWidth" prop="registerId">
           <el-input v-model="saveDialog.form.registerId" placeholder="请输入"></el-input>
@@ -132,7 +134,7 @@
 </template>
 
 <script>
-import {pageBeedPregnancyCheck, addBeedPregnancyCheck, delBeedPregnancyCheck} from '@/api/breed';
+import {pageBreedPregnancyCheck, addBreedPregnancyCheck, delBreedPregnancyCheck} from '@/api/breed';
 import {listUser} from '@/api/user';
 
 export default {
@@ -188,7 +190,7 @@ export default {
         params.checkDayEnd = params.checkDay[1];
         params.checkDay = undefined;
       }
-      pageBeedPregnancyCheck(params).then(res => {
+      pageBreedPregnancyCheck(params).then(res => {
         this.tableData = res.list;
         this.pageTotal = res.total;
         this.multipleSelection = [];
@@ -209,8 +211,7 @@ export default {
         if (!valid) {
           return false;
         }
-        console.log({...this.saveDialog.form});
-        addBeedPregnancyCheck(this.saveDialog.form).then(res => {
+        addBreedPregnancyCheck(this.saveDialog.form).then(res => {
           if (res > 0) {
             this.saveDialog.visible = false;
             this.saveDialog.form = {};
@@ -232,7 +233,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delBeedPregnancyCheck(this.multipleSelection.map(item => item.id)).then(res => {
+        delBreedPregnancyCheck(this.multipleSelection.map(item => item.id)).then(res => {
           if (res > 0) {
             this.$message.success('删除成功');
             this.getData();

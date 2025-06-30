@@ -31,5 +31,9 @@ export default {
         nature: '自然',
         samePeriod: '同期',
         principal: '本交'
+    },
+    pregnancyResult: {
+        birth: '生育',
+        abortion: '流产'
     }
 }

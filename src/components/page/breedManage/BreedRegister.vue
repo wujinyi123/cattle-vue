@@ -106,6 +106,8 @@
         <el-table-column prop="breedingDay" label="配种日期"></el-table-column>
         <el-table-column prop="breedingMethodName" label="配种方式"></el-table-column>
         <el-table-column prop="operateUser" label="输配员"></el-table-column>
+        <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
+        <el-table-column prop="updateUser" label="修改人"></el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination
@@ -119,7 +121,7 @@
         ></el-pagination>
       </div>
     </div>
-    <el-dialog title="新增" :visible.sync="saveDialog.visible">
+    <el-dialog :destroy-on-close="true" title="新增" :visible.sync="saveDialog.visible">
       <el-form :model="saveDialog.form" ref="saveDialog.form" :rules="saveDialog.rules">
         <el-form-item label="牛只耳牌号" :label-width="formLabelWidth" prop="cattleCode">
           <el-input v-model="saveDialog.form.cattleCode" placeholder="请输入"></el-input>
@@ -175,7 +177,7 @@
 
 <script>
 import configValue from '@/components/common/configValue';
-import {pageBeedRegister, addBeedRegister, delBeedRegister} from '@/api/breed';
+import {pageBreedRegister, addBreedRegister, delBreedRegister} from '@/api/breed';
 import {listUser} from '@/api/user';
 
 export default {
@@ -231,7 +233,7 @@ export default {
     // 获取 easy-mock 的模拟数据
     getData() {
       this.loading = true;
-      pageBeedRegister(this.query.form).then(res => {
+      pageBreedRegister(this.query.form).then(res => {
         let breedMap = configValue.cattleBreed;
         let methodMap = configValue.breedingMethod;
         res.list.forEach(item => {
@@ -258,8 +260,7 @@ export default {
         if (!valid) {
           return false;
         }
-        console.log({...this.saveDialog.form});
-        addBeedRegister(this.saveDialog.form).then(res => {
+        addBreedRegister(this.saveDialog.form).then(res => {
           if (res > 0) {
             this.saveDialog.visible = false;
             this.saveDialog.form = {};
@@ -281,7 +282,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delBeedRegister(this.multipleSelection.map(item => item.id)).then(res => {
+        delBreedRegister(this.multipleSelection.map(item => item.id)).then(res => {
           if (res > 0) {
             this.$message.success('删除成功');
             this.getData();

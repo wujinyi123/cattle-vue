@@ -119,6 +119,8 @@
         <el-table-column prop="sexName" label="性别"></el-table-column>
         <el-table-column prop="birthday" label="出生日期"></el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
+        <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
+        <el-table-column prop="updateUser" label="修改人"></el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination
@@ -132,7 +134,7 @@
         ></el-pagination>
       </div>
     </div>
-    <el-dialog :title="saveDialog.title" :visible.sync="saveDialog.visible">
+    <el-dialog :destroy-on-close="true" :title="saveDialog.title" :visible.sync="saveDialog.visible">
       <el-form :model="saveDialog.form" ref="saveDialog.form" :rules="saveDialog.rules">
         <el-form-item label="牧场" :label-width="formLabelWidth" prop="farmId">
           <el-select v-model="saveDialog.form.farmId" filterable placeholder="请选择" style="width:100%" @change="selectFarmZoneForSave">

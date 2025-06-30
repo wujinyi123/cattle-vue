@@ -14,19 +14,6 @@
             <i class="el-icon-rank"></i>
           </el-tooltip>
         </div>
-        <!-- 消息中心 -->
-        <div class="btn-bell">
-          <el-tooltip
-              effect="dark"
-              :content="message?`有${message}条未读消息`:`消息中心`"
-              placement="bottom"
-          >
-            <router-link to="/tabs">
-              <i class="el-icon-bell"></i>
-            </router-link>
-          </el-tooltip>
-          <span class="btn-bell-badge" v-if="message"></span>
-        </div>
         <!-- 用户头像 -->
         <div class="user-avator">
           <img src="../../assets/img/img.jpg"/>
@@ -38,9 +25,7 @@
                         <i class="el-icon-caret-bottom"></i>
                     </span>
           <el-dropdown-menu slot="dropdown">
-            <a href="https://github.com/lin-xin/vue-manage-system" target="_blank">
-              <el-dropdown-item>项目仓库</el-dropdown-item>
-            </a>
+            <el-dropdown-item divided command="personalCenter">个人中心</el-dropdown-item>
             <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -57,8 +42,7 @@ export default {
     return {
       collapse: false,
       fullscreen: false,
-      name: 'linxin',
-      message: 2
+      name: '未知',
     };
   },
   computed: {
@@ -74,6 +58,9 @@ export default {
         this.$message.success('退出登录');
         currentUser.remove();
         this.$router.push('/login');
+      }
+      if (command == 'personalCenter') {
+        this.$router.push('/personalCenter');
       }
     },
     // 侧边栏折叠

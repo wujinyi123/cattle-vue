@@ -20,6 +20,11 @@ export default new Router({
                     meta: {title: '系统首页'}
                 },
                 {
+                    path: '/personalCenter',
+                    component: () => import('@/components/page/baseInfoManage/PersonalCenter.vue'),
+                    meta: {title: '个人中心'}
+                },
+                {
                     path: '/employeeInfoManage',
                     component: () => import('@/components/page/baseInfoManage/EmployeeInfoManage.vue'),
                     meta: {title: '员工档案管理'}
@@ -48,6 +53,11 @@ export default new Router({
                     path: '/breedPregnancyCheck',
                     component: () => import('@/components/page/breedManage/BreedPregnancyCheck.vue'),
                     meta: {title: '妊检登记'}
+                },
+                {
+                    path: '/breedPregnancyResult',
+                    component: () => import('@/components/page/breedManage/BreedPregnancyResult.vue'),
+                    meta: {title: '妊娠结果'}
                 },
                 {
                     path: '/inInventoryManage',

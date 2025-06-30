@@ -70,6 +70,8 @@
         <el-table-column prop="address" label="地址"></el-table-column>
         <el-table-column prop="area" label="面积"></el-table-column>
         <el-table-column prop="scale" label="养殖规模"></el-table-column>
+        <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
+        <el-table-column prop="updateUser" label="修改人"></el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination
@@ -83,7 +85,7 @@
         ></el-pagination>
       </div>
     </div>
-    <el-dialog :title="saveDialog.title" :visible.sync="saveDialog.visible">
+    <el-dialog :destroy-on-close="true" :title="saveDialog.title" :visible.sync="saveDialog.visible">
       <el-form :model="saveDialog.form" ref="saveDialog.form" :rules="saveDialog.rules">
         <el-form-item label="名称" :label-width="formLabelWidth" prop="farmName">
           <el-input v-model="saveDialog.form.farmName" placeholder="请输入"></el-input>
@@ -133,7 +135,7 @@
         <el-button type="primary" @click="saveInfo">保 存</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="修改管理员/员工" :visible.sync="adminEmployeeDialog.visible">
+    <el-dialog :destroy-on-close="true" title="修改管理员/员工" :visible.sync="adminEmployeeDialog.visible">
       <el-form :model="adminEmployeeDialog.form">
         <el-form-item label="管理员" :label-width="formLabelWidth">
           <el-select v-model="adminEmployeeDialog.form.admin" filterable multiple placeholder="请选择" style="width:100%">

@@ -82,6 +82,8 @@
         <el-table-column prop="phone" label="联系方式"></el-table-column>
         <el-table-column prop="isSysAdminValue" label="是否系统管理员"></el-table-column>
         <el-table-column prop="statusValue" label="状态"></el-table-column>
+        <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
+        <el-table-column prop="updateUser" label="修改人"></el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination
@@ -95,7 +97,7 @@
         ></el-pagination>
       </div>
     </div>
-    <el-dialog :title="saveDialog.title" :visible.sync="saveDialog.visible">
+    <el-dialog :destroy-on-close="true" :title="saveDialog.title" :visible.sync="saveDialog.visible">
       <el-form :model="saveDialog.form" ref="saveDialog.form" :rules="saveDialog.rules">
         <el-form-item label="账号" :label-width="formLabelWidth" prop="username">
           <el-input v-model="saveDialog.form.username" :disabled="saveDialog.type==='update'" placeholder="请输入"></el-input>
@@ -133,7 +135,7 @@
         <el-button type="primary" @click="saveInfo">保 存</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="批量修改状态" :visible.sync="setUserStatusDialog.visible">
+    <el-dialog :destroy-on-close="true" title="批量修改状态" :visible.sync="setUserStatusDialog.visible">
       <el-form :model="setUserStatusDialog.form" style="width:1000px">
         <el-form-item label="状态" :label-width="formLabelWidth">
           <el-radio-group v-model="setUserStatusDialog.form.value">

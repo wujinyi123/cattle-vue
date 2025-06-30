@@ -1,25 +1,37 @@
 import service from '@/utils/request';
 
-export const pageBeedRegister = params => {
-    return service.get("/breed/pageBeedRegister", {params});
+export const pageBreedRegister = params => {
+    return service.get("/breed/pageBreedRegister", {params});
 };
 
-export const addBeedRegister = data => {
-    return service.post("/breed/addBeedRegister", data);
+export const addBreedRegister = data => {
+    return service.post("/breed/addBreedRegister", data);
 };
 
-export const delBeedRegister = data => {
-    return service.post("/breed/delBeedRegister", data);
+export const delBreedRegister = data => {
+    return service.post("/breed/delBreedRegister", data);
 };
 
-export const pageBeedPregnancyCheck = params => {
-    return service.get("/breed/pageBeedPregnancyCheck", {params});
+export const pageBreedPregnancyCheck = params => {
+    return service.get("/breed/pageBreedPregnancyCheck", {params});
 };
 
-export const addBeedPregnancyCheck = data => {
-    return service.post("/breed/addBeedPregnancyCheck", data);
+export const addBreedPregnancyCheck = data => {
+    return service.post("/breed/addBreedPregnancyCheck", data);
 };
 
-export const delBeedPregnancyCheck = data => {
-    return service.post("/breed/delBeedPregnancyCheck", data);
+export const delBreedPregnancyCheck = data => {
+    return service.post("/breed/delBreedPregnancyCheck", data);
+};
+
+export const pageBreedPregnancyResult = params => {
+    return service.get("/breed/pageBreedPregnancyResult", {params});
+};
+
+export const addBreedPregnancyResult = data => {
+    return service.post("/breed/addBreedPregnancyResult", data);
+};
+
+export const delBreedPregnancyResult = data => {
+    return service.post("/breed/delBreedPregnancyResult", data);
 };
