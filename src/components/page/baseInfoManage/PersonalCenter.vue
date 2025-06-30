@@ -1,246 +1,154 @@
 <template>
-  <div>
-    <div class="container">
-      <div class="handle-box">
-        <el-form :model="query.form">
-          <el-row :gutter="20" class="handle-el-row">
-            <el-col :span="8">
-              <el-form-item label="牧场" :label-width="formLabelWidth">
-                <el-input v-model="query.form.farmName" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="圈舍" :label-width="formLabelWidth">
-                <el-input v-model="query.form.farmZoneCode" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="牛只耳牌号" :label-width="formLabelWidth">
-                <el-input v-model="query.form.cattleCode" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20" class="handle-el-row">
-            <el-col :span="8">
-              <el-form-item label="登记号" :label-width="formLabelWidth">
-                <el-input v-model="query.form.registerId" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="检查日期" :label-width="formLabelWidth">
-                <el-date-picker
-                    v-model="query.form.checkDay"
-                    type="daterange"
-                    format="yyyy-MM-dd"
-                    value-format="yyyy-MM-dd"
-                    range-separator="至"
-                    start-placeholder="开始日期"
-                    end-placeholder="结束日期"
-                    style="width:100%">
-                </el-date-picker>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="检查员" :label-width="formLabelWidth">
-                <el-input v-model="query.form.checkUser" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20" class="handle-el-row">
-            <el-col :span="8">
-              <el-form-item label="检查结果" :label-width="formLabelWidth">
-                <el-input v-model="query.form.result" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20" class="handle-el-row">
-            <el-col :span="24" style="text-align:right">
-              <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
-            </el-col>
-          </el-row>
-        </el-form>
-        <div>
-          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
-          <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
-        </div>
-      </div>
-      <el-table
-          :data="tableData"
-          v-loading="loading"
-          current-row-key="id"
-          border
-          class="table"
-          ref="multipleTable"
-          header-cell-class-name="table-header"
-          @selection-change="handleSelectionChange"
-      >
-        <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="registerId" label="登记号"></el-table-column>
-        <el-table-column prop="farmName" label="牧场"></el-table-column>
-        <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
-        <el-table-column prop="cattleCode" label="牛只耳牌号"></el-table-column>
-        <el-table-column prop="checkDay" label="检查日期"></el-table-column>
-        <el-table-column prop="checkUser" label="检查员"></el-table-column>
-        <el-table-column prop="result" label="检查结果"></el-table-column>
-        <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
-        <el-table-column prop="updateUser" label="修改人"></el-table-column>
-      </el-table>
-      <div class="pagination">
-        <el-pagination
-            background
-            layout="sizes, total, prev, pager, next"
-            :current-page="query.pageNum"
-            :page-size="query.pageSize"
-            :total="pageTotal"
-            @size-change="handleSizeChange"
-            @current-change="handlePageChange"
-        ></el-pagination>
-      </div>
+  <div class="personal-center-wrap">
+    <div style="padding-top: 60px">
+      <el-row class="user-el-row">
+        <el-col :span="10" class="user-el-col-label">账号：</el-col>
+        <el-col :span="14" class="user-el-col-value">{{ user.username }}</el-col>
+      </el-row>
+      <el-row class="user-el-row">
+        <el-col :span="10" class="user-el-col-label">姓名：</el-col>
+        <el-col :span="14" class="user-el-col-value">{{ user.name }}</el-col>
+      </el-row>
+      <el-row class="user-el-row">
+        <el-col :span="10" class="user-el-col-label">工种：</el-col>
+        <el-col :span="14" class="user-el-col-value">{{ user.job }}</el-col>
+      </el-row>
+      <el-row class="user-el-row">
+        <el-col :span="10" class="user-el-col-label">联系方式：</el-col>
+        <el-col :span="14" class="user-el-col-value">{{ user.phone }}</el-col>
+      </el-row>
+      <el-row class="user-el-row">
+        <el-col :span="10" class="user-el-col-label">是否系统管理员：</el-col>
+        <el-col :span="14" class="user-el-col-value">{{ user.isSysAdminValue }}</el-col>
+      </el-row>
+      <el-row class="user-el-row">
+        <el-col :span="10" class="user-el-col-label">状态：</el-col>
+        <el-col :span="14" class="user-el-col-value">{{ user.statusValue }}</el-col>
+      </el-row>
+      <el-row class="user-el-row">
+        <el-col :span="10" class="user-el-col-label">所属牧场：</el-col>
+        <el-col :span="14" class="user-el-col-value">
+          <div v-for="item in user.farmInfo">{{item}}</div>
+        </el-col>
+      </el-row>
+      <el-row style="text-align: center;margin-top: 30px">
+        <el-col :span="20">
+          <el-button type="primary" @click="openUpdatePassword">修改用户密码</el-button>
+          <el-button type="primary" @click="updatePhone">修改联系方式</el-button>
+        </el-col>
+      </el-row>
     </div>
-    <el-dialog :destroy-on-close="true" title="新增" :visible.sync="saveDialog.visible">
-      <el-form :model="saveDialog.form" ref="saveDialog.form" :rules="saveDialog.rules">
-        <el-form-item label="登记号" :label-width="formLabelWidth" prop="registerId">
-          <el-input v-model="saveDialog.form.registerId" placeholder="请输入"></el-input>
+    <el-dialog :destroy-on-close="true" title="修改用户密码" :visible.sync="updatePasswordDialog.visible">
+      <el-form :model="updatePasswordDialog.form" ref="updatePasswordDialog.form" :rules="updatePasswordDialog.rules">
+        <el-form-item label="旧密码" :label-width="formLabelWidth" prop="password">
+          <el-input type="password" v-model="updatePasswordDialog.form.password" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="检查日期" :label-width="formLabelWidth" prop="checkDay">
-          <el-date-picker
-              v-model="saveDialog.form.checkDay"
-              type="date"
-              format="yyyy-MM-dd"
-              value-format="yyyy-MM-dd"
-              placeholder="选择日期"
-              style="width:100%">
-          </el-date-picker>
+        <el-form-item label="新密码" :label-width="formLabelWidth" prop="newPassword">
+          <el-input type="password" v-model="updatePasswordDialog.form.newPassword" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="检查员" :label-width="formLabelWidth" prop="checkUser">
-          <el-select v-model="saveDialog.form.checkUser" filterable style="width:100%" placeholder="请选择">
-            <el-option v-for="item in listUser"
-                       :key="item.username"
-                       :label="item.name"
-                       :value="item.username">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="检查结果" :label-width="formLabelWidth" prop="result">
-          <el-input type="textarea" :rows="2" v-model="saveDialog.form.result" placeholder="请输入"></el-input>
+        <el-form-item label="再次输入新密码" :label-width="formLabelWidth" prop="confirmPassword">
+          <el-input type="password" v-model="updatePasswordDialog.form.confirmPassword" placeholder="请输入"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="saveDialog.visible = false">取 消</el-button>
-        <el-button type="primary" @click="saveInfo">保 存</el-button>
+        <el-button @click="updatePasswordDialog.visible = false">取 消</el-button>
+        <el-button type="primary" @click="updatePassword">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import {pageBreedPregnancyCheck, addBreedPregnancyCheck, delBreedPregnancyCheck} from '@/api/breed';
-import {listUser} from '@/api/user';
+import {getCurrentUser, updatePassword, updatePhone} from '@/api/user';
+import configValue from "@/components/common/configValue";
+import currentUser from "@/utils/currentUser";
 
 export default {
   name: 'PersonalCenter',
   data() {
     return {
-      listUser: [],
-      query: {
-        form: {
-          pageNum: 1,
-          pageSize: 10
-        }
-      },
-      tableData: [],
-      loading: false,
-      multipleSelection: [],
-      pageTotal: 0,
-      formLabelWidth: '100px',
-      saveDialog: {
+      formLabelWidth: '150px',
+      user: {},
+      updatePasswordDialog: {
         visible: false,
         form: {},
         rules: {
-          registerId: [{required: true, message: '登记号不能为空', trigger: 'change'}],
-          checkDay: [{required: true, message: '检查日期不能为空', trigger: 'change'}],
-          checkUser: [{required: true, message: '检查员不能为空', trigger: 'change'}],
-          result: [{required: true, message: '检查结果不能为空', trigger: 'change'}]
+          password: [{required: true, message: '旧密码不能为空', trigger: 'change'}],
+          newPassword: [{required: true, message: '新密码不能为空', trigger: 'change'}],
+          confirmPassword: [{required: true, message: '再次输入新密码不能为空', trigger: 'change'}]
         }
       }
     };
   },
   created() {
-    listUser().then(res => this.listUser = res);
-    this.getData();
+    this.getCurrentUserInfo();
   },
   methods: {
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
-    handleSizeChange(val) {
-      this.$set(this.query, 'pageSize', val);
-      this.getData();
-    },
-    handlePageChange(val) {
-      this.$set(this.query, 'pageNum', val);
-      this.getData();
-    },
-    // 获取 easy-mock 的模拟数据
-    getData() {
-      this.loading = true;
-      let params = {...this.query.form};
-      if (params.checkDay && params.checkDay.length) {
-        params.checkDayStart = params.checkDay[0];
-        params.checkDayEnd = params.checkDay[1];
-        params.checkDay = undefined;
-      }
-      pageBreedPregnancyCheck(params).then(res => {
-        this.tableData = res.list;
-        this.pageTotal = res.total;
-        this.multipleSelection = [];
-        this.loading = false;
+    getCurrentUserInfo() {
+      getCurrentUser().then(item => {
+        item.isSysAdminValue = configValue.whetherOrNot[item.isSysAdmin];
+        item.statusValue = configValue.userStatus[item.status];
+        if (item.farmList) {
+          let farmInfo = [];
+          item.farmList.forEach(info => {
+            let userType = [];
+            if (info.owner === item.username) {
+              userType.push('负责人');
+            }
+            if (info.admin && info.admin.includes(item.username)) {
+              userType.push('管理员');
+            }
+            if (info.employee && info.employee.includes(item.username)) {
+              userType.push('员工');
+            }
+            if (userType.length > 0) {
+              farmInfo.push(`${info.farmName}：${userType.join(',')}`);
+            }
+          });
+          item.farmInfo = farmInfo;
+        }
+        this.user = item;
       });
     },
-    // 触发搜索按钮
-    handleSearch() {
-      this.$set(this.query, 'pageNum', 1);
-      this.getData();
+    openUpdatePassword() {
+      this.updatePasswordDialog.form = {};
+      this.updatePasswordDialog.visible = true;
     },
-    addInfo() {
-      this.saveDialog.form = {};
-      this.saveDialog.visible = true;
-    },
-    saveInfo() {
-      this.$refs['saveDialog.form'].validate((valid) => {
+    updatePassword() {
+      this.$refs['updatePasswordDialog.form'].validate((valid) => {
         if (!valid) {
           return false;
         }
-        addBreedPregnancyCheck(this.saveDialog.form).then(res => {
+        updatePassword(this.updatePasswordDialog.form).then(res => {
           if (res > 0) {
-            this.saveDialog.visible = false;
-            this.saveDialog.form = {};
-            this.$message.success('保存成功');
-            this.getData();
+            this.updatePasswordDialog.visible = false;
+            this.updatePasswordDialog.form = {};
+            this.$message.success('修改成功，请重新登录');
+            currentUser.remove();
+            this.$router.push('/login');
           } else {
-            this.$message.error('保存失败');
+            this.$message.error('修改失败');
           }
         });
       });
     },
-    delInfo() {
-      if (this.multipleSelection.length === 0) {
-        this.$message.error('至少选择一条数据');
-        return;
-      }
-      this.$confirm('此操作将永久删除牧场, 是否继续?', '提示', {
+    updatePhone() {
+      this.$prompt('请输入联系方式', '修改联系方式', {
         confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        delBreedPregnancyCheck(this.multipleSelection.map(item => item.id)).then(res => {
-          if (res > 0) {
-            this.$message.success('删除成功');
-            this.getData();
-          } else {
-            this.$message.error('删除失败');
-          }
-        });
+        cancelButtonText: '取消'
+      }).then(({value}) => {
+        if (!value) {
+          this.$message.error('联系方式不能为空');
+        } else {
+          updatePhone({phone: value}).then(res => {
+            if (res > 0) {
+              this.$message.success('修改成功');
+              this.getCurrentUserInfo();
+            } else {
+              this.$message.error('修改失败');
+            }
+          });
+        }
       });
     }
   }
@@ -248,17 +156,25 @@ export default {
 </script>
 
 <style scoped>
-.handle-box {
-  margin-bottom: 20px;
-}
-
-.handle-el-row {
-  margin: 10px 0;
-  text-align: center;
-}
-
-.table {
+.personal-center-wrap {
+  position: relative;
   width: 100%;
-  font-size: 14px;
+  height: 100%;
+  background-image: url('../../../assets/img/personal-center-bg.jpeg');
+  background-size: 100%;
+}
+
+.user-el-row {
+  margin: 10px 0;
+  font-size: 20px;
+}
+
+.user-el-col-label {
+  text-align: right;
+  font-weight: bold;
+}
+
+.user-el-col-value {
+  text-align: left;
 }
 </style>

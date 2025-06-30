@@ -32,6 +32,14 @@ export const resetPassword = data => {
     return service.post("/user/resetPassword", data);
 };
 
+export const updatePassword = data => {
+    return service.post("/user/updatePassword", data);
+};
+
+export const updatePhone = data => {
+    return service.post("/user/updatePhone", data);
+};
+
 export const delUser = data => {
     return service.post("/user/delUser", data);
 };
