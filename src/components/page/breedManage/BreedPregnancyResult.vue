@@ -286,7 +286,7 @@ export default {
       },
       addCattleDialog: {
         visible: false,
-        form: {},
+        form: {children: []},
         rules: {
           farmId: [{required: true, message: '牧场不能为空', trigger: 'change'}],
           farmZoneId: [{required: true, message: '圈舍编号不能为空', trigger: 'change'}],
@@ -353,7 +353,7 @@ export default {
       this.saveDialog.visible = true;
     },
     addCattle() {
-      this.addCattleDialog.form = {};
+      this.addCattleDialog.form = {children: []};
       this.addCattleDialog.visible = true;
     },
     addCattleInfo() {
@@ -370,14 +370,13 @@ export default {
         children.push(cattleObj);
         this.saveDialog.form.children = children;
         this.addCattleDialog.visible = false;
-        this.addCattleDialog.form = {};
+        this.addCattleDialog.form = {children: []};
       });
     },
     delCattle(row) {
       let children = this.saveDialog.form.children && [...this.saveDialog.form.children] || [];
       children = children.filter(item => item.id != row.id);
       this.saveDialog.form.children = children;
-      console.log(this.saveDialog.form.children)
     },
     saveInfo() {
       this.$refs['saveDialog.form'].validate((valid) => {
