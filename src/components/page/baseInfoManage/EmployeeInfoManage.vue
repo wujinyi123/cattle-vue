@@ -57,12 +57,15 @@
             </el-col>
           </el-row>
         </el-form>
-        <div v-if="isSysAdmin==='Y'">
-          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
-          <el-button type="primary" icon="el-icon-edit" @click="updateInfo">修改</el-button>
-          <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
-          <el-button type="primary" icon="el-icon-refresh" @click="patchUserStatus">批量修改状态</el-button>
-          <el-button type="primary" icon="el-icon-delete" @click="resetPassword">批量重置密码</el-button>
+        <div>
+          <span v-if="isSysAdmin==='Y'">
+            <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
+            <el-button type="primary" icon="el-icon-edit" @click="updateInfo">修改</el-button>
+            <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
+            <el-button type="primary" icon="el-icon-refresh" @click="patchUserStatus">批量修改状态</el-button>
+            <el-button type="primary" icon="el-icon-delete" @click="resetPassword">批量重置密码</el-button>
+          </span>
+          <import-export :template-code="'user'"></import-export>
         </div>
       </div>
       <el-table
@@ -156,12 +159,16 @@
 </template>
 
 <script>
+import ImportExport from "@/components/common/ImportExport";
 import currentUser from "@/utils/currentUser";
 import {pageUser, getUser, saveUser, setUserStatus, resetPassword, delUser} from '@/api/user';
 import configValue from '@/components/common/configValue';
 
 export default {
   name: 'EmployeeInfoManage',
+  components: {
+    ImportExport
+  },
   data() {
     return {
       isSysAdmin: 'N',
@@ -215,7 +222,7 @@ export default {
   },
   created() {
     this.isSysAdmin = currentUser.getIsSysAdmin();
-    this.isSysAdminList = configValue.getValueList(configValue.whetherOrNot);
+    this.isSysAdminList = configValue.getValueList(configValue.isSysAdmin);
     this.userStatusList = configValue.getValueList(configValue.userStatus);
     this.getData();
   },
@@ -236,7 +243,7 @@ export default {
       this.loading = true;
       pageUser(this.query.form).then(res => {
         let userStatusMap = configValue.userStatus;
-        let isSysAdminMap = configValue.whetherOrNot;
+        let isSysAdminMap = configValue.isSysAdmin;
         res.list.forEach(item => item.isSysAdminValue = isSysAdminMap[item.isSysAdmin]);
         res.list.forEach(item => item.statusValue = userStatusMap[item.status]);
         this.tableData = res.list;

@@ -86,7 +86,7 @@ export default {
   methods: {
     getCurrentUserInfo() {
       getCurrentUser().then(item => {
-        item.isSysAdminValue = configValue.whetherOrNot[item.isSysAdmin];
+        item.isSysAdminValue = configValue.isSysAdmin[item.isSysAdmin];
         item.statusValue = configValue.userStatus[item.status];
         if (item.farmList) {
           let farmInfo = [];
