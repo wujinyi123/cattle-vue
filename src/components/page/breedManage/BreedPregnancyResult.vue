@@ -93,7 +93,7 @@
         <el-table-column prop="cattleCode" label="牛只耳牌号"></el-table-column>
         <el-table-column prop="resultDay" label="日期"></el-table-column>
         <el-table-column prop="operaUser" label="操作员"></el-table-column>
-        <el-table-column prop="resultName" label="结果"></el-table-column>
+        <el-table-column prop="resultValue" label="结果"></el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
         <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
         <el-table-column prop="updateUser" label="修改人"></el-table-column>
@@ -171,8 +171,8 @@
         <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
         <el-table-column prop="cattleCode" label="耳牌号"></el-table-column>
         <el-table-column prop="cattleName" label="牛只名称"></el-table-column>
-        <el-table-column prop="breedName" label="品种"></el-table-column>
-        <el-table-column prop="sexName" label="性别"></el-table-column>
+        <el-table-column prop="breedValue" label="品种"></el-table-column>
+        <el-table-column prop="sexValue" label="性别"></el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
         <el-table-column
             fixed="right"
@@ -247,10 +247,10 @@
 </template>
 
 <script>
-import configValue from '@/components/common/configValue';
 import {listFarm, listFarmZone} from '@/api/farm';
 import {pageBreedPregnancyResult, addBreedPregnancyResult, delBreedPregnancyResult} from '@/api/breed';
 import {listUser} from '@/api/user';
+import {listSysConfig} from "@/api/common";
 
 export default {
   name: 'BreedPregnancyResult',
@@ -298,9 +298,9 @@ export default {
     };
   },
   created() {
-    this.listPregnancyResult = configValue.getValueList(configValue.pregnancyResult);
-    this.cattleBreedList = configValue.getValueList(configValue.cattleBreed);
-    this.cattleSexList = configValue.getValueList(configValue.cattleSex);
+    listSysConfig('pregnancyResult').then(res => this.listPregnancyResult = res);
+    listSysConfig('cattleBreed').then(res => this.cattleBreedList = res);
+    listSysConfig('cattleSex').then(res => this.cattleSexList = res);
     listUser().then(res => this.listUser = res);
     listFarm().then(res => this.listFarm = res);
     this.getData();
@@ -334,9 +334,6 @@ export default {
         params.resultDay = undefined;
       }
       pageBreedPregnancyResult(params).then(res => {
-        res.list.forEach(item => {
-          item.resultName = configValue.pregnancyResult[item.result];
-        });
         this.tableData = res.list;
         this.pageTotal = res.total;
         this.multipleSelection = [];
@@ -364,8 +361,8 @@ export default {
         let cattleObj = {id: new Date().getTime(), ...this.addCattleDialog.form};
         cattleObj.farmName = this.listFarm.filter(item => item.farmId == cattleObj.farmId)[0].farmName;
         cattleObj.farmZoneCode = this.listFarmZone.filter(item => item.farmZoneId == cattleObj.farmZoneId)[0].farmZoneCode;
-        cattleObj.breedName = configValue.cattleBreed[cattleObj.breed];
-        cattleObj.sexName = configValue.cattleSex[cattleObj.sex];
+        cattleObj.breedValue = this.cattleBreedList.filter(item => item.key == cattleObj.breed)[0].value;
+        cattleObj.sexValue = this.cattleSexList.filter(item => item.key == cattleObj.sex)[0].value;
         let children = this.saveDialog.form.children && [...this.saveDialog.form.children] || [];
         children.push(cattleObj);
         this.saveDialog.form.children = children;

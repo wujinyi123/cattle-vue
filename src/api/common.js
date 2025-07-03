@@ -4,6 +4,10 @@ export const pageSysConfig = params => {
     return service.get("/common/pageSysConfig", {params});
 };
 
+export const listSysConfig = code => {
+    return service.get("/common/listSysConfig", {params:{code}});
+};
+
 export const addSysConfig = data => {
     return service.post("/common/addSysConfig", data);
 };

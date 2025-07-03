@@ -60,7 +60,6 @@
 
 <script>
 import {getCurrentUser, updatePassword, updatePhone} from '@/api/user';
-import configValue from "@/components/common/configValue";
 import currentUser from "@/utils/currentUser";
 
 export default {
@@ -86,8 +85,6 @@ export default {
   methods: {
     getCurrentUserInfo() {
       getCurrentUser().then(item => {
-        item.isSysAdminValue = configValue.isSysAdmin[item.isSysAdmin];
-        item.statusValue = configValue.userStatus[item.status];
         if (item.farmList) {
           let farmInfo = [];
           item.farmList.forEach(info => {

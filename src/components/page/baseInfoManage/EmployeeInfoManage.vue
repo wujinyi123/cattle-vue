@@ -161,8 +161,8 @@
 <script>
 import ImportExport from "@/components/common/ImportExport";
 import currentUser from "@/utils/currentUser";
+import {listSysConfig} from "@/api/common";
 import {pageUser, getUser, saveUser, setUserStatus, resetPassword, delUser} from '@/api/user';
-import configValue from '@/components/common/configValue';
 
 export default {
   name: 'EmployeeInfoManage',
@@ -222,8 +222,8 @@ export default {
   },
   created() {
     this.isSysAdmin = currentUser.getIsSysAdmin();
-    this.isSysAdminList = configValue.getValueList(configValue.isSysAdmin);
-    this.userStatusList = configValue.getValueList(configValue.userStatus);
+    listSysConfig('isSysAdmin').then(res => this.isSysAdminList = res);
+    listSysConfig('userStatus').then(res => this.userStatusList = res);
     this.getData();
   },
   methods: {
@@ -242,10 +242,6 @@ export default {
     getData() {
       this.loading = true;
       pageUser(this.query.form).then(res => {
-        let userStatusMap = configValue.userStatus;
-        let isSysAdminMap = configValue.isSysAdmin;
-        res.list.forEach(item => item.isSysAdminValue = isSysAdminMap[item.isSysAdmin]);
-        res.list.forEach(item => item.statusValue = userStatusMap[item.status]);
         this.tableData = res.list;
         this.pageTotal = res.total;
         this.multipleSelection = [];

@@ -115,8 +115,8 @@
         <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
         <el-table-column prop="cattleCode" label="耳牌号"></el-table-column>
         <el-table-column prop="cattleName" label="牛只名称"></el-table-column>
-        <el-table-column prop="breedName" label="品种"></el-table-column>
-        <el-table-column prop="sexName" label="性别"></el-table-column>
+        <el-table-column prop="breedValue" label="品种"></el-table-column>
+        <el-table-column prop="sexValue" label="性别"></el-table-column>
         <el-table-column prop="birthday" label="出生日期"></el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
         <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
@@ -204,9 +204,9 @@
 
 <script>
 import currentUser from "@/utils/currentUser";
+import {listSysConfig} from "@/api/common";
 import {listFarm, listFarmZone} from '@/api/farm';
 import {pageCattle, getCattle, saveCattle, delCattle} from '@/api/cattle';
-import configValue from '@/components/common/configValue';
 
 export default {
   name: 'CattleInfoManage',
@@ -256,21 +256,21 @@ export default {
   created() {
     this.isSysAdmin = currentUser.getIsSysAdmin();
     listFarm().then(res => this.listFarm = res);
-    this.cattleBreedList = configValue.getValueList(configValue.cattleBreed);
-    this.cattleSexList = configValue.getValueList(configValue.cattleSex);
+    listSysConfig('cattleBreed').then(res => this.cattleBreedList = res);
+    listSysConfig('cattleSex').then(res => this.cattleSexList = res);
     this.getData();
   },
   methods: {
     selectFarmZone() {
       if (!this.query.form.farmId) {
-        this.listFarmZone=[];
+        this.listFarmZone = [];
         return;
       }
       listFarmZone(this.query.form.farmId).then(res => this.listFarmZone = res);
     },
     selectFarmZoneForSave() {
       if (!this.saveDialog.form.farmId) {
-        this.listFarmZoneForSave=[];
+        this.listFarmZoneForSave = [];
         return;
       }
       listFarmZone(this.saveDialog.form.farmId).then(res => this.listFarmZoneForSave = res);
@@ -290,12 +290,6 @@ export default {
     getData() {
       this.loading = true;
       pageCattle(this.query.form).then(res => {
-        let cattleBreedMap = configValue.cattleBreed;
-        let cattleSexMap = configValue.cattleSex;
-        res.list.forEach(item => {
-          item.breedName = cattleBreedMap[item.breed];
-          item.sexName = cattleSexMap[item.sex];
-        });
         this.tableData = res.list;
         this.pageTotal = res.total;
         this.multipleSelection = [];

@@ -102,9 +102,9 @@
         <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
         <el-table-column prop="cattleCode" label="牛只耳牌号"></el-table-column>
         <el-table-column prop="frozenSemenCode" label="冻精号"></el-table-column>
-        <el-table-column prop="frozenSemenBreedName" label="冻精品种"></el-table-column>
+        <el-table-column prop="frozenSemenBreedValue" label="冻精品种"></el-table-column>
         <el-table-column prop="breedingDay" label="配种日期"></el-table-column>
-        <el-table-column prop="breedingMethodName" label="配种方式"></el-table-column>
+        <el-table-column prop="breedingMethodValue" label="配种方式"></el-table-column>
         <el-table-column prop="operateUser" label="输配员"></el-table-column>
         <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
         <el-table-column prop="updateUser" label="修改人"></el-table-column>
@@ -176,9 +176,9 @@
 </template>
 
 <script>
-import configValue from '@/components/common/configValue';
 import {pageBreedRegister, addBreedRegister, delBreedRegister} from '@/api/breed';
 import {listUser} from '@/api/user';
+import {listSysConfig} from "@/api/common";
 
 export default {
   name: 'BreedRegister',
@@ -214,8 +214,8 @@ export default {
   },
   created() {
     listUser().then(res => this.listUser = res);
-    this.listBreed = configValue.getValueList(configValue.cattleBreed);
-    this.listMethod = configValue.getValueList(configValue.breedingMethod);
+    listSysConfig('cattleBreed').then(res => this.listBreed = res);
+    listSysConfig('breedingMethod').then(res => this.listMethod = res);
     this.getData();
   },
   methods: {
@@ -234,12 +234,6 @@ export default {
     getData() {
       this.loading = true;
       pageBreedRegister(this.query.form).then(res => {
-        let breedMap = configValue.cattleBreed;
-        let methodMap = configValue.breedingMethod;
-        res.list.forEach(item => {
-          item.frozenSemenBreedName = breedMap[item.frozenSemenBreed];
-          item.breedingMethodName = methodMap[item.breedingMethod];
-        });
         this.tableData = res.list;
         this.pageTotal = res.total;
         this.multipleSelection = [];
