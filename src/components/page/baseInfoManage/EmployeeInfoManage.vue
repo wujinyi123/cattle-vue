@@ -92,8 +92,8 @@
         <el-pagination
             background
             layout="sizes, total, prev, pager, next"
-            :current-page="query.pageNum"
-            :page-size="query.pageSize"
+            :current-page="query.form.pageNum"
+            :page-size="query.form.pageSize"
             :total="pageTotal"
             @size-change="handleSizeChange"
             @current-change="handlePageChange"
@@ -231,11 +231,11 @@ export default {
       this.multipleSelection = val;
     },
     handleSizeChange(val) {
-      this.$set(this.query, 'pageSize', val);
+      this.query.form.pageSize = val;
       this.getData();
     },
     handlePageChange(val) {
-      this.$set(this.query, 'pageNum', val);
+      this.query.form.pageNum = val;
       this.getData();
     },
     // 获取 easy-mock 的模拟数据
@@ -254,7 +254,7 @@ export default {
     },
     // 触发搜索按钮
     handleSearch() {
-      this.$set(this.query, 'pageNum', 1);
+      this.query.form.pageNum = 1;
       this.getData();
     },
     addInfo() {

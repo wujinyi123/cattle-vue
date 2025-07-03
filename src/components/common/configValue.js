@@ -8,7 +8,7 @@ export default {
         keys.forEach(key => list.push({key, value: map[key]}));
         return list;
     },
-    whetherOrNot: {
+    isSysAdmin: {
         Y: '是',
         N: '否'
     },

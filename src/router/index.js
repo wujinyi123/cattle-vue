@@ -25,6 +25,11 @@ export default new Router({
                     meta: {title: '个人中心'}
                 },
                 {
+                    path: '/sysConfig',
+                    component: () => import('@/components/page/baseInfoManage/SysConfig.vue'),
+                    meta: {title: '系统配置'}
+                },
+                {
                     path: '/employeeInfoManage',
                     component: () => import('@/components/page/baseInfoManage/EmployeeInfoManage.vue'),
                     meta: {title: '员工档案管理'}

@@ -4,39 +4,25 @@
       <div class="handle-box">
         <el-form :model="query.form">
           <el-row :gutter="20" class="handle-el-row">
-            <el-col :span="8">
-              <el-form-item label="牧场" :label-width="formLabelWidth">
-                <el-select v-model="query.form.farmId" filterable placeholder="请选择" style="width:100%">
+            <el-col :span="12" style="text-align:right">
+              <el-form-item label="配置项" :label-width="formLabelWidth">
+                <el-select v-model="query.form.code" style="width:100%" placeholder="请选择">
                   <el-option key="all" label="全部" value=""></el-option>
-                  <el-option
-                      v-for="item in listFarm"
-                      :key="item.farmId"
-                      :label="item.farmName"
-                      :value="item.farmId">
+                  <el-option v-for="item in listConfigType"
+                             :key="item.code"
+                             :label="item.name"
+                             :value="item.code">
                   </el-option>
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
-              <el-form-item label="圈舍编号" :label-width="formLabelWidth">
-                <el-input v-model="query.form.farmZoneCode" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="圈舍备注" :label-width="formLabelWidth">
-                <el-input v-model="query.form.farmZoneRemark" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20" class="handle-el-row">
-            <el-col :span="24" style="text-align:right">
+            <el-col :span="12" style="text-align:left">
               <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </el-col>
           </el-row>
         </el-form>
         <div>
           <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
-          <el-button type="primary" icon="el-icon-edit" @click="updateInfo">修改</el-button>
           <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
         </div>
       </div>
@@ -51,13 +37,10 @@
           @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="farmName" label="牧场"></el-table-column>
-        <el-table-column prop="farmOwner" label="牧场负责人"></el-table-column>
-        <el-table-column prop="farmAdmin" label="牧场管理员"></el-table-column>
-        <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
-        <el-table-column prop="farmZoneRemark" label="圈舍备注"></el-table-column>
-        <el-table-column prop="size" label="容量"></el-table-column>
-        <el-table-column prop="currentSize" label="当前容量"></el-table-column>
+        <el-table-column prop="codeName" label="配置项"></el-table-column>
+        <el-table-column prop="key" label="键"></el-table-column>
+        <el-table-column prop="value" label="值"></el-table-column>
+        <el-table-column prop="sort" label="排序值"></el-table-column>
         <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
         <el-table-column prop="updateUser" label="修改人"></el-table-column>
       </el-table>
@@ -73,26 +56,25 @@
         ></el-pagination>
       </div>
     </div>
-    <el-dialog :destroy-on-close="true" :title="saveDialog.title" :visible.sync="saveDialog.visible">
+    <el-dialog :destroy-on-close="true" title="新增" :visible.sync="saveDialog.visible">
       <el-form :model="saveDialog.form" ref="saveDialog.form" :rules="saveDialog.rules">
-        <el-form-item label="牧场" :label-width="formLabelWidth" prop="farmId">
-          <el-select v-model="saveDialog.form.farmId" filterable placeholder="请选择" style="width:100%">
-            <el-option
-                v-for="item in listFarm"
-                :key="item.farmId"
-                :label="item.farmName"
-                :value="item.farmId">
+        <el-form-item label="配置项" :label-width="formLabelWidth" prop="code">
+          <el-select v-model="saveDialog.form.code" style="width:100%" placeholder="请选择">
+            <el-option v-for="item in listConfigType"
+                       :key="item.code"
+                       :label="item.name"
+                       :value="item.code">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="圈舍编号" :label-width="formLabelWidth" prop="farmZoneCode">
-          <el-input v-model="saveDialog.form.farmZoneCode" placeholder="请输入"></el-input>
+        <el-form-item label="键" :label-width="formLabelWidth" prop="key">
+          <el-input v-model="saveDialog.form.key" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="圈舍备注" :label-width="formLabelWidth">
-          <el-input type="textarea" :rows="2" v-model="saveDialog.form.farmZoneRemark" placeholder="请输入"></el-input>
+        <el-form-item label="值" :label-width="formLabelWidth" prop="value">
+          <el-input v-model="saveDialog.form.value" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="容量" :label-width="formLabelWidth" prop="size">
-          <el-input-number v-model="saveDialog.form.size" :min="1" :max="99999"></el-input-number>
+        <el-form-item label="排序值" :label-width="formLabelWidth" prop="sort">
+          <el-input-number v-model="saveDialog.form.sort" :min="1" :max="99999"></el-input-number>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -104,20 +86,23 @@
 </template>
 
 <script>
-import currentUser from "@/utils/currentUser";
-import {listFarm, pageFarmZone, getFarmZone, saveFarmZone, delFarmZone} from '@/api/farm';
+import {pageSysConfig, addSysConfig, delSysConfig} from '@/api/common';
 
 export default {
-  name: 'FarmZoneManage',
+  name: 'SysConfig',
   data() {
     return {
-      isSysAdmin: 'N',
-      listFarm: [],
+      mapConfigType: {
+        isSysAdmin: '是否管理员',
+        userStatus: '员工状态',
+        cattleBreed: '牛只品种',
+        cattleSex: '牛只性别',
+        breedingMethod: '配种方式',
+        pregnancyResult: '妊娠结果'
+      },
+      listConfigType: [],
       query: {
         form: {
-          farmId: '',
-          farmZoneCode: '',
-          farmZoneRemark: '',
           pageNum: 1,
           pageSize: 10
         }
@@ -128,21 +113,20 @@ export default {
       pageTotal: 0,
       formLabelWidth: '100px',
       saveDialog: {
-        title: '',
-        type: 'add',
         visible: false,
         form: {},
         rules: {
-          farmId: [{required: true, message: '牧场不能为空', trigger: 'change'}],
-          farmZoneCode: [{required: true, message: '圈舍编号不能为空', trigger: 'change'}],
-          size: [{required: true, message: '容量不能为空', trigger: 'blur'}]
+          code: [{required: true, message: '配置项不能为空', trigger: 'change'}],
+          key: [{required: true, message: '键不能为空', trigger: 'change'}],
+          value: [{required: true, message: '值不能为空', trigger: 'change'}],
+          sort: [{required: true, message: '排序值不能为空', trigger: 'change'}]
         }
       }
     };
   },
   created() {
-    this.isSysAdmin = currentUser.getIsSysAdmin();
-    listFarm().then(res => this.listFarm = res);
+    let keys = Object.keys(this.mapConfigType);
+    keys.forEach(key => this.listConfigType.push({code: key, name: this.mapConfigType[key]}));
     this.getData();
   },
   methods: {
@@ -160,7 +144,8 @@ export default {
     // 获取 easy-mock 的模拟数据
     getData() {
       this.loading = true;
-      pageFarmZone(this.query.form).then(res => {
+      pageSysConfig(this.query.form).then(res => {
+        res.list.forEach(item => item.codeName = this.mapConfigType[item.code]);
         this.tableData = res.list;
         this.pageTotal = res.total;
         this.multipleSelection = [];
@@ -173,21 +158,7 @@ export default {
       this.getData();
     },
     addInfo() {
-      this.saveDialog.title = '新增';
-      this.saveDialog.type = 'add';
       this.saveDialog.form = {};
-      this.saveDialog.visible = true;
-    },
-    updateInfo() {
-      if (this.multipleSelection.length !== 1) {
-        this.$message.error('仅请选择一条数据');
-        return;
-      }
-      this.saveDialog.title = '修改';
-      this.saveDialog.type = 'update';
-      getFarmZone(this.multipleSelection[0].farmZoneId).then(res => {
-        this.saveDialog.form = res;
-      });
       this.saveDialog.visible = true;
     },
     saveInfo() {
@@ -195,7 +166,7 @@ export default {
         if (!valid) {
           return false;
         }
-        saveFarmZone(this.saveDialog.type, this.saveDialog.form).then(res => {
+        addSysConfig(this.saveDialog.form).then(res => {
           if (res > 0) {
             this.saveDialog.visible = false;
             this.saveDialog.form = {};
@@ -217,7 +188,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delFarmZone(this.multipleSelection.map(item => item.farmZoneId)).then(res => {
+        delSysConfig(this.multipleSelection.map(item => item.id)).then(res => {
           if (res > 0) {
             this.$message.success('删除成功');
             this.getData();

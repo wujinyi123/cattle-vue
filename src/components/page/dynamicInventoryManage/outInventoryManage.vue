@@ -79,8 +79,8 @@
         <el-pagination
             background
             layout="total, prev, pager, next"
-            :current-page="query.pageIndex"
-            :page-size="query.pageSize"
+            :current-page="query.form.pageIndex"
+            :page-size="query.form.pageSize"
             :total="pageTotal"
             @current-change="handlePageChange"
         ></el-pagination>

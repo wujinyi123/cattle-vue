@@ -112,8 +112,8 @@
         <el-pagination
             background
             layout="sizes, total, prev, pager, next"
-            :current-page="query.pageNum"
-            :page-size="query.pageSize"
+            :current-page="query.form.pageNum"
+            :page-size="query.form.pageSize"
             :total="pageTotal"
             @size-change="handleSizeChange"
             @current-change="handlePageChange"
@@ -276,7 +276,7 @@ export default {
       childrenSize: 0,
       saveDialog: {
         visible: false,
-        form: {},
+        form: {children:[]},
         rules: {
           registerId: [{required: true, message: '登记号不能为空', trigger: 'change'}],
           resultDay: [{required: true, message: '日期不能为空', trigger: 'change'}],
@@ -286,7 +286,7 @@ export default {
       },
       addCattleDialog: {
         visible: false,
-        form: {children: []},
+        form: {},
         rules: {
           farmId: [{required: true, message: '牧场不能为空', trigger: 'change'}],
           farmZoneId: [{required: true, message: '圈舍编号不能为空', trigger: 'change'}],
@@ -317,11 +317,11 @@ export default {
       this.multipleSelection = val;
     },
     handleSizeChange(val) {
-      this.$set(this.query, 'pageSize', val);
+      this.query.form.pageSize = val;
       this.getData();
     },
     handlePageChange(val) {
-      this.$set(this.query, 'pageNum', val);
+      this.query.form.pageNum = val;
       this.getData();
     },
     // 获取 easy-mock 的模拟数据
@@ -345,15 +345,15 @@ export default {
     },
     // 触发搜索按钮
     handleSearch() {
-      this.$set(this.query, 'pageNum', 1);
+      this.query.form.pageNum = 1;
       this.getData();
     },
     addInfo() {
-      this.saveDialog.form = {};
+      this.saveDialog.form = {children: []};
       this.saveDialog.visible = true;
     },
     addCattle() {
-      this.addCattleDialog.form = {children: []};
+      this.addCattleDialog.form = {};
       this.addCattleDialog.visible = true;
     },
     addCattleInfo() {

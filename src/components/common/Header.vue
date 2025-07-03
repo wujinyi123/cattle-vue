@@ -26,6 +26,7 @@
                     </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item divided command="personalCenter">个人中心</el-dropdown-item>
+            <el-dropdown-item v-if="isSysAdmin" divided command="sysConfig">系统配置</el-dropdown-item>
             <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -34,7 +35,7 @@
   </div>
 </template>
 <script>
-import bus from '../common/bus';
+import bus from '@/components/common/bus';
 import currentUser from '@/utils/currentUser'
 
 export default {
@@ -42,14 +43,13 @@ export default {
     return {
       collapse: false,
       fullscreen: false,
-      name: '未知',
+      username: '未知',
+      isSysAdmin: 'N'
     };
   },
-  computed: {
-    username() {
-      let username = currentUser.getUsername();
-      return username ? username : this.name;
-    }
+  created() {
+    this.username = currentUser.getUsername();
+    this.isSysAdmin = currentUser.getUsername();
   },
   methods: {
     // 用户名下拉菜单选择事件
@@ -61,6 +61,9 @@ export default {
       }
       if (command == 'personalCenter') {
         this.$router.push('/personalCenter');
+      }
+      if (command == 'sysConfig') {
+        this.$router.push('/sysConfig');
       }
     },
     // 侧边栏折叠
