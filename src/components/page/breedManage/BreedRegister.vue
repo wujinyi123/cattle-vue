@@ -109,7 +109,11 @@
         <el-table-column prop="frozenSemenBreedValue" label="冻精品种"></el-table-column>
         <el-table-column prop="breedingDay" label="配种日期"></el-table-column>
         <el-table-column prop="breedingMethodValue" label="配种方式"></el-table-column>
-        <el-table-column prop="operateUser" label="输配员"></el-table-column>
+        <el-table-column label="输配员">
+          <template slot-scope="scope">
+            <user-info :username="scope.row.operateUser"/>
+          </template>
+        </el-table-column>
         <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
         <el-table-column prop="updateUser" label="修改人"></el-table-column>
       </el-table>
@@ -180,6 +184,7 @@
 </template>
 
 <script>
+import UserInfo from "@/components/common/UserInfo";
 import CattleInfo from "@/components/common/CattleInfo";
 import {pageBreedRegister, addBreedRegister, delBreedRegister} from '@/api/breed';
 import {listUser} from '@/api/user';
@@ -188,6 +193,7 @@ import {listSysConfig} from "@/api/common";
 export default {
   name: 'BreedRegister',
   components: {
+    UserInfo,
     CattleInfo
   },
   data() {

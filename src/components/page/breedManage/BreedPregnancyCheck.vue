@@ -84,7 +84,11 @@
           </template>
         </el-table-column>
         <el-table-column prop="checkDay" label="检查日期"></el-table-column>
-        <el-table-column prop="checkUser" label="检查员"></el-table-column>
+        <el-table-column label="检查员">
+          <template slot-scope="scope">
+            <user-info :username="scope.row.checkUser"/>
+          </template>
+        </el-table-column>
         <el-table-column prop="result" label="检查结果"></el-table-column>
         <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
         <el-table-column prop="updateUser" label="修改人"></el-table-column>
@@ -138,6 +142,7 @@
 </template>
 
 <script>
+import UserInfo from "@/components/common/UserInfo";
 import CattleInfo from "@/components/common/CattleInfo";
 import {pageBreedPregnancyCheck, addBreedPregnancyCheck, delBreedPregnancyCheck} from '@/api/breed';
 import {listUser} from '@/api/user';
@@ -145,6 +150,7 @@ import {listUser} from '@/api/user';
 export default {
   name: 'BreedPregnancyCheck',
   components: {
+    UserInfo,
     CattleInfo
   },
   data() {

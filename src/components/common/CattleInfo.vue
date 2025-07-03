@@ -45,7 +45,7 @@
 import {getCattle} from '@/api/cattle';
 
 export default {
-  name: 'ImportExport',
+  name: 'CattleInfo',
   props: {
     cattleId: {
       type: String,

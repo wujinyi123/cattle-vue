@@ -96,7 +96,11 @@
           </template>
         </el-table-column>
         <el-table-column prop="resultDay" label="日期"></el-table-column>
-        <el-table-column prop="operaUser" label="操作员"></el-table-column>
+        <el-table-column label="操作员">
+          <template slot-scope="scope">
+            <user-info :username="scope.row.operaUser"/>
+          </template>
+        </el-table-column>
         <el-table-column prop="resultValue" label="结果"></el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
         <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
@@ -254,6 +258,7 @@
 </template>
 
 <script>
+import UserInfo from "@/components/common/UserInfo";
 import CattleInfo from "@/components/common/CattleInfo";
 import {listFarm, listFarmZone} from '@/api/farm';
 import {pageBreedPregnancyResult, addBreedPregnancyResult, delBreedPregnancyResult} from '@/api/breed';
@@ -263,6 +268,7 @@ import {listSysConfig} from "@/api/common";
 export default {
   name: 'BreedPregnancyResult',
   components: {
+    UserInfo,
     CattleInfo
   },
   data() {
