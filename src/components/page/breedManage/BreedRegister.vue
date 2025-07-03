@@ -100,7 +100,11 @@
         <el-table-column prop="registerId" label="登记号"></el-table-column>
         <el-table-column prop="farmName" label="牧场"></el-table-column>
         <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
-        <el-table-column prop="cattleCode" label="牛只耳牌号"></el-table-column>
+        <el-table-column label="牛只耳牌号">
+          <template slot-scope="scope">
+            <cattle-info :cattle-id="scope.row.cattleId" :cattle-code="scope.row.cattleCode"/>
+          </template>
+        </el-table-column>
         <el-table-column prop="frozenSemenCode" label="冻精号"></el-table-column>
         <el-table-column prop="frozenSemenBreedValue" label="冻精品种"></el-table-column>
         <el-table-column prop="breedingDay" label="配种日期"></el-table-column>
@@ -176,12 +180,16 @@
 </template>
 
 <script>
+import CattleInfo from "@/components/common/CattleInfo";
 import {pageBreedRegister, addBreedRegister, delBreedRegister} from '@/api/breed';
 import {listUser} from '@/api/user';
 import {listSysConfig} from "@/api/common";
 
 export default {
   name: 'BreedRegister',
+  components: {
+    CattleInfo
+  },
   data() {
     return {
       listBreed: [],

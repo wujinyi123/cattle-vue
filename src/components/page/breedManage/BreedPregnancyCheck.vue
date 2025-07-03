@@ -78,7 +78,11 @@
         <el-table-column prop="registerId" label="登记号"></el-table-column>
         <el-table-column prop="farmName" label="牧场"></el-table-column>
         <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
-        <el-table-column prop="cattleCode" label="牛只耳牌号"></el-table-column>
+        <el-table-column label="牛只耳牌号">
+          <template slot-scope="scope">
+            <cattle-info :cattle-id="scope.row.cattleId" :cattle-code="scope.row.cattleCode"/>
+          </template>
+        </el-table-column>
         <el-table-column prop="checkDay" label="检查日期"></el-table-column>
         <el-table-column prop="checkUser" label="检查员"></el-table-column>
         <el-table-column prop="result" label="检查结果"></el-table-column>
@@ -134,11 +138,15 @@
 </template>
 
 <script>
+import CattleInfo from "@/components/common/CattleInfo";
 import {pageBreedPregnancyCheck, addBreedPregnancyCheck, delBreedPregnancyCheck} from '@/api/breed';
 import {listUser} from '@/api/user';
 
 export default {
   name: 'BreedPregnancyCheck',
+  components: {
+    CattleInfo
+  },
   data() {
     return {
       listUser: [],

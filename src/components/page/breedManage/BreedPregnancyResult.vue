@@ -90,7 +90,11 @@
         <el-table-column prop="registerId" label="登记号"></el-table-column>
         <el-table-column prop="farmName" label="牧场"></el-table-column>
         <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
-        <el-table-column prop="cattleCode" label="牛只耳牌号"></el-table-column>
+        <el-table-column label="牛只耳牌号">
+          <template slot-scope="scope">
+            <cattle-info :cattle-id="scope.row.cattleId" :cattle-code="scope.row.cattleCode"/>
+          </template>
+        </el-table-column>
         <el-table-column prop="resultDay" label="日期"></el-table-column>
         <el-table-column prop="operaUser" label="操作员"></el-table-column>
         <el-table-column prop="resultValue" label="结果"></el-table-column>
@@ -102,9 +106,12 @@
             label="后代"
             width="100">
           <template slot-scope="scope">
-            <el-link type="primary" :underline="false" style="display: block" v-for="item in scope.row.children" :key="item.id">
-              {{ item.cattleCode }}
-            </el-link>
+            <cattle-info
+                style="display: block"
+                v-for="item in scope.row.children"
+                :key="item.id"
+                :cattle-id="item.cattleId"
+                :cattle-code="item.cattleCode"/>
           </template>
         </el-table-column>
       </el-table>
@@ -247,6 +254,7 @@
 </template>
 
 <script>
+import CattleInfo from "@/components/common/CattleInfo";
 import {listFarm, listFarmZone} from '@/api/farm';
 import {pageBreedPregnancyResult, addBreedPregnancyResult, delBreedPregnancyResult} from '@/api/breed';
 import {listUser} from '@/api/user';
@@ -254,6 +262,9 @@ import {listSysConfig} from "@/api/common";
 
 export default {
   name: 'BreedPregnancyResult',
+  components: {
+    CattleInfo
+  },
   data() {
     return {
       listUser: [],
@@ -276,7 +287,7 @@ export default {
       childrenSize: 0,
       saveDialog: {
         visible: false,
-        form: {children:[]},
+        form: {children: []},
         rules: {
           registerId: [{required: true, message: '登记号不能为空', trigger: 'change'}],
           resultDay: [{required: true, message: '日期不能为空', trigger: 'change'}],
