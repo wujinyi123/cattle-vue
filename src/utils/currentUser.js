@@ -1,7 +1,12 @@
 export default {
     set: (userInfo) => {
-        document.cookie="token=" + userInfo.token;
+        document.cookie = "token=" + userInfo.token;
         localStorage.setItem('token', userInfo.token);
+        localStorage.setItem('username', userInfo.username);
+        localStorage.setItem('name', userInfo.name);
+        localStorage.setItem('isSysAdmin', userInfo.isSysAdmin);
+    },
+    setInfo: (userInfo) => {
         localStorage.setItem('username', userInfo.username);
         localStorage.setItem('name', userInfo.name);
         localStorage.setItem('isSysAdmin', userInfo.isSysAdmin);

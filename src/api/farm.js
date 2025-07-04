@@ -32,8 +32,8 @@ export const listFarmZone = farmId => {
     return service.get("/farm/listFarmZone", {params: {farmId}});
 };
 
-export const getFarmZone = farmZoneId => {
-    return service.get("/farm/getFarmZone", {params: {farmZoneId}});
+export const getFarmZone = farmZoneCode => {
+    return service.get("/farm/getFarmZone", {params: {farmZoneCode}});
 };
 
 export const saveFarmZone = (type, data) => {

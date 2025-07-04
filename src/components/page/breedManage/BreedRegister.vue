@@ -102,7 +102,7 @@
         <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
         <el-table-column label="牛只耳牌号">
           <template slot-scope="scope">
-            <cattle-info :cattle-id="scope.row.cattleId" :cattle-code="scope.row.cattleCode"/>
+            <cattle-info :cattle-code="scope.row.cattleCode"/>
           </template>
         </el-table-column>
         <el-table-column prop="frozenSemenCode" label="冻精号"></el-table-column>

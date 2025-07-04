@@ -47,10 +47,6 @@ import {getCattle} from '@/api/cattle';
 export default {
   name: 'CattleInfo',
   props: {
-    cattleId: {
-      type: String,
-      default: 'NA'
-    },
     cattleCode: {
       type: String,
       default: 'NA'
@@ -66,7 +62,7 @@ export default {
     getCattleInfo() {
       this.cattleDialogVisible = true;
       if (!this.cattleInfo.id) {
-        getCattle(this.cattleId).then(res => this.cattleInfo = res || {});
+        getCattle(this.cattleCode).then(res => this.cattleInfo = res || {});
       }
     }
   }

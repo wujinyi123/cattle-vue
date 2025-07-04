@@ -37,6 +37,7 @@
 <script>
 import bus from '@/components/common/bus';
 import currentUser from '@/utils/currentUser'
+import {getCurrentUser} from "@/api/user";
 
 export default {
   data() {
@@ -48,8 +49,11 @@ export default {
     };
   },
   created() {
-    this.username = currentUser.getUsername();
-    this.isSysAdmin = currentUser.getUsername();
+    getCurrentUser().then(userInfo => {
+      this.username = userInfo.username;
+      this.isSysAdmin = userInfo.isSysAdmin;
+      currentUser.setInfo(userInfo);
+    });
   },
   methods: {
     // 用户名下拉菜单选择事件

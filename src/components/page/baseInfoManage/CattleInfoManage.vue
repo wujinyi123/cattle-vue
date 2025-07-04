@@ -6,28 +6,12 @@
           <el-row :gutter="20" class="handle-el-row">
             <el-col :span="6">
               <el-form-item label="牧场" :label-width="formLabelWidth">
-                <el-select v-model="query.form.farmId" filterable placeholder="请选择" style="width:100%" @change="selectFarmZone">
-                  <el-option key="all" label="全部" value=""></el-option>
-                  <el-option
-                      v-for="item in listFarm"
-                      :key="item.farmId"
-                      :label="item.farmName"
-                      :value="item.farmId">
-                  </el-option>
-                </el-select>
+                <el-input v-model="query.form.farmName" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="圈舍编号" :label-width="formLabelWidth">
-                <el-select v-model="query.form.farmZoneId" filterable placeholder="请选择" style="width:100%">
-                  <el-option key="all" label="全部" value=""></el-option>
-                  <el-option
-                      v-for="item in listFarmZone"
-                      :key="item.farmZoneId"
-                      :label="item.farmZoneCode"
-                      :value="item.farmZoneId">
-                  </el-option>
-                </el-select>
+                <el-input v-model="query.form.farmZoneCode" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -137,7 +121,7 @@
     <el-dialog :destroy-on-close="true" :title="saveDialog.title" :visible.sync="saveDialog.visible">
       <el-form :model="saveDialog.form" ref="saveDialog.form" :rules="saveDialog.rules">
         <el-form-item label="牧场" :label-width="formLabelWidth" prop="farmId">
-          <el-select v-model="saveDialog.form.farmId" filterable placeholder="请选择" style="width:100%" @change="selectFarmZoneForSave">
+          <el-select v-model="saveDialog.form.farmId" filterable placeholder="请选择" style="width:100%" @change="selectFarmZone" :disabled="saveDialog.type === 'update'">
             <el-option
                 v-for="item in listFarm"
                 :key="item.farmId"
@@ -146,18 +130,18 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="圈舍编号" :label-width="formLabelWidth" prop="farmZoneId">
-          <el-select v-model="saveDialog.form.farmZoneId" filterable placeholder="请选择" style="width:100%">
+        <el-form-item label="圈舍编号" :label-width="formLabelWidth" prop="farmZoneCode">
+          <el-select v-model="saveDialog.form.farmZoneCode" filterable placeholder="请选择" style="width:100%" :disabled="saveDialog.type === 'update'">
             <el-option
-                v-for="item in listFarmZoneForSave"
-                :key="item.farmZoneId"
+                v-for="item in listFarmZone"
+                :key="item.farmZoneCode"
                 :label="item.farmZoneCode"
-                :value="item.farmZoneId">
+                :value="item.farmZoneCode">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="耳牌号" :label-width="formLabelWidth" prop="cattleCode">
-          <el-input v-model="saveDialog.form.cattleCode" placeholder="请输入"></el-input>
+          <el-input v-model="saveDialog.form.cattleCode" placeholder="请输入" :disabled="saveDialog.type === 'update'"></el-input>
         </el-form-item>
         <el-form-item label="牛只名称" :label-width="formLabelWidth">
           <el-input v-model="saveDialog.form.cattleName" placeholder="请输入"></el-input>
@@ -215,13 +199,12 @@ export default {
       isSysAdmin: 'N',
       listFarm: [],
       listFarmZone: [],
-      listFarmZoneForSave: [],
       cattleBreedList: [],
       cattleSexList: [],
       query: {
         form: {
-          farmId: '',
-          farmZoneId: '',
+          farmName: '',
+          farmZoneCode: '',
           cattleCode: '',
           cattleName: '',
           breed: '',
@@ -244,7 +227,7 @@ export default {
         form: {},
         rules: {
           farmId: [{required: true, message: '牧场不能为空', trigger: 'change'}],
-          farmZoneId: [{required: true, message: '圈舍编号不能为空', trigger: 'change'}],
+          farmZoneCode: [{required: true, message: '圈舍编号不能为空', trigger: 'change'}],
           cattleCode: [{required: true, message: '耳牌号不能为空', trigger: 'change'}],
           breed: [{required: true, message: '品种不能为空', trigger: 'change'}],
           sex: [{required: true, message: '性别不能为空', trigger: 'change'}],
@@ -262,18 +245,11 @@ export default {
   },
   methods: {
     selectFarmZone() {
-      if (!this.query.form.farmId) {
+      if (!this.saveDialog.form.farmId) {
         this.listFarmZone = [];
         return;
       }
-      listFarmZone(this.query.form.farmId).then(res => this.listFarmZone = res);
-    },
-    selectFarmZoneForSave() {
-      if (!this.saveDialog.form.farmId) {
-        this.listFarmZoneForSave = [];
-        return;
-      }
-      listFarmZone(this.saveDialog.form.farmId).then(res => this.listFarmZoneForSave = res);
+      listFarmZone(this.saveDialog.form.farmId).then(res => this.listFarmZone = res);
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -314,9 +290,9 @@ export default {
       }
       this.saveDialog.title = '修改';
       this.saveDialog.type = 'update';
-      getCattle(this.multipleSelection[0].cattleId).then(res => {
+      getCattle(this.multipleSelection[0].cattleCode).then(res => {
         this.saveDialog.form = res;
-        this.selectFarmZoneForSave();
+        this.selectFarmZone();
       });
       this.saveDialog.visible = true;
     },
@@ -347,7 +323,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delCattle(this.multipleSelection.map(item => item.cattleId)).then(res => {
+        delCattle(this.multipleSelection.map(item => item.cattleCode)).then(res => {
           if (res > 0) {
             this.$message.success('删除成功');
             this.getData();

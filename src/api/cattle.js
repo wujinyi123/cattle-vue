@@ -4,8 +4,8 @@ export const pageCattle = params => {
     return service.get("/cattle/pageCattle", {params});
 };
 
-export const getCattle = cattleId => {
-    return service.get("/cattle/getCattle", {params: {cattleId}});
+export const getCattle = cattleCode => {
+    return service.get("/cattle/getCattle", {params: {cattleCode}});
 };
 
 export const saveCattle = (type, data) => {
@@ -14,8 +14,4 @@ export const saveCattle = (type, data) => {
 
 export const delCattle = data => {
     return service.post("/cattle/delCattle", data);
-};
-
-export const listCattle = params => {
-    return service.get("/cattle/listCattle", {params});
 };

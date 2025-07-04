@@ -76,7 +76,7 @@
     <el-dialog :destroy-on-close="true" :title="saveDialog.title" :visible.sync="saveDialog.visible">
       <el-form :model="saveDialog.form" ref="saveDialog.form" :rules="saveDialog.rules">
         <el-form-item label="牧场" :label-width="formLabelWidth" prop="farmId">
-          <el-select v-model="saveDialog.form.farmId" filterable placeholder="请选择" style="width:100%">
+          <el-select v-model="saveDialog.form.farmId" filterable placeholder="请选择" style="width:100%" :disabled="saveDialog.type === 'update'">
             <el-option
                 v-for="item in listFarm"
                 :key="item.farmId"
@@ -86,7 +86,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="圈舍编号" :label-width="formLabelWidth" prop="farmZoneCode">
-          <el-input v-model="saveDialog.form.farmZoneCode" placeholder="请输入"></el-input>
+          <el-input v-model="saveDialog.form.farmZoneCode" placeholder="请输入" :disabled="saveDialog.type === 'update'"></el-input>
         </el-form-item>
         <el-form-item label="圈舍备注" :label-width="formLabelWidth">
           <el-input type="textarea" :rows="2" v-model="saveDialog.form.farmZoneRemark" placeholder="请输入"></el-input>
@@ -185,7 +185,7 @@ export default {
       }
       this.saveDialog.title = '修改';
       this.saveDialog.type = 'update';
-      getFarmZone(this.multipleSelection[0].farmZoneId).then(res => {
+      getFarmZone(this.multipleSelection[0].farmZoneCode).then(res => {
         this.saveDialog.form = res;
       });
       this.saveDialog.visible = true;
@@ -217,7 +217,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delFarmZone(this.multipleSelection.map(item => item.farmZoneId)).then(res => {
+        delFarmZone(this.multipleSelection.map(item => item.farmZoneCode)).then(res => {
           if (res > 0) {
             this.$message.success('删除成功');
             this.getData();

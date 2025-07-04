@@ -92,7 +92,7 @@
         <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
         <el-table-column label="牛只耳牌号">
           <template slot-scope="scope">
-            <cattle-info :cattle-id="scope.row.cattleId" :cattle-code="scope.row.cattleCode"/>
+            <cattle-info :cattle-code="scope.row.cattleCode"/>
           </template>
         </el-table-column>
         <el-table-column prop="resultDay" label="日期"></el-table-column>
@@ -108,13 +108,12 @@
         <el-table-column
             fixed="right"
             label="后代"
-            width="100">
+            width="200">
           <template slot-scope="scope">
             <cattle-info
                 style="display: block"
                 v-for="item in scope.row.children"
                 :key="item.id"
-                :cattle-id="item.cattleId"
                 :cattle-code="item.cattleCode"/>
           </template>
         </el-table-column>
@@ -211,13 +210,13 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="圈舍编号" :label-width="formLabelWidth" prop="farmZoneId">
-          <el-select v-model="addCattleDialog.form.farmZoneId" filterable placeholder="请选择" style="width:100%">
+        <el-form-item label="圈舍编号" :label-width="formLabelWidth" prop="farmZoneCode">
+          <el-select v-model="addCattleDialog.form.farmZoneCode" filterable placeholder="请选择" style="width:100%">
             <el-option
                 v-for="item in listFarmZone"
-                :key="item.farmZoneId"
+                :key="item.farmZoneCode"
                 :label="item.farmZoneCode"
-                :value="item.farmZoneId">
+                :value="item.farmZoneCode">
             </el-option>
           </el-select>
         </el-form-item>
@@ -306,7 +305,7 @@ export default {
         form: {},
         rules: {
           farmId: [{required: true, message: '牧场不能为空', trigger: 'change'}],
-          farmZoneId: [{required: true, message: '圈舍编号不能为空', trigger: 'change'}],
+          farmZoneCode: [{required: true, message: '圈舍编号不能为空', trigger: 'change'}],
           cattleCode: [{required: true, message: '耳牌号不能为空', trigger: 'change'}],
           breed: [{required: true, message: '品种不能为空', trigger: 'change'}],
           sex: [{required: true, message: '性别不能为空', trigger: 'change'}]
@@ -377,7 +376,6 @@ export default {
         }
         let cattleObj = {id: new Date().getTime(), ...this.addCattleDialog.form};
         cattleObj.farmName = this.listFarm.filter(item => item.farmId == cattleObj.farmId)[0].farmName;
-        cattleObj.farmZoneCode = this.listFarmZone.filter(item => item.farmZoneId == cattleObj.farmZoneId)[0].farmZoneCode;
         cattleObj.breedValue = this.cattleBreedList.filter(item => item.key == cattleObj.breed)[0].value;
         cattleObj.sexValue = this.cattleSexList.filter(item => item.key == cattleObj.sex)[0].value;
         let children = this.saveDialog.form.children && [...this.saveDialog.form.children] || [];
