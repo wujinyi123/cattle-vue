@@ -375,9 +375,9 @@ export default {
           return false;
         }
         let cattleObj = {id: new Date().getTime(), ...this.addCattleDialog.form};
-        cattleObj.farmName = this.listFarm.filter(item => item.farmId == cattleObj.farmId)[0].farmName;
-        cattleObj.breedValue = this.cattleBreedList.filter(item => item.key == cattleObj.breed)[0].value;
-        cattleObj.sexValue = this.cattleSexList.filter(item => item.key == cattleObj.sex)[0].value;
+        cattleObj.farmName = this.listFarm.filter(item => item.farmId === cattleObj.farmId)[0].farmName;
+        cattleObj.breedValue = this.cattleBreedList.filter(item => item.key === cattleObj.breed)[0].value;
+        cattleObj.sexValue = this.cattleSexList.filter(item => item.key === cattleObj.sex)[0].value;
         let children = this.saveDialog.form.children && [...this.saveDialog.form.children] || [];
         children.push(cattleObj);
         this.saveDialog.form.children = children;
@@ -387,7 +387,7 @@ export default {
     },
     delCattle(row) {
       let children = this.saveDialog.form.children && [...this.saveDialog.form.children] || [];
-      children = children.filter(item => item.id != row.id);
+      children = children.filter(item => item.id !== row.id);
       this.saveDialog.form.children = children;
     },
     saveInfo() {
