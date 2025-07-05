@@ -65,7 +65,7 @@
             <el-button type="primary" icon="el-icon-refresh" @click="patchUserStatus">批量修改状态</el-button>
             <el-button type="primary" icon="el-icon-delete" @click="resetPassword">批量重置密码</el-button>
           </span>
-          <import-export :template-code="'user'"></import-export>
+          <import-export :template-code="'user'" :params="query.form"></import-export>
         </div>
       </div>
       <el-table

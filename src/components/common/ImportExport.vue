@@ -1,11 +1,15 @@
 <template>
   <div style="display: inline-block;margin-left: 10px;">
-    <el-button type="primary" icon="el-icon-download" @click="exportFile">导出</el-button>
+    <a :href="exportUrl" target="_blank" style="margin-right: 10px">
+      <el-button type="primary" icon="el-icon-download">导出</el-button>
+    </a>
     <el-button type="primary" icon="el-icon-upload2" @click="importDialogVisible = true" v-if="hasImport">导入</el-button>
     <el-dialog :destroy-on-close="true" title="批量导入" :visible.sync="importDialogVisible">
       <div>
         <span style="margin-right: 10px;">请使用模板导入，模板为xlsx文件</span>
-        <el-button type="primary" icon="el-icon-download">下载模板</el-button>
+        <a :href="templateUrl" target="_blank">
+          <el-button type="primary" icon="el-icon-download">下载模板</el-button>
+        </a>
       </div>
       <div style="font-size: 15px;margin-bottom: 20px">
         <p style="color: red">注意：</p>
@@ -46,6 +50,10 @@ export default {
       type: String,
       default: 'NA'
     },
+    params: {
+      type: Object,
+      default: {}
+    },
     hasImport: {
       type: Boolean,
       default: true
@@ -53,6 +61,8 @@ export default {
   },
   data() {
     return {
+      exportUrl: '#',
+      templateUrl: '#',
       requireFields: '',
       importAction: '',
       headers: {},
@@ -60,14 +70,20 @@ export default {
     };
   },
   created() {
+    let paramsObj = this.params && {...this.params} || {};
+    let paramsList = [`templateCode=${this.templateCode}`];
+    Object.keys(paramsObj).forEach(key => {
+      if (paramsObj[key]) {
+        paramsList.push(`${key}=${paramsObj[key]}`)
+      }
+    });
+    this.exportUrl = `/api/common/export?${paramsList.join('&')}`;
+    this.templateUrl = `/api/common/template?templateCode=${this.templateCode}`;
     this.importAction = `/api/common/importFile?templateCode=${this.templateCode}`;
     this.headers = {token: currentUser.getToken()}
     importRequireField(this.templateCode).then(res => this.requireFields = res.join(','));
   },
   methods: {
-    exportFile() {
-
-    },
     uploadBefore(file) {
       if (!file.name.endsWith('.xlsx')) {
         this.$message.error('请上传xlsx文件');
