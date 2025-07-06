@@ -80,6 +80,7 @@
           <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
           <el-button type="primary" icon="el-icon-edit" @click="updateInfo">修改</el-button>
           <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
+          <import-export :template-code="'cattle'" :params="query.form"></import-export>
         </div>
       </div>
       <el-table
@@ -102,6 +103,7 @@
         <el-table-column prop="breedValue" label="品种"></el-table-column>
         <el-table-column prop="sexValue" label="性别"></el-table-column>
         <el-table-column prop="birthday" label="出生日期"></el-table-column>
+        <el-table-column prop="age" label="年龄"></el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
         <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
         <el-table-column prop="updateUser" label="修改人"></el-table-column>
@@ -187,6 +189,7 @@
 </template>
 
 <script>
+import ImportExport from "@/components/common/ImportExport";
 import currentUser from "@/utils/currentUser";
 import {listSysConfig} from "@/api/common";
 import {listFarm, listFarmZone} from '@/api/farm';
@@ -194,6 +197,9 @@ import {pageCattle, getCattle, saveCattle, delCattle} from '@/api/cattle';
 
 export default {
   name: 'CattleInfoManage',
+  components: {
+    ImportExport
+  },
   data() {
     return {
       isSysAdmin: 'N',

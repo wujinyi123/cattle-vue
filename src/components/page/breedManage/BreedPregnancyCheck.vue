@@ -62,6 +62,7 @@
         <div>
           <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
           <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
+          <import-export :template-code="'breedPregnancyCheck'" :params="query.form" :hasImport="false"></import-export>
         </div>
       </div>
       <el-table
@@ -142,6 +143,7 @@
 </template>
 
 <script>
+import ImportExport from "@/components/common/ImportExport";
 import UserInfo from "@/components/common/UserInfo";
 import CattleInfo from "@/components/common/CattleInfo";
 import {pageBreedPregnancyCheck, addBreedPregnancyCheck, delBreedPregnancyCheck} from '@/api/breed';
@@ -150,6 +152,7 @@ import {listUser} from '@/api/user';
 export default {
   name: 'BreedPregnancyCheck',
   components: {
+    ImportExport,
     UserInfo,
     CattleInfo
   },

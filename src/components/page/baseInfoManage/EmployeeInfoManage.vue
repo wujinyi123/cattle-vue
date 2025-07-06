@@ -58,13 +58,13 @@
           </el-row>
         </el-form>
         <div>
-          <span v-if="isSysAdmin==='Y'">
+          <template v-if="isSysAdmin==='Y'">
             <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
             <el-button type="primary" icon="el-icon-edit" @click="updateInfo">修改</el-button>
             <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
             <el-button type="primary" icon="el-icon-refresh" @click="patchUserStatus">批量修改状态</el-button>
             <el-button type="primary" icon="el-icon-delete" @click="resetPassword">批量重置密码</el-button>
-          </span>
+          </template>
           <import-export :template-code="'user'" :params="query.form"></import-export>
         </div>
       </div>

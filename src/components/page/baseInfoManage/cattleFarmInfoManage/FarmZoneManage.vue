@@ -38,6 +38,7 @@
           <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
           <el-button type="primary" icon="el-icon-edit" @click="updateInfo">修改</el-button>
           <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
+          <import-export :template-code="'farmZone'" :params="query.form"></import-export>
         </div>
       </div>
       <el-table
@@ -104,11 +105,15 @@
 </template>
 
 <script>
+import ImportExport from "@/components/common/ImportExport";
 import currentUser from "@/utils/currentUser";
 import {listFarm, pageFarmZone, getFarmZone, saveFarmZone, delFarmZone} from '@/api/farm';
 
 export default {
   name: 'FarmZoneManage',
+  components: {
+    ImportExport
+  },
   data() {
     return {
       isSysAdmin: 'N',

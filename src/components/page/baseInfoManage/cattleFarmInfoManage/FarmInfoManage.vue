@@ -50,6 +50,7 @@
             <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
           </template>
           <el-button type="primary" icon="el-icon-edit" @click="updateAdminEmployee">修改管理员/员工</el-button>
+          <import-export :template-code="'farm'" :params="query.form"></import-export>
         </div>
       </div>
       <el-table
@@ -167,12 +168,16 @@
 </template>
 
 <script>
+import ImportExport from "@/components/common/ImportExport";
 import currentUser from "@/utils/currentUser";
 import {pageFarm, getFarm, saveFarm, saveAdminEmployee, delFarm} from '@/api/farm';
 import {listUser} from '@/api/user';
 
 export default {
   name: 'FarmInfoManage',
+  components: {
+    ImportExport
+  },
   data() {
     return {
       isSysAdmin: 'N',

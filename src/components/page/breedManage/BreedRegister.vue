@@ -84,6 +84,7 @@
         <div>
           <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
           <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
+          <import-export :template-code="'breedRegister'" :params="query.form" :hasImport="false"></import-export>
         </div>
       </div>
       <el-table
@@ -114,6 +115,7 @@
             <user-info :username="scope.row.operateUser"/>
           </template>
         </el-table-column>
+        <el-table-column prop="pregnancyResultValue" label="妊娠结果"></el-table-column>
         <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
         <el-table-column prop="updateUser" label="修改人"></el-table-column>
       </el-table>
@@ -184,6 +186,7 @@
 </template>
 
 <script>
+import ImportExport from "@/components/common/ImportExport";
 import UserInfo from "@/components/common/UserInfo";
 import CattleInfo from "@/components/common/CattleInfo";
 import {pageBreedRegister, addBreedRegister, delBreedRegister} from '@/api/breed';
@@ -193,6 +196,7 @@ import {listSysConfig} from "@/api/common";
 export default {
   name: 'BreedRegister',
   components: {
+    ImportExport,
     UserInfo,
     CattleInfo
   },

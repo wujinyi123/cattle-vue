@@ -31,6 +31,10 @@
         <el-col :span="14" class="cattle-el-col-value">{{ cattleInfo.birthday }}</el-col>
       </el-row>
       <el-row class="cattle-el-row">
+        <el-col :span="10" class="cattle-el-col-label">年龄：</el-col>
+        <el-col :span="14" class="cattle-el-col-value">{{ cattleInfo.age }}</el-col>
+      </el-row>
+      <el-row class="cattle-el-row">
         <el-col :span="10" class="cattle-el-col-label">备注：</el-col>
         <el-col :span="14" class="cattle-el-col-value">{{ cattleInfo.remark }}</el-col>
       </el-row>

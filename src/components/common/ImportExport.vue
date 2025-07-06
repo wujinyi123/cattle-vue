@@ -15,7 +15,7 @@
         <p style="color: red">注意：</p>
         <p>&nbsp;&nbsp;<span>1、请不要修改模板格式</span></p>
         <p>&nbsp;&nbsp;<span>2、请把数据放至第一个sheet页</span></p>
-        <p>&nbsp;&nbsp;<span>3、模板中必填信息有：</span><span>{{ requireFields }}</span></p>
+        <p>&nbsp;&nbsp;<span>3、模板中必填信息有：</span><span style="color: red">{{ requireFields }}</span></p>
       </div>
       <el-upload
           style="text-align: center"
@@ -32,6 +32,19 @@
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         <div class="el-upload__tip" slot="tip">只能上传xlsx文件，且不超过500kb</div>
       </el-upload>
+      <div v-if="importResult.success || importResult.fail">
+        <p>
+          <span v-if="importResult.success" style="color: lawngreen;margin-right: 10px">
+            成功{{ importResult.success }}条
+          </span>
+          <span v-if="importResult.fail" style="color: red;margin-right: 10px">
+            失败{{ importResult.fail }}条
+          </span>
+        </p>
+        <p v-for="(item,index) in importResult.errorList" :key="index">
+          {{ item }}
+        </p>
+      </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="importDialogVisible = false">取消</el-button>
       </div>
@@ -66,7 +79,8 @@ export default {
       requireFields: '',
       importAction: '',
       headers: {},
-      importDialogVisible: false
+      importDialogVisible: false,
+      importResult: {}
     };
   },
   created() {
@@ -81,7 +95,9 @@ export default {
     this.templateUrl = `/api/common/template?templateCode=${this.templateCode}`;
     this.importAction = `/api/common/importFile?templateCode=${this.templateCode}`;
     this.headers = {token: currentUser.getToken()}
-    importRequireField(this.templateCode).then(res => this.requireFields = res.join(','));
+    if (this.hasImport) {
+      importRequireField(this.templateCode).then(res => this.requireFields = res.join(','));
+    }
   },
   methods: {
     uploadBefore(file) {
@@ -92,8 +108,8 @@ export default {
       return true;
     },
     uploadSuccess(response, file) {
-      this.$message.success(`成功导入：${file.name}`);
-      console.log(response);
+      this.$message.success(`执行成功，文件：${file.name}，请查看结果`);
+      this.importResult = response.body || {};
     },
     uploadError(err) {
       let obj = typeof (err) == 'string' ? JSON.parse(err) : err;
