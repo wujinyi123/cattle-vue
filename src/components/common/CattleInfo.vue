@@ -54,6 +54,10 @@ export default {
     cattleCode: {
       type: String,
       default: 'NA'
+    },
+    cattleJson: {
+      type: String,
+      default: 'NA'
     }
   },
   data() {
@@ -61,6 +65,11 @@ export default {
       cattleDialogVisible: false,
       cattleInfo: {}
     };
+  },
+  created() {
+    if (this.cattleJson) {
+      this.cattleInfo = JSON.parse(this.cattleJson);
+    }
   },
   methods: {
     getCattleInfo() {

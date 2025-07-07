@@ -10,26 +10,26 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="圈舍" :label-width="formLabelWidth">
-                <el-input v-model="query.form.farmZoneCode" placeholder="请输入"></el-input>
+              <el-form-item label="牛只耳牌号" :label-width="formLabelWidth">
+                <el-input v-model="query.form.cattleCode" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="牛只耳牌号" :label-width="formLabelWidth">
-                <el-input v-model="query.form.cattleCode" placeholder="请输入"></el-input>
+              <el-form-item label="买家信息" :label-width="formLabelWidth">
+                <el-input v-model="query.form.buyerInfo" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20" class="handle-el-row">
             <el-col :span="8">
-              <el-form-item label="登记号" :label-width="formLabelWidth">
-                <el-input v-model="query.form.registerId" placeholder="请输入"></el-input>
+              <el-form-item label="检疫证明" :label-width="formLabelWidth">
+                <el-input v-model="query.form.delInventorySell" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="检查日期" :label-width="formLabelWidth">
+              <el-form-item label="日期" :label-width="formLabelWidth">
                 <el-date-picker
-                    v-model="query.form.checkDay"
+                    v-model="query.form.sellDay"
                     type="daterange"
                     format="yyyy-MM-dd"
                     value-format="yyyy-MM-dd"
@@ -38,18 +38,6 @@
                     end-placeholder="结束日期"
                     style="width:100%">
                 </el-date-picker>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="检查员" :label-width="formLabelWidth">
-                <el-input v-model="query.form.checkUser" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20" class="handle-el-row">
-            <el-col :span="8">
-              <el-form-item label="检查结果" :label-width="formLabelWidth">
-                <el-input v-model="query.form.result" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -62,7 +50,7 @@
         <div>
           <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
           <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
-          <import-export :template-code="'breedPregnancyCheck'" :params="query.form" :hasImport="false"></import-export>
+          <import-export :template-code="'inventorySell'" :params="query.form" :hasImport="false"></import-export>
         </div>
       </div>
       <el-table
@@ -76,23 +64,22 @@
           @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="registerId" label="登记号"></el-table-column>
         <el-table-column prop="farmName" label="牧场"></el-table-column>
-        <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
         <el-table-column label="牛只耳牌号">
           <template slot-scope="scope">
-            <cattle-info :cattle-code="scope.row.cattleCode"/>
+            <cattle-info :cattle-code="scope.row.cattleCode" :cattle-json="scope.row.cattleInfo"/>
           </template>
         </el-table-column>
-        <el-table-column prop="checkDay" label="检查日期"></el-table-column>
-        <el-table-column label="检查员">
-          <template slot-scope="scope">
-            <user-info :username="scope.row.checkUser"/>
-          </template>
-        </el-table-column>
-        <el-table-column prop="result" label="检查结果"></el-table-column>
+        <el-table-column prop="buyerInfo" label="买家信息"></el-table-column>
+        <el-table-column prop="price" label="价格"></el-table-column>
+        <el-table-column prop="quarantineCertificate" label="检疫证明"></el-table-column>
+        <el-table-column prop="sellDay" label="日期"></el-table-column>
         <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
-        <el-table-column prop="updateUser" label="修改人"></el-table-column>
+        <el-table-column label="修改人">
+          <template slot-scope="scope">
+            <user-info :username="scope.row.updateUser"/>
+          </template>
+        </el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination
@@ -108,30 +95,27 @@
     </div>
     <el-dialog :destroy-on-close="true" title="新增" :visible.sync="saveDialog.visible">
       <el-form :model="saveDialog.form" ref="saveDialog.form" :rules="saveDialog.rules">
-        <el-form-item label="登记号" :label-width="formLabelWidth" prop="registerId">
-          <el-input v-model="saveDialog.form.registerId" placeholder="请输入"></el-input>
+        <el-form-item label="耳牌号" :label-width="formLabelWidth" prop="cattleCode">
+          <el-input v-model="saveDialog.form.cattleCode" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="检查日期" :label-width="formLabelWidth" prop="checkDay">
+        <el-form-item label="买家信息" :label-width="formLabelWidth" prop="buyerInfo">
+          <el-input type="textarea" :rows="2" v-model="saveDialog.form.buyerInfo" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="价格" :label-width="formLabelWidth" prop="price">
+          <el-input-number v-model="saveDialog.form.price" :min="1" :max="99999"></el-input-number>
+        </el-form-item>
+        <el-form-item label="检疫证明" :label-width="formLabelWidth" prop="quarantineCertificate">
+          <el-input type="textarea" :rows="2" v-model="saveDialog.form.quarantineCertificate" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="日期" :label-width="formLabelWidth" prop="sellDay">
           <el-date-picker
-              v-model="saveDialog.form.checkDay"
+              v-model="saveDialog.form.sellDay"
               type="date"
               format="yyyy-MM-dd"
               value-format="yyyy-MM-dd"
               placeholder="选择日期"
               style="width:100%">
           </el-date-picker>
-        </el-form-item>
-        <el-form-item label="检查员" :label-width="formLabelWidth" prop="checkUser">
-          <el-select v-model="saveDialog.form.checkUser" filterable style="width:100%" placeholder="请选择">
-            <el-option v-for="item in listUser"
-                       :key="item.username"
-                       :label="item.name"
-                       :value="item.username">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="检查结果" :label-width="formLabelWidth" prop="result">
-          <el-input type="textarea" :rows="2" v-model="saveDialog.form.result" placeholder="请输入"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -146,11 +130,10 @@
 import ImportExport from "@/components/common/ImportExport";
 import UserInfo from "@/components/common/UserInfo";
 import CattleInfo from "@/components/common/CattleInfo";
-import {pageBreedPregnancyCheck, addBreedPregnancyCheck, delBreedPregnancyCheck} from '@/api/breed';
-import {listUser} from '@/api/user';
+import {pageInventorySell, addInventorySell, delInventorySell} from '@/api/inventory';
 
 export default {
-  name: 'BreedPregnancyCheck',
+  name: 'InventorySell',
   components: {
     ImportExport,
     UserInfo,
@@ -158,7 +141,6 @@ export default {
   },
   data() {
     return {
-      listUser: [],
       query: {
         form: {
           pageNum: 1,
@@ -174,16 +156,16 @@ export default {
         visible: false,
         form: {},
         rules: {
-          registerId: [{required: true, message: '登记号不能为空', trigger: 'change'}],
-          checkDay: [{required: true, message: '检查日期不能为空', trigger: 'change'}],
-          checkUser: [{required: true, message: '检查员不能为空', trigger: 'change'}],
-          result: [{required: true, message: '检查结果不能为空', trigger: 'change'}]
+          cattleCode: [{required: true, message: '耳牌号不能为空', trigger: 'change'}],
+          buyerInfo: [{required: true, message: '买家信息不能为空', trigger: 'change'}],
+          price: [{required: true, message: '价格不能为空', trigger: 'change'}],
+          quarantineCertificate: [{required: true, message: '检疫证明不能为空', trigger: 'change'}],
+          sellDay: [{required: true, message: '日期不能为空', trigger: 'change'}]
         }
       }
     };
   },
   created() {
-    listUser().then(res => this.listUser = res);
     this.getData();
   },
   methods: {
@@ -202,12 +184,12 @@ export default {
     getData() {
       this.loading = true;
       let params = {...this.query.form};
-      if (params.checkDay && params.checkDay.length) {
-        params.checkDayStart = params.checkDay[0];
-        params.checkDayEnd = params.checkDay[1];
-        params.checkDay = undefined;
+      if (params.sellDay && params.sellDay.length) {
+        params.sellDayStart = params.sellDay[0];
+        params.sellDayEnd = params.sellDay[1];
+        params.sellDay = undefined;
       }
-      pageBreedPregnancyCheck(params).then(res => {
+      pageInventorySell(params).then(res => {
         this.tableData = res.list;
         this.pageTotal = res.total;
         this.multipleSelection = [];
@@ -228,7 +210,7 @@ export default {
         if (!valid) {
           return false;
         }
-        addBreedPregnancyCheck(this.saveDialog.form).then(res => {
+        addInventorySell(this.saveDialog.form).then(res => {
           if (res > 0) {
             this.saveDialog.visible = false;
             this.saveDialog.form = {};
@@ -250,7 +232,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delBreedPregnancyCheck(this.multipleSelection.map(item => item.id)).then(res => {
+        delInventorySell(this.multipleSelection.map(item => item.id)).then(res => {
           if (res > 0) {
             this.$message.success('删除成功');
             this.getData();

@@ -7,7 +7,7 @@ export default new Router({
     routes: [
         {
             path: '/',
-            redirect: '/dashboard'
+            redirect: '/home'
         },
         {
             path: '/',
@@ -17,6 +17,11 @@ export default new Router({
                 {
                     path: '/dashboard',
                     component: () => import('@/components/page/Dashboard.vue'),
+                    meta: {title: '首页'}
+                },
+                {
+                    path: '/home',
+                    component: () => import('@/components/page/Home.vue'),
                     meta: {title: '系统首页'}
                 },
                 {
@@ -65,14 +70,19 @@ export default new Router({
                     meta: {title: '妊娠结果'}
                 },
                 {
-                    path: '/inInventoryManage',
-                    component: () => import('@/components/page/dynamicInventoryManage/inInventoryManage.vue'),
-                    meta: {title: '入库管理'}
+                    path: '/inventoryBuy',
+                    component: () => import('@/components/page/dynamicInventoryManage/InventoryBuy.vue'),
+                    meta: {title: '外购牛只登记'}
                 },
                 {
-                    path: '/outInventoryManage',
-                    component: () => import('@/components/page/dynamicInventoryManage/outInventoryManage.vue'),
-                    meta: {title: '出库管理'}
+                    path: '/inventorySell',
+                    component: () => import('@/components/page/dynamicInventoryManage/InventorySell.vue'),
+                    meta: {title: '出售记录'}
+                },
+                {
+                    path: '/inventoryDeath',
+                    component: () => import('@/components/page/dynamicInventoryManage/InventoryDeath.vue'),
+                    meta: {title: '死亡登记'}
                 },
                 {
                     path: '/diseaseMonitor',

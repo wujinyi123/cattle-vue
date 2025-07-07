@@ -61,7 +61,7 @@ export default {
       items: [
         {
           icon: 'el-icon-lx-home',
-          index: 'dashboard',
+          index: 'home',
           title: '系统首页'
         },
         {
@@ -127,13 +127,18 @@ export default {
           subs: [
             {
               icon: 'el-icon-lx-home',
-              index: 'inInventoryManage',
-              title: '入库管理',
+              index: 'inventoryBuy',
+              title: '外购牛只登记',
             },
             {
               icon: 'el-icon-lx-home',
-              index: 'outInventoryManage',
-              title: '出库管理',
+              index: 'inventorySell',
+              title: '出售记录',
+            },
+            {
+              icon: 'el-icon-lx-home',
+              index: 'inventoryDeath',
+              title: '死亡登记',
             }
           ]
         },

@@ -217,7 +217,7 @@ export default {
         this.$message.error('至少选择一条数据');
         return;
       }
-      this.$confirm('此操作将永久删除牧场, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
