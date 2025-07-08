@@ -67,7 +67,7 @@ export default new Router({
                 {
                     path: '/breedPregnancyResult',
                     component: () => import('@/components/page/breedManage/BreedPregnancyResult.vue'),
-                    meta: {title: '妊娠结果'}
+                    meta: {title: '产犊登记'}
                 },
                 {
                     path: '/inventoryBuy',

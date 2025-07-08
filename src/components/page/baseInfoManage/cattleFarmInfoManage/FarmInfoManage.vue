@@ -49,7 +49,7 @@
             <el-button type="primary" icon="el-icon-edit" @click="updateInfo">修改</el-button>
             <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
           </template>
-          <el-button type="primary" icon="el-icon-edit" @click="updateAdminEmployee">修改管理员/员工</el-button>
+          <el-button type="primary" icon="el-icon-edit" @click="updateAdmin">修改管理员</el-button>
           <import-export :template-code="'farm'" :params="query.form"></import-export>
         </div>
       </div>
@@ -67,7 +67,6 @@
         <el-table-column prop="farmName" label="名称"></el-table-column>
         <el-table-column prop="owner" label="负责人"></el-table-column>
         <el-table-column prop="admin" label="管理员"></el-table-column>
-        <el-table-column prop="employee" label="员工"></el-table-column>
         <el-table-column prop="address" label="地址"></el-table-column>
         <el-table-column prop="area" label="面积"></el-table-column>
         <el-table-column prop="scale" label="养殖规模"></el-table-column>
@@ -111,16 +110,6 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="员工" :label-width="formLabelWidth">
-          <el-select v-model="saveDialog.form.employee" filterable multiple placeholder="请选择" style="width:100%">
-            <el-option
-                v-for="item in listUser"
-                :key="item.username"
-                :label="item.title"
-                :value="item.username">
-            </el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="地址" :label-width="formLabelWidth" prop="address">
           <el-input v-model="saveDialog.form.address" placeholder="请输入"></el-input>
         </el-form-item>
@@ -136,20 +125,10 @@
         <el-button type="primary" @click="saveInfo">保 存</el-button>
       </div>
     </el-dialog>
-    <el-dialog :destroy-on-close="true" title="修改管理员/员工" :visible.sync="adminEmployeeDialog.visible">
-      <el-form :model="adminEmployeeDialog.form">
+    <el-dialog :destroy-on-close="true" title="修改管理员" :visible.sync="adminDialog.visible">
+      <el-form :model="adminDialog.form">
         <el-form-item label="管理员" :label-width="formLabelWidth">
-          <el-select v-model="adminEmployeeDialog.form.admin" filterable multiple placeholder="请选择" style="width:100%">
-            <el-option
-                v-for="item in listUser"
-                :key="item.username"
-                :label="item.title"
-                :value="item.username">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="员工" :label-width="formLabelWidth">
-          <el-select v-model="adminEmployeeDialog.form.employee" filterable multiple placeholder="请选择" style="width:100%">
+          <el-select v-model="adminDialog.form.admin" filterable multiple placeholder="请选择" style="width:100%">
             <el-option
                 v-for="item in listUser"
                 :key="item.username"
@@ -161,7 +140,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="saveDialog.visible = false">取 消</el-button>
-        <el-button type="primary" @click="saveAdminEmployee">保 存</el-button>
+        <el-button type="primary" @click="saveAdmin">保 存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -170,7 +149,7 @@
 <script>
 import ImportExport from "@/components/common/ImportExport";
 import currentUser from "@/utils/currentUser";
-import {pageFarm, getFarm, saveFarm, saveAdminEmployee, delFarm} from '@/api/farm';
+import {pageFarm, getFarm, saveFarm, saveAdmin, delFarm} from '@/api/farm';
 import {listUser} from '@/api/user';
 
 export default {
@@ -212,7 +191,7 @@ export default {
           scale: [{required: true, message: '养殖规模不能为空', trigger: 'change'}]
         }
       },
-      adminEmployeeDialog: {
+      adminDialog: {
         visible: false,
         form: {}
       }
@@ -265,7 +244,6 @@ export default {
       this.saveDialog.type = 'update';
       getFarm(this.multipleSelection[0].farmId).then(res => {
         res.admin = res.admin && res.admin.split(',');
-        res.employee = res.employee && res.employee.split(',');
         this.saveDialog.form = res;
       });
       this.saveDialog.visible = true;
@@ -277,7 +255,6 @@ export default {
         }
         let data = {...this.saveDialog.form};
         data.admin = data.admin && data.admin.join(',');
-        data.employee = data.employee && data.employee.join(',');
         saveFarm(this.saveDialog.type, data).then(res => {
           if (res > 0) {
             this.saveDialog.visible = false;
@@ -310,7 +287,7 @@ export default {
         });
       });
     },
-    updateAdminEmployee() {
+    updateAdmin() {
       if (this.multipleSelection.length !== 1) {
         this.$message.error('仅请选择一条数据');
         return;
@@ -321,22 +298,20 @@ export default {
         return;
       }
       getFarm(this.multipleSelection[0].farmId).then(res => {
-        this.adminEmployeeDialog.form = {
+        this.adminDialog.form = {
           farmId: res.farmId,
-          admin: res.admin && res.admin.split(','),
-          employee: res.employee && res.employee.split(',')
+          admin: res.admin && res.admin.split(',')
         };
       });
-      this.adminEmployeeDialog.visible = true;
+      this.adminDialog.visible = true;
     },
-    saveAdminEmployee() {
-      let data = {...this.adminEmployeeDialog.form};
+    saveAdmin() {
+      let data = {...this.adminDialog.form};
       data.admin = data.admin && data.admin.join(',');
-      data.employee = data.employee && data.employee.join(',');
-      saveAdminEmployee(data).then(res => {
+      saveAdmin(data).then(res => {
         if (res > 0) {
-          this.adminEmployeeDialog.visible = false;
-          this.adminEmployeeDialog.form = {};
+          this.adminDialog.visible = false;
+          this.adminDialog.form = {};
           this.$message.success('保存成功');
           this.getData();
         } else {

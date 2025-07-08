@@ -65,112 +65,97 @@ export default {
           title: '系统首页'
         },
         {
-          icon: 'el-icon-lx-home',
+          icon: 'el-icon-notebook-2',
           index: 'baseInfoManage',
           title: '基础信息管理',
           subs: [
             {
-              icon: 'el-icon-lx-home',
               index: 'employeeInfoManage',
               title: '员工档案管理',
             },
             {
-              icon: 'el-icon-lx-home',
               index: 'cattleFarmInfoManage',
               title: '牛场信息管理',
               subs: [
                 {
-                  icon: 'el-icon-lx-home',
                   index: 'farmInfoManage',
                   title: '牧场基础信息'
                 },
                 {
-                  icon: 'el-icon-lx-home',
                   index: 'farmZoneManage',
                   title: '牛舍分区管理'
                 }
               ]
             },
             {
-              icon: 'el-icon-lx-home',
               index: 'cattleInfoManage',
               title: '牛只档案管理',
             }
           ]
         },
         {
-          icon: 'el-icon-lx-home',
+          icon: 'el-icon-female',
           index: 'breedManage',
           title: '繁殖管理',
           subs: [
             {
-              icon: 'el-icon-lx-home',
               index: 'breedRegister',
               title: '配种登记',
             },
             {
-              icon: 'el-icon-lx-home',
               index: 'breedPregnancyCheck',
               title: '妊检登记',
             },
             {
-              icon: 'el-icon-lx-home',
               index: 'breedPregnancyResult',
-              title: '妊娠结果',
+              title: '产犊登记',
             }
           ]
         },
         {
-          icon: 'el-icon-lx-home',
+          icon: 'el-icon-s-data',
           index: 'dynamicInventoryManage',
           title: '动态库存管理',
           subs: [
             {
-              icon: 'el-icon-lx-home',
               index: 'inventoryBuy',
               title: '外购牛只登记',
             },
             {
-              icon: 'el-icon-lx-home',
               index: 'inventorySell',
               title: '出售记录',
             },
             {
-              icon: 'el-icon-lx-home',
               index: 'inventoryDeath',
               title: '死亡登记',
             }
           ]
         },
         {
-          icon: 'el-icon-lx-home',
+          icon: 'el-icon-s-cooperation',
           index: 'healthDiseaseManage',
           title: '健康与疾病管理',
           subs: [
             {
-              icon: 'el-icon-lx-home',
               index: 'diseaseMonitor',
               title: '疾病监控',
             },
             {
-              icon: 'el-icon-lx-home',
               index: 'epidemicPreventionPlan',
               title: '防疫计划',
             }
           ]
         },
         {
-          icon: 'el-icon-lx-home',
+          icon: 'el-icon-data-analysis',
           index: 'intelligentStatisticsAnalysis',
           title: '智能统计与分析',
           subs: [
             {
-              icon: 'el-icon-lx-home',
               index: 'realTimeBoard',
               title: '实时看板',
             },
             {
-              icon: 'el-icon-lx-home',
               index: 'generateReport',
               title: '报表生成',
             }

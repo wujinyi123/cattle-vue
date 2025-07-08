@@ -78,7 +78,7 @@ export default {
   line-height: 50px;
   text-align: center;
   font-size: 20px;
-  color: #ffee00;
+  color: #fff700;
   border-bottom: 1px solid #ddd;
 }
 

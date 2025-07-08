@@ -16,8 +16,8 @@ export const saveFarm = (type, data) => {
     return service.post("/farm/saveFarm?type=" + type, data);
 };
 
-export const saveAdminEmployee = data => {
-    return service.post("/farm/saveAdminEmployee", data);
+export const saveAdmin = data => {
+    return service.post("/farm/saveAdmin", data);
 };
 
 export const delFarm = data => {

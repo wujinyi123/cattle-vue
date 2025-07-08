@@ -95,9 +95,6 @@ export default {
             if (info.admin && info.admin.includes(item.username)) {
               userType.push('管理员');
             }
-            if (info.employee && info.employee.includes(item.username)) {
-              userType.push('员工');
-            }
             if (userType.length > 0) {
               farmInfo.push(`${info.farmName}：${userType.join(',')}`);
             }

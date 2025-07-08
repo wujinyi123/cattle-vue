@@ -171,7 +171,7 @@
           <el-select v-model="saveDialog.form.operateUser" filterable style="width:100%" placeholder="请选择">
             <el-option v-for="item in listUser"
                        :key="item.username"
-                       :label="item.name"
+                       :label="item.title"
                        :value="item.username">
             </el-option>
           </el-select>
