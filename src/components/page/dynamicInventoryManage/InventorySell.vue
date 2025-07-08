@@ -50,7 +50,7 @@
         <div>
           <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
           <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
-          <import-export :template-code="'inventorySell'" :params="query.form" :hasImport="false"></import-export>
+          <import-export :template-code="'inventorySell'" :params="queryParams" :hasImport="false"></import-export>
         </div>
       </div>
       <el-table
@@ -168,6 +168,17 @@ export default {
   created() {
     this.getData();
   },
+  computed:{
+    queryParams(){
+      let params = {...this.query.form};
+      if (params.sellDay && params.sellDay.length) {
+        params.sellDayStart = params.sellDay[0];
+        params.sellDayEnd = params.sellDay[1];
+        params.sellDay = undefined;
+      }
+      return params;
+    }
+  },
   methods: {
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -183,13 +194,7 @@ export default {
     // 获取 easy-mock 的模拟数据
     getData() {
       this.loading = true;
-      let params = {...this.query.form};
-      if (params.sellDay && params.sellDay.length) {
-        params.sellDayStart = params.sellDay[0];
-        params.sellDayEnd = params.sellDay[1];
-        params.sellDay = undefined;
-      }
-      pageInventorySell(params).then(res => {
+      pageInventorySell(this.queryParams).then(res => {
         this.tableData = res.list;
         this.pageTotal = res.total;
         this.multipleSelection = [];

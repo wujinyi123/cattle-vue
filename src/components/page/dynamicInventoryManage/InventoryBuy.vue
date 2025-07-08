@@ -43,7 +43,7 @@
         <div>
           <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
           <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
-          <import-export :template-code="'inventoryBuy'" :params="query.form" :hasImport="false"></import-export>
+          <import-export :template-code="'inventoryBuy'" :params="queryParams" :hasImport="false"></import-export>
         </div>
       </div>
       <el-table
@@ -224,6 +224,17 @@ export default {
     listSysConfig('cattleSex').then(res => this.cattleSexList = res);
     this.getData();
   },
+  computed:{
+    queryParams(){
+      let params = {...this.query.form};
+      if (params.buyDay && params.buyDay.length) {
+        params.buyDayStart = params.buyDay[0];
+        params.buyDayEnd = params.buyDay[1];
+        params.buyDay = undefined;
+      }
+      return params;
+    }
+  },
   methods: {
     selectFarmZone() {
       if (!this.saveDialog.form.farmId) {
@@ -246,13 +257,7 @@ export default {
     // 获取 easy-mock 的模拟数据
     getData() {
       this.loading = true;
-      let params = {...this.query.form};
-      if (params.buyDay && params.buyDay.length) {
-        params.buyDayStart = params.buyDay[0];
-        params.buyDayEnd = params.buyDay[1];
-        params.buyDay = undefined;
-      }
-      pageInventoryBuy(params).then(res => {
+      pageInventoryBuy(this.queryParams).then(res => {
         this.tableData = res.list;
         this.pageTotal = res.total;
         this.multipleSelection = [];

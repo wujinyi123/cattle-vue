@@ -74,7 +74,7 @@
         <div>
           <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
           <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
-          <import-export :template-code="'breedPregnancyResult'" :params="query.form" :hasImport="false"></import-export>
+          <import-export :template-code="'breedPregnancyResult'" :params="queryParams" :hasImport="false"></import-export>
         </div>
       </div>
       <el-table
@@ -324,6 +324,17 @@ export default {
     listFarm().then(res => this.listFarm = res);
     this.getData();
   },
+  computed:{
+    queryParams(){
+      let params = {...this.query.form};
+      if (params.resultDay && params.resultDay.length) {
+        params.resultDayStart = params.resultDay[0];
+        params.resultDayEnd = params.resultDay[1];
+        params.resultDay = undefined;
+      }
+      return params;
+    }
+  },
   methods: {
     selectFarmZone() {
       if (!this.addCattleDialog.form.farmId) {
@@ -346,13 +357,7 @@ export default {
     // 获取 easy-mock 的模拟数据
     getData() {
       this.loading = true;
-      let params = {...this.query.form};
-      if (params.resultDay && params.resultDay.length) {
-        params.resultDayStart = params.resultDay[0];
-        params.resultDayEnd = params.resultDay[1];
-        params.resultDay = undefined;
-      }
-      pageBreedPregnancyResult(params).then(res => {
+      pageBreedPregnancyResult(this.queryParams).then(res => {
         this.tableData = res.list;
         this.pageTotal = res.total;
         this.multipleSelection = [];

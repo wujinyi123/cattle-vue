@@ -50,7 +50,7 @@
         <div>
           <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
           <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
-          <import-export :template-code="'inventoryDeath'" :params="query.form" :hasImport="false"></import-export>
+          <import-export :template-code="'inventoryDeath'" :params="queryParams" :hasImport="false"></import-export>
         </div>
       </div>
       <el-table
@@ -164,6 +164,17 @@ export default {
   created() {
     this.getData();
   },
+  computed:{
+    queryParams(){
+      let params = {...this.query.form};
+      if (params.deathDay && params.deathDay.length) {
+        params.deathDayStart = params.deathDay[0];
+        params.deathDayEnd = params.deathDay[1];
+        params.deathDay = undefined;
+      }
+      return params;
+    }
+  },
   methods: {
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -179,13 +190,7 @@ export default {
     // 获取 easy-mock 的模拟数据
     getData() {
       this.loading = true;
-      let params = {...this.query.form};
-      if (params.deathDay && params.deathDay.length) {
-        params.deathDayStart = params.deathDay[0];
-        params.deathDayEnd = params.deathDay[1];
-        params.deathDay = undefined;
-      }
-      pageInventoryDeath(params).then(res => {
+      pageInventoryDeath(this.queryParams).then(res => {
         this.tableData = res.list;
         this.pageTotal = res.total;
         this.multipleSelection = [];
