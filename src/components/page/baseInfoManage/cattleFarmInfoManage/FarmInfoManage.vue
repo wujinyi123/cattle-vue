@@ -44,7 +44,7 @@
           </el-row>
         </el-form>
         <div>
-          <template v-if="isSysAdmin==='Y'">
+          <template v-if="$store.state.user.userInfo.isSysAdmin==='Y'">
             <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
             <el-button type="primary" icon="el-icon-edit" @click="updateInfo">修改</el-button>
             <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
@@ -148,7 +148,6 @@
 
 <script>
 import ImportExport from "@/components/common/ImportExport";
-import currentUser from "@/utils/currentUser";
 import {pageFarm, getFarm, saveFarm, saveAdmin, delFarm} from '@/api/farm';
 import {listUser} from '@/api/user';
 
@@ -159,7 +158,6 @@ export default {
   },
   data() {
     return {
-      isSysAdmin: 'N',
       listUser: [],
       query: {
         form: {
@@ -198,7 +196,6 @@ export default {
     };
   },
   created() {
-    this.isSysAdmin = currentUser.getIsSysAdmin();
     listUser().then(res => this.listUser = res);
     this.getData();
   },
@@ -293,7 +290,7 @@ export default {
         return;
       }
       let farmOwner = this.multipleSelection[0].owner;
-      if (this.isSysAdmin !== 'Y' && farmOwner !== currentUser.getUsername()) {
+      if (this.$store.state.user.userInfo.isSysAdmin !== 'Y' && farmOwner !== this.$store.state.user.userInfo.username) {
         this.$message.error('仅系统管理员或牧场负责人可以操作');
         return;
       }

@@ -106,7 +106,6 @@
 
 <script>
 import ImportExport from "@/components/common/ImportExport";
-import currentUser from "@/utils/currentUser";
 import {listFarm, pageFarmZone, getFarmZone, saveFarmZone, delFarmZone} from '@/api/farm';
 
 export default {
@@ -116,7 +115,6 @@ export default {
   },
   data() {
     return {
-      isSysAdmin: 'N',
       listFarm: [],
       query: {
         form: {
@@ -146,7 +144,6 @@ export default {
     };
   },
   created() {
-    this.isSysAdmin = currentUser.getIsSysAdmin();
     listFarm().then(res => this.listFarm = res);
     this.getData();
   },

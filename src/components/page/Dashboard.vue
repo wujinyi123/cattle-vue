@@ -6,7 +6,7 @@
           <div class="user-info">
             <img src="../../assets/img/img.jpg" class="user-avator" alt/>
             <div class="user-info-cont">
-              <div class="user-info-name">{{ name }}</div>
+              <div class="user-info-name">{{ $store.state.user.userInfo.name }}</div>
               <div>{{ role }}</div>
             </div>
           </div>
@@ -117,13 +117,11 @@
 <script>
 import Schart from 'vue-schart';
 import bus from '../common/bus';
-import currentUser from '@/utils/currentUser'
 
 export default {
   name: 'dashboard',
   data() {
     return {
-      name: currentUser.getUsername(),
       todoList: [
         {
           title: '今天要修复100个bug',

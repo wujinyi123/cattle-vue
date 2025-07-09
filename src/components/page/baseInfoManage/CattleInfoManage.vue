@@ -190,7 +190,6 @@
 
 <script>
 import ImportExport from "@/components/common/ImportExport";
-import currentUser from "@/utils/currentUser";
 import {listSysConfig} from "@/api/common";
 import {listFarm, listFarmZone} from '@/api/farm';
 import {pageCattle, getCattle, saveCattle, delCattle} from '@/api/cattle';
@@ -202,7 +201,6 @@ export default {
   },
   data() {
     return {
-      isSysAdmin: 'N',
       listFarm: [],
       listFarmZone: [],
       cattleBreedList: [],
@@ -243,7 +241,6 @@ export default {
     };
   },
   created() {
-    this.isSysAdmin = currentUser.getIsSysAdmin();
     listFarm().then(res => this.listFarm = res);
     listSysConfig('cattleBreed').then(res => this.cattleBreedList = res);
     listSysConfig('cattleSex').then(res => this.cattleSexList = res);

@@ -58,7 +58,7 @@
           </el-row>
         </el-form>
         <div>
-          <template v-if="isSysAdmin==='Y'">
+          <template v-if="$store.state.user.userInfo.isSysAdmin==='Y'">
             <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
             <el-button type="primary" icon="el-icon-edit" @click="updateInfo">修改</el-button>
             <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
@@ -160,7 +160,6 @@
 
 <script>
 import ImportExport from "@/components/common/ImportExport";
-import currentUser from "@/utils/currentUser";
 import {listSysConfig} from "@/api/common";
 import {pageUser, getUser, saveUser, setUserStatus, resetPassword, delUser} from '@/api/user';
 
@@ -171,7 +170,6 @@ export default {
   },
   data() {
     return {
-      isSysAdmin: 'N',
       isSysAdminList: [],
       userStatusList: [],
       query: {
@@ -221,7 +219,6 @@ export default {
     };
   },
   created() {
-    this.isSysAdmin = currentUser.getIsSysAdmin();
     listSysConfig('isSysAdmin').then(res => this.isSysAdminList = res);
     listSysConfig('userStatus').then(res => this.userStatusList = res);
     this.getData();

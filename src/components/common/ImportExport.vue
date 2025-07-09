@@ -54,7 +54,7 @@
 
 <script>
 import {importRequireField} from '@/api/common';
-import currentUser from "@/utils/currentUser";
+import tokenUtil from "@/utils/tokenUtil";
 
 export default {
   name: 'ImportExport',
@@ -94,7 +94,7 @@ export default {
     this.exportUrl = `/api/common/export?${paramsList.join('&')}`;
     this.templateUrl = `/api/common/template?templateCode=${this.templateCode}`;
     this.importAction = `/api/common/importFile?templateCode=${this.templateCode}`;
-    this.headers = {token: currentUser.getToken()}
+    this.headers = {token: tokenUtil.getToken()}
     if (this.hasImport) {
       importRequireField(this.templateCode).then(res => this.requireFields = res.join(','));
     }

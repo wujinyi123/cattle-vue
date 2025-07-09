@@ -28,7 +28,7 @@
       <el-row class="user-el-row">
         <el-col :span="10" class="user-el-col-label">所属牧场：</el-col>
         <el-col :span="14" class="user-el-col-value">
-          <div v-for="item in user.farmInfo">{{item}}</div>
+          <div v-for="item in user.farmInfo">{{ item }}</div>
         </el-col>
       </el-row>
       <el-row style="text-align: center;margin-top: 30px">
@@ -59,8 +59,8 @@
 </template>
 
 <script>
-import {getCurrentUser, updatePassword, updatePhone} from '@/api/user';
-import currentUser from "@/utils/currentUser";
+import {updatePassword, updatePhone} from '@/api/user';
+import tokenUtil from "@/utils/tokenUtil";
 
 export default {
   name: 'PersonalCenter',
@@ -84,25 +84,24 @@ export default {
   },
   methods: {
     getCurrentUserInfo() {
-      getCurrentUser().then(item => {
-        if (item.farmList) {
-          let farmInfo = [];
-          item.farmList.forEach(info => {
-            let userType = [];
-            if (info.owner === item.username) {
-              userType.push('负责人');
-            }
-            if (info.admin && info.admin.includes(item.username)) {
-              userType.push('管理员');
-            }
-            if (userType.length > 0) {
-              farmInfo.push(`${info.farmName}：${userType.join(',')}`);
-            }
-          });
-          item.farmInfo = farmInfo;
-        }
-        this.user = item;
-      });
+      let item = {...this.$store.state.user.userInfo}
+      if (item.farmList) {
+        let farmInfo = [];
+        item.farmList.forEach(info => {
+          let userType = [];
+          if (info.owner === item.username) {
+            userType.push('负责人');
+          }
+          if (info.admin && info.admin.includes(item.username)) {
+            userType.push('管理员');
+          }
+          if (userType.length > 0) {
+            farmInfo.push(`${info.farmName}：${userType.join(',')}`);
+          }
+        });
+        item.farmInfo = farmInfo;
+      }
+      this.user = item;
     },
     openUpdatePassword() {
       this.updatePasswordDialog.form = {};
@@ -118,7 +117,7 @@ export default {
             this.updatePasswordDialog.visible = false;
             this.updatePasswordDialog.form = {};
             this.$message.success('修改成功，请重新登录');
-            currentUser.remove();
+            tokenUtil.removeToken();
             this.$router.push('/login');
           } else {
             this.$message.error('修改失败');
@@ -137,6 +136,7 @@ export default {
           updatePhone({phone: value}).then(res => {
             if (res > 0) {
               this.$message.success('修改成功');
+              this.$store.dispatch('user/setCurrentUser');
               this.getCurrentUserInfo();
             } else {
               this.$message.error('修改失败');

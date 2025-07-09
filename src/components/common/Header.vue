@@ -21,12 +21,12 @@
         <!-- 用户名下拉菜单 -->
         <el-dropdown class="user-name" trigger="click" @command="handleCommand">
                     <span class="el-dropdown-link">
-                        {{ username }}
+                        {{ $store.state.user.userInfo.username }}
                         <i class="el-icon-caret-bottom"></i>
                     </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item divided command="personalCenter">个人中心</el-dropdown-item>
-            <el-dropdown-item v-if="isSysAdmin" divided command="sysConfig">系统配置</el-dropdown-item>
+            <el-dropdown-item v-if="$store.state.user.userInfo.isSysAdmin==='Y'" divided command="sysConfig">系统配置</el-dropdown-item>
             <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -36,37 +36,30 @@
 </template>
 <script>
 import bus from '@/components/common/bus';
-import currentUser from '@/utils/currentUser'
-import {getCurrentUser} from "@/api/user";
+import tokenUtil from '@/utils/tokenUtil'
 
 export default {
   data() {
     return {
       collapse: false,
-      fullscreen: false,
-      username: '未知',
-      isSysAdmin: 'N'
+      fullscreen: false
     };
   },
   created() {
-    getCurrentUser().then(userInfo => {
-      this.username = userInfo.username;
-      this.isSysAdmin = userInfo.isSysAdmin;
-      currentUser.setInfo(userInfo);
-    });
+    this.$store.dispatch('user/setCurrentUser');
   },
   methods: {
     // 用户名下拉菜单选择事件
     handleCommand(command) {
-      if (command == 'loginout') {
+      if (command === 'loginout') {
         this.$message.success('退出登录');
-        currentUser.remove();
+        tokenUtil.removeToken();
         this.$router.push('/login');
       }
-      if (command == 'personalCenter') {
+      if (command === 'personalCenter') {
         this.$router.push('/personalCenter');
       }
-      if (command == 'sysConfig') {
+      if (command === 'sysConfig') {
         this.$router.push('/sysConfig');
       }
     },

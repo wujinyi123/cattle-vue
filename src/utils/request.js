@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {Message} from "element-ui";
-import currentUser from '@/utils/currentUser'
+import tokenUtil from '@/utils/tokenUtil'
 
 const service = axios.create({
     baseURL: "/api",
@@ -9,7 +9,7 @@ const service = axios.create({
 
 service.interceptors.request.use(
     config => {
-        const token = currentUser.getToken();
+        const token = tokenUtil.getToken();
         if (token) {
             config.headers["token"] = token;
         }
@@ -33,7 +33,7 @@ service.interceptors.response.use(
         let data = getResponseData(error.response);
         Message.error(data.body || '系统异常');
         if (data.statusCodeValue == 401) {
-            currentUser.remove();
+            tokenUtil.removeToken();
             window.app.$router.push('/login');
         }
     }

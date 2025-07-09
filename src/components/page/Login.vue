@@ -28,7 +28,7 @@
 
 <script>
 import {login} from '@/api/user';
-import currentUser from '@/utils/currentUser'
+import tokenUtil from '@/utils/tokenUtil'
 
 export default {
   data: function () {
@@ -50,7 +50,7 @@ export default {
           login(this.param).then(res => {
             if (res && res.token) {
               this.$message.success('登录成功');
-              currentUser.set(res);
+              tokenUtil.setToken(res.token);
               this.$router.push('/');
             }
           });
