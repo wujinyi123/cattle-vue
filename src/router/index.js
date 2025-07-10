@@ -1,9 +1,10 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import tokenUtil from "@/utils/tokenUtil";
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
     routes: [
         {
             path: '/',
@@ -200,3 +201,15 @@ export default new Router({
         }
     ]
 });
+
+//使用钩子函数对路由进行权限跳转
+router.beforeEach((to, from, next) => {
+    document.title = `${to.meta.title} | 牛只管理系统`;
+    if (!tokenUtil.getToken() && to.path !== '/login') {
+        next('/login');
+    } else {
+        next();
+    }
+});
+
+export default router;
