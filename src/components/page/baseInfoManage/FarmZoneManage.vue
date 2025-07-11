@@ -4,25 +4,30 @@
       <div class="handle-box">
         <el-form :model="query.form">
           <el-row :gutter="20" class="handle-el-row">
-            <el-col :span="8">
-              <el-form-item label="牧场" :label-width="formLabelWidth">
-                <el-select v-model="query.form.farmId" filterable placeholder="请选择" style="width:100%">
+            <el-col :span="6">
+              <el-form-item label="牧场名称" :label-width="formLabelWidth">
+                <el-select v-model="query.form.farmCode" filterable placeholder="请选择" style="width:100%">
                   <el-option key="all" label="全部" value=""></el-option>
                   <el-option
                       v-for="item in listFarm"
-                      :key="item.farmId"
+                      :key="item.farmCode"
                       :label="item.farmName"
-                      :value="item.farmId">
+                      :value="item.farmCode">
                   </el-option>
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="6">
               <el-form-item label="圈舍编号" :label-width="formLabelWidth">
                 <el-input v-model="query.form.farmZoneCode" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="6">
+              <el-form-item label="圈舍名称" :label-width="formLabelWidth">
+                <el-input v-model="query.form.farmZoneName" placeholder="请输入"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
               <el-form-item label="圈舍备注" :label-width="formLabelWidth">
                 <el-input v-model="query.form.farmZoneRemark" placeholder="请输入"></el-input>
               </el-form-item>
@@ -30,15 +35,16 @@
           </el-row>
           <el-row :gutter="20" class="handle-el-row">
             <el-col :span="24" style="text-align:right">
+              <el-button icon="el-icon-refresh" @click="query.form={}">重置</el-button>
               <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </el-col>
           </el-row>
         </el-form>
         <div>
-          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
-          <el-button type="primary" icon="el-icon-edit" @click="updateInfo">修改</el-button>
-          <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
-          <import-export :template-code="'farmZone'" :params="query.form"></import-export>
+          <template v-if="$store.state.user.userInfo.isSysAdmin==='Y'">
+            <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
+            <el-button type="primary" icon="el-icon-delete" @click="batchDelInfo">批量删除</el-button>
+          </template>
         </div>
       </div>
       <el-table
@@ -52,15 +58,31 @@
           @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="farmName" label="牧场"></el-table-column>
-        <el-table-column prop="farmOwner" label="牧场负责人"></el-table-column>
-        <el-table-column prop="farmAdmin" label="牧场管理员"></el-table-column>
+        <el-table-column prop="farmName" label="牧场名称"></el-table-column>
         <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
+        <el-table-column prop="farmZoneName" label="圈舍名称"></el-table-column>
         <el-table-column prop="farmZoneRemark" label="圈舍备注"></el-table-column>
         <el-table-column prop="size" label="容量"></el-table-column>
         <el-table-column prop="currentSize" label="当前容量"></el-table-column>
         <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
         <el-table-column prop="updateUser" label="修改人"></el-table-column>
+        <el-table-column label="操作" width="200" align="center" v-if="$store.state.user.userInfo.isSysAdmin==='Y'">
+          <template slot-scope="scope">
+            <el-button
+                type="primary"
+                icon="el-icon-edit"
+                @click="updateInfo(scope.row.farmZoneCode)"
+            >编辑
+            </el-button>
+            <el-button
+                type="danger"
+                icon="el-icon-delete"
+                class="red"
+                @click="delInfo(scope.row.farmZoneCode)"
+            >删除
+            </el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination
@@ -76,18 +98,21 @@
     </div>
     <el-dialog :destroy-on-close="true" :title="saveDialog.title" :visible.sync="saveDialog.visible">
       <el-form :model="saveDialog.form" ref="saveDialog.form" :rules="saveDialog.rules">
-        <el-form-item label="牧场" :label-width="formLabelWidth" prop="farmId">
-          <el-select v-model="saveDialog.form.farmId" filterable placeholder="请选择" style="width:100%" :disabled="saveDialog.type === 'update'">
+        <el-form-item label="牧场名称" :label-width="formLabelWidth" prop="farmCode">
+          <el-select v-model="saveDialog.form.farmCode" filterable placeholder="请选择" style="width:100%" :disabled="saveDialog.type === 'update'">
             <el-option
                 v-for="item in listFarm"
-                :key="item.farmId"
+                :key="item.farmCode"
                 :label="item.farmName"
-                :value="item.farmId">
+                :value="item.farmCode">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="圈舍编号" :label-width="formLabelWidth" prop="farmZoneCode">
           <el-input v-model="saveDialog.form.farmZoneCode" placeholder="请输入" :disabled="saveDialog.type === 'update'"></el-input>
+        </el-form-item>
+        <el-form-item label="圈舍名称" :label-width="formLabelWidth" prop="farmZoneName">
+          <el-input v-model="saveDialog.form.farmZoneName" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="圈舍备注" :label-width="formLabelWidth">
           <el-input type="textarea" :rows="2" v-model="saveDialog.form.farmZoneRemark" placeholder="请输入"></el-input>
@@ -105,22 +130,15 @@
 </template>
 
 <script>
-import ImportExport from "@/components/common/ImportExport";
 import {listFarm, pageFarmZone, getFarmZone, saveFarmZone, delFarmZone} from '@/api/farm';
 
 export default {
   name: 'FarmZoneManage',
-  components: {
-    ImportExport
-  },
   data() {
     return {
       listFarm: [],
       query: {
         form: {
-          farmId: '',
-          farmZoneCode: '',
-          farmZoneRemark: '',
           pageNum: 1,
           pageSize: 10
         }
@@ -136,15 +154,16 @@ export default {
         visible: false,
         form: {},
         rules: {
-          farmId: [{required: true, message: '牧场不能为空', trigger: 'change'}],
+          farmCode: [{required: true, message: '牧场不能为空', trigger: 'change'}],
           farmZoneCode: [{required: true, message: '圈舍编号不能为空', trigger: 'change'}],
+          farmZoneName: [{required: true, message: '圈舍名称不能为空', trigger: 'change'}],
           size: [{required: true, message: '容量不能为空', trigger: 'blur'}]
         }
       }
     };
   },
   created() {
-    listFarm().then(res => this.listFarm = res);
+    listFarm({}).then(res => this.listFarm = res);
     this.getData();
   },
   methods: {
@@ -180,16 +199,12 @@ export default {
       this.saveDialog.form = {};
       this.saveDialog.visible = true;
     },
-    updateInfo() {
-      if (this.multipleSelection.length !== 1) {
-        this.$message.error('仅请选择一条数据');
-        return;
-      }
-      this.saveDialog.title = '修改';
-      this.saveDialog.type = 'update';
-      getFarmZone(this.multipleSelection[0].farmZoneCode).then(res => {
+    updateInfo(farmZoneCode) {
+      getFarmZone(farmZoneCode).then(res => {
         this.saveDialog.form = res;
       });
+      this.saveDialog.title = '修改';
+      this.saveDialog.type = 'update';
       this.saveDialog.visible = true;
     },
     saveInfo() {
@@ -209,8 +224,14 @@ export default {
         });
       });
     },
-    delInfo() {
-      if (this.multipleSelection.length === 0) {
+    delInfo(farmZoneCode) {
+      this.delInfoFunc([farmZoneCode]);
+    },
+    batchDelInfo() {
+      this.delInfoFunc(this.multipleSelection.map(item => item.farmZoneCode));
+    },
+    delInfoFunc(farmZoneCodeList) {
+      if (farmZoneCodeList.length === 0) {
         this.$message.error('至少选择一条数据');
         return;
       }
@@ -219,7 +240,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delFarmZone(this.multipleSelection.map(item => item.farmZoneCode)).then(res => {
+        delFarmZone(farmZoneCodeList).then(res => {
           if (res > 0) {
             this.$message.success('删除成功');
             this.getData();

@@ -36,19 +36,19 @@ const router = new Router({
                     meta: {title: '系统配置'}
                 },
                 {
-                    path: '/employeeInfoManage',
-                    component: () => import('@/components/page/baseInfoManage/EmployeeInfoManage.vue'),
-                    meta: {title: '员工档案管理'}
-                },
-                {
                     path: '/farmInfoManage',
-                    component: () => import('@/components/page/baseInfoManage/cattleFarmInfoManage/FarmInfoManage.vue'),
+                    component: () => import('@/components/page/baseInfoManage/FarmInfoManage.vue'),
                     meta: {title: '牧场基础信息'}
                 },
                 {
                     path: '/farmZoneManage',
-                    component: () => import('@/components/page/baseInfoManage/cattleFarmInfoManage/FarmZoneManage.vue'),
+                    component: () => import('@/components/page/baseInfoManage/FarmZoneManage.vue'),
                     meta: {title: '牛舍分区管理'}
+                },
+                {
+                    path: '/employeeInfoManage',
+                    component: () => import('@/components/page/baseInfoManage/EmployeeInfoManage.vue'),
+                    meta: {title: '员工档案管理'}
                 },
                 {
                     path: '/cattleInfoManage',

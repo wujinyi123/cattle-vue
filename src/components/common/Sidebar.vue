@@ -70,22 +70,16 @@ export default {
           title: '基础信息管理',
           subs: [
             {
-              index: 'employeeInfoManage',
-              title: '员工档案管理',
+              index: 'farmInfoManage',
+              title: '牧场基础信息'
             },
             {
-              index: 'cattleFarmInfoManage',
-              title: '牛场信息管理',
-              subs: [
-                {
-                  index: 'farmInfoManage',
-                  title: '牧场基础信息'
-                },
-                {
-                  index: 'farmZoneManage',
-                  title: '牛舍分区管理'
-                }
-              ]
+              index: 'farmZoneManage',
+              title: '牛舍分区管理'
+            },
+            {
+              index: 'employeeInfoManage',
+              title: '员工档案管理',
             },
             {
               index: 'cattleInfoManage',

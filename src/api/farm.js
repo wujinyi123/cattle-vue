@@ -4,20 +4,16 @@ export const pageFarm = params => {
     return service.get("/farm/pageFarm", {params});
 };
 
-export const listFarm = () => {
-    return service.get("/farm/listFarm");
+export const listFarm = params => {
+    return service.get("/farm/listFarm", {params});
 };
 
-export const getFarm = farmId => {
-    return service.get("/farm/getFarm", {params: {farmId}});
+export const getFarm = farmCode => {
+    return service.get("/farm/getFarm", {params: {farmCode}});
 };
 
 export const saveFarm = (type, data) => {
     return service.post("/farm/saveFarm?type=" + type, data);
-};
-
-export const saveAdmin = data => {
-    return service.post("/farm/saveAdmin", data);
 };
 
 export const delFarm = data => {
@@ -28,8 +24,8 @@ export const pageFarmZone = params => {
     return service.get("/farm/pageFarmZone", {params});
 };
 
-export const listFarmZone = farmId => {
-    return service.get("/farm/listFarmZone", {params: {farmId}});
+export const listFarmZone = params => {
+    return service.get("/farm/listFarmZone", {params});
 };
 
 export const getFarmZone = farmZoneCode => {
