@@ -46,7 +46,7 @@ export default {
     };
   },
   created() {
-    this.$store.dispatch('user/setCurrentUser');
+
   },
   methods: {
     // 用户名下拉菜单选择事件
