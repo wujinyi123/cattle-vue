@@ -51,6 +51,7 @@ export default {
             if (res && res.token) {
               this.$message.success('登录成功');
               tokenUtil.setToken(res.token);
+              this.$store.dispatch('user/setCurrentUser');
               this.$router.push('/');
             }
           });

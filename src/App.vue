@@ -4,13 +4,15 @@
   </div>
 </template>
 <script>
-  export default {
-    beforeMount() {
-      if (!this.$store.state.user.userInfo || !this.$store.state.user.userInfo.username) {
-        this.$store.dispatch('user/setCurrentUser');
-      }
+import tokenUtil from "@/utils/tokenUtil";
+
+export default {
+  beforeCreate() {
+    if (tokenUtil.getToken() && (!this.$store.state.user.userInfo || !this.$store.state.user.userInfo.username)) {
+      this.$store.dispatch('user/setCurrentUser');
     }
   }
+}
 </script>
 <style>
 @import "./assets/css/main.css";
