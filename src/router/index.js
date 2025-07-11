@@ -38,17 +38,17 @@ const router = new Router({
                 {
                     path: '/farmInfoManage',
                     component: () => import('@/components/page/baseInfoManage/FarmInfoManage.vue'),
-                    meta: {title: '牧场基础信息'}
+                    meta: {title: '牧场基础信息', onlySysAdmin: true}
                 },
                 {
                     path: '/farmZoneManage',
                     component: () => import('@/components/page/baseInfoManage/FarmZoneManage.vue'),
-                    meta: {title: '牛舍分区管理'}
+                    meta: {title: '牛舍分区管理', onlySysAdmin: true}
                 },
                 {
                     path: '/employeeInfoManage',
                     component: () => import('@/components/page/baseInfoManage/EmployeeInfoManage.vue'),
-                    meta: {title: '员工档案管理'}
+                    meta: {title: '员工档案管理', onlySysAdmin: true}
                 },
                 {
                     path: '/cattleInfoManage',
@@ -207,8 +207,15 @@ router.beforeEach((to, from, next) => {
     document.title = `${to.meta.title} | 牛只管理系统`;
     if (!tokenUtil.getToken() && to.path !== '/login') {
         next('/login');
-    } else {
-        next();
+        return;
+    }
+    next();
+});
+
+router.afterEach((to, from) => {
+    const currentUserInfo = window.app.$store.state.user.userInfo || {};
+    if (to.meta.onlySysAdmin && currentUserInfo.isSysAdmin!=='Y') {
+        window.app.$router.push('/403');
     }
 });
 

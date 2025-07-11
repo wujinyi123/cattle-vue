@@ -4,8 +4,8 @@ export const login = data => {
     return service.post("/user/login", data);
 };
 
-export const getCurrentUser = () => {
-    return service.get("/user/getCurrentUser");
+export const getCurrentUser = async () => {
+    return await service.get("/user/getCurrentUser");
 };
 
 export const pageUser = params => {
