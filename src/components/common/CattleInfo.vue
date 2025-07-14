@@ -24,7 +24,11 @@
       </el-row>
       <el-row class="cattle-el-row">
         <el-col :span="10" class="cattle-el-col-label">性别：</el-col>
-        <el-col :span="14" class="cattle-el-col-value">{{ cattleInfo.sexValue }}</el-col>
+        <el-col :span="14" class="cattle-el-col-value">{{ cattleInfo.sex }}</el-col>
+      </el-row>
+      <el-row class="cattle-el-row">
+        <el-col :span="10" class="cattle-el-col-label">颜色：</el-col>
+        <el-col :span="14" class="cattle-el-col-value">{{ cattleInfo.color }}</el-col>
       </el-row>
       <el-row class="cattle-el-row">
         <el-col :span="10" class="cattle-el-col-label">出生日期：</el-col>
@@ -68,7 +72,11 @@ export default {
   },
   created() {
     if (this.cattleJson) {
-      this.cattleInfo = JSON.parse(this.cattleJson);
+      try {
+        this.cattleInfo = JSON.parse(this.cattleJson);
+      } catch (e) {
+
+      }
     }
   },
   methods: {

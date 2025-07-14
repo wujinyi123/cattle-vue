@@ -94,8 +94,7 @@ export default {
     return {
       mapConfigType: {
         cattleBreed: '牛只品种',
-        breedingMethod: '配种方式',
-        pregnancyResult: '妊娠结果'
+        breedingMethod: '配种方式'
       },
       listConfigType: [],
       query: {

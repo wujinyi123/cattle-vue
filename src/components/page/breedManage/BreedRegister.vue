@@ -5,8 +5,8 @@
         <el-form :model="query.form">
           <el-row :gutter="20" class="handle-el-row">
             <el-col :span="8">
-              <el-form-item label="牧场" :label-width="formLabelWidth">
-                <el-input v-model="query.form.farmName" placeholder="请输入"></el-input>
+              <el-form-item label="登记号" :label-width="formLabelWidth">
+                <el-input v-model="query.form.registerId" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -21,11 +21,6 @@
             </el-col>
           </el-row>
           <el-row :gutter="20" class="handle-el-row">
-            <el-col :span="8">
-              <el-form-item label="登记号" :label-width="formLabelWidth">
-                <el-input v-model="query.form.registerId" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
             <el-col :span="8">
               <el-form-item label="冻精号" :label-width="formLabelWidth">
                 <el-input v-model="query.form.frozenSemenCode" placeholder="请输入"></el-input>
@@ -82,9 +77,8 @@
           </el-row>
         </el-form>
         <div>
-          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
-          <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
-          <import-export :template-code="'breedRegister'" :params="query.form" :hasImport="false"></import-export>
+          <el-button v-if="power.insert" type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
+          <el-button v-if="power.delete" type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
         </div>
       </div>
       <el-table
@@ -115,7 +109,6 @@
             <user-info :username="scope.row.operateUser"/>
           </template>
         </el-table-column>
-        <el-table-column prop="pregnancyResultValue" label="妊娠结果"></el-table-column>
         <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
         <el-table-column prop="updateUser" label="修改人"></el-table-column>
       </el-table>
@@ -186,6 +179,7 @@
 </template>
 
 <script>
+import {getPageActionPower} from '@/components/common/base'
 import ImportExport from "@/components/common/ImportExport";
 import UserInfo from "@/components/common/UserInfo";
 import CattleInfo from "@/components/common/CattleInfo";
@@ -202,6 +196,12 @@ export default {
   },
   data() {
     return {
+      power:{
+        insert:false,
+        update:false,
+        delete:false
+      },
+      currentFarmCode:'',
       listBreed: [],
       listMethod: [],
       listUser: [],
@@ -231,6 +231,8 @@ export default {
     };
   },
   created() {
+    this.power = getPageActionPower('breedRegister');
+    this.currentFarmCode = this.$store.state.user.currentFarmCode;
     listUser().then(res => this.listUser = res);
     listSysConfig('cattleBreed').then(res => this.listBreed = res);
     listSysConfig('breedingMethod').then(res => this.listMethod = res);
@@ -250,8 +252,17 @@ export default {
     },
     // 获取 easy-mock 的模拟数据
     getData() {
+      if (!this.currentFarmCode) {
+        this.$message.error("请在页面右上角先选择牧场权限");
+        this.tableData = [];
+        this.pageTotal = 0;
+        this.multipleSelection = [];
+        return;
+      }
       this.loading = true;
-      pageBreedRegister(this.query.form).then(res => {
+      let params = {...this.query.form};
+      params.farmCode = this.currentFarmCode;
+      pageBreedRegister(params).then(res => {
         this.tableData = res.list;
         this.pageTotal = res.total;
         this.multipleSelection = [];
@@ -272,7 +283,9 @@ export default {
         if (!valid) {
           return false;
         }
-        addBreedRegister(this.saveDialog.form).then(res => {
+        let data = {...this.saveDialog.form};
+        data.farmCode = this.currentFarmCode;
+        addBreedRegister(data).then(res => {
           if (res > 0) {
             this.saveDialog.visible = false;
             this.saveDialog.form = {};

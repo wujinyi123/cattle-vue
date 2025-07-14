@@ -5,8 +5,8 @@
         <el-form :model="query.form">
           <el-row :gutter="20" class="handle-el-row">
             <el-col :span="8">
-              <el-form-item label="牧场" :label-width="formLabelWidth">
-                <el-input v-model="query.form.farmName" placeholder="请输入"></el-input>
+              <el-form-item label="登记号" :label-width="formLabelWidth">
+                <el-input v-model="query.form.registerId" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -21,11 +21,6 @@
             </el-col>
           </el-row>
           <el-row :gutter="20" class="handle-el-row">
-            <el-col :span="8">
-              <el-form-item label="登记号" :label-width="formLabelWidth">
-                <el-input v-model="query.form.registerId" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
             <el-col :span="8">
               <el-form-item label="日期" :label-width="formLabelWidth">
                 <el-date-picker
@@ -45,17 +40,13 @@
                 <el-input v-model="query.form.operaUser" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row :gutter="20" class="handle-el-row">
             <el-col :span="8">
               <el-form-item label="结果" :label-width="formLabelWidth">
                 <el-select v-model="query.form.result" style="width:100%" placeholder="请选择">
-                  <el-option key="all" label="全部" value=""></el-option>
-                  <el-option v-for="item in listPregnancyResult"
-                             :key="item.key"
-                             :label="item.value"
-                             :value="item.key">
-                  </el-option>
+                  <el-option label="全部" value=""></el-option>
+                  <el-option label="正常" value="正常"></el-option>
+                  <el-option label="弱犊" value="弱犊"></el-option>
+                  <el-option label="死胎" value="死胎"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -72,9 +63,8 @@
           </el-row>
         </el-form>
         <div>
-          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
-          <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
-          <import-export :template-code="'breedPregnancyResult'" :params="queryParams" :hasImport="false"></import-export>
+          <el-button v-if="power.insert" type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
+          <el-button v-if="power.delete" type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
         </div>
       </div>
       <el-table
@@ -102,22 +92,16 @@
             <user-info :username="scope.row.operaUser"/>
           </template>
         </el-table-column>
-        <el-table-column prop="resultValue" label="结果"></el-table-column>
+        <el-table-column prop="result" label="结果"></el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
+        <el-table-column prop="childFarmZoneCode" label="牛犊子圈舍编号"></el-table-column>
+        <el-table-column prop="childCattleCode" label="牛犊子耳牌号"></el-table-column>
+        <el-table-column prop="breedValue" label="牛犊子品种"></el-table-column>
+        <el-table-column prop="sex" label="牛犊子性别"></el-table-column>
+        <el-table-column prop="color" label="牛犊子颜色"></el-table-column>
+        <el-table-column prop="weight" label="牛犊子体重"></el-table-column>
         <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
         <el-table-column prop="updateUser" label="修改人"></el-table-column>
-        <el-table-column
-            fixed="right"
-            label="后代"
-            width="200">
-          <template slot-scope="scope">
-            <cattle-info
-                style="display: block"
-                v-for="item in scope.row.children"
-                :key="item.id"
-                :cattle-code="item.cattleCode"/>
-          </template>
-        </el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination
@@ -157,78 +141,25 @@
         </el-form-item>
         <el-form-item label="结果" :label-width="formLabelWidth" prop="result">
           <el-select v-model="saveDialog.form.result" style="width:100%" placeholder="请选择">
-            <el-option v-for="item in listPregnancyResult"
-                       :key="item.key"
-                       :label="item.value"
-                       :value="item.key">
-            </el-option>
+            <el-option label="正常" value="正常"></el-option>
+            <el-option label="弱犊" value="弱犊"></el-option>
+            <el-option label="死胎" value="死胎"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="备注" :label-width="formLabelWidth">
           <el-input type="textarea" :rows="2" v-model="saveDialog.form.remark" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="后代" :label-width="formLabelWidth">
-          <el-link type="primary" :underline="false" @click="addCattle">添加</el-link>
-        </el-form-item>
-      </el-form>
-      <el-table
-          :data="saveDialog.form.children"
-          current-row-key="id"
-          border
-          class="table"
-          header-cell-class-name="table-header"
-      >
-        <el-table-column prop="farmName" label="牧场"></el-table-column>
-        <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
-        <el-table-column prop="cattleCode" label="耳牌号"></el-table-column>
-        <el-table-column prop="cattleName" label="牛只名称"></el-table-column>
-        <el-table-column prop="breedValue" label="品种"></el-table-column>
-        <el-table-column prop="sexValue" label="性别"></el-table-column>
-        <el-table-column prop="remark" label="备注"></el-table-column>
-        <el-table-column
-            fixed="right"
-            label="操作"
-            width="100">
-          <template slot-scope="scope">
-            <el-link type="danger" :underline="false" @click="delCattle(scope.row)">删除</el-link>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="saveDialog.visible = false">取 消</el-button>
-        <el-button type="primary" @click="saveInfo">保 存</el-button>
-      </div>
-    </el-dialog>
-    <el-dialog :destroy-on-close="true" title="添加牛犊子" :visible.sync="addCattleDialog.visible">
-      <el-form :model="addCattleDialog.form" ref="addCattleDialog.form" :rules="addCattleDialog.rules">
-        <el-form-item label="牧场" :label-width="formLabelWidth" prop="farmId">
-          <el-select v-model="addCattleDialog.form.farmId" filterable placeholder="请选择" style="width:100%" @change="selectFarmZone">
-            <el-option
-                v-for="item in listFarm"
-                :key="item.farmId"
-                :label="item.farmName"
-                :value="item.farmId">
+        <el-form-item label="牛犊子圈舍编号" :label-width="formLabelWidth">
+          <el-select v-model="saveDialog.form.childFarmZoneCode" style="width:100%" placeholder="请选择">
+            <el-option v-for="item in listFarmZone"
+                       :key="item.farmZoneCode"
+                       :label="item.farmZoneCode"
+                       :value="item.farmZoneCode">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="圈舍编号" :label-width="formLabelWidth" prop="farmZoneCode">
-          <el-select v-model="addCattleDialog.form.farmZoneCode" filterable placeholder="请选择" style="width:100%">
-            <el-option
-                v-for="item in listFarmZone"
-                :key="item.farmZoneCode"
-                :label="item.farmZoneCode"
-                :value="item.farmZoneCode">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="耳牌号" :label-width="formLabelWidth" prop="cattleCode">
-          <el-input v-model="addCattleDialog.form.cattleCode" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="牛只名称" :label-width="formLabelWidth">
-          <el-input v-model="addCattleDialog.form.cattleName" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="品种" :label-width="formLabelWidth" prop="breed">
-          <el-select v-model="addCattleDialog.form.breed" style="width:100%" placeholder="请选择">
+        <el-form-item label="牛犊子品种" :label-width="formLabelWidth">
+          <el-select v-model="saveDialog.form.breed" style="width:100%" placeholder="请选择">
             <el-option v-for="item in cattleBreedList"
                        :key="item.key"
                        :label="item.value"
@@ -236,32 +167,36 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="性别" :label-width="formLabelWidth" prop="sex">
-          <el-select v-model="addCattleDialog.form.sex" style="width:100%" placeholder="请选择">
-            <el-option v-for="item in cattleSexList"
-                       :key="item.key"
-                       :label="item.value"
-                       :value="item.key">
-            </el-option>
+        <el-form-item label="牛犊子性别" :label-width="formLabelWidth">
+          <el-select v-model="saveDialog.form.sex" style="width:100%" placeholder="请选择">
+            <el-option label="公" value="公"></el-option>
+            <el-option label="母" value="母"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="备注" :label-width="formLabelWidth">
-          <el-input type="textarea" :rows="2" v-model="addCattleDialog.form.remark" placeholder="请输入"></el-input>
+        <el-form-item label="牛犊子耳牌号" :label-width="formLabelWidth">
+          <el-input v-model="saveDialog.form.childCattleCode" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="颜色" :label-width="formLabelWidth">
+          <el-input v-model="saveDialog.form.color" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="体重" :label-width="formLabelWidth">
+          <el-input v-model="saveDialog.form.weight" placeholder="请输入"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addCattleDialog.visible = false">取 消</el-button>
-        <el-button type="primary" @click="addCattleInfo">保 存</el-button>
+        <el-button @click="saveDialog.visible = false">取 消</el-button>
+        <el-button type="primary" @click="saveInfo">保 存</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import {getPageActionPower} from '@/components/common/base'
 import ImportExport from "@/components/common/ImportExport";
 import UserInfo from "@/components/common/UserInfo";
 import CattleInfo from "@/components/common/CattleInfo";
-import {listFarm, listFarmZone} from '@/api/farm';
+import {listFarmZone} from '@/api/farm';
 import {pageBreedPregnancyResult, addBreedPregnancyResult, delBreedPregnancyResult} from '@/api/breed';
 import {listUser} from '@/api/user';
 import {listSysConfig} from "@/api/sys";
@@ -275,12 +210,15 @@ export default {
   },
   data() {
     return {
+      power: {
+        insert: false,
+        update: false,
+        delete: false
+      },
+      currentFarmCode: '',
       listUser: [],
-      listFarm: [],
       listFarmZone: [],
-      listPregnancyResult: [],
       cattleBreedList: [],
-      cattleSexList: [],
       query: {
         form: {
           pageNum: 1,
@@ -295,54 +233,37 @@ export default {
       childrenSize: 0,
       saveDialog: {
         visible: false,
-        form: {children: []},
+        form: {},
         rules: {
           registerId: [{required: true, message: '登记号不能为空', trigger: 'change'}],
           resultDay: [{required: true, message: '日期不能为空', trigger: 'change'}],
           operaUser: [{required: true, message: '操作员不能为空', trigger: 'change'}],
           result: [{required: true, message: '结果不能为空', trigger: 'change'}]
         }
-      },
-      addCattleDialog: {
-        visible: false,
-        form: {},
-        rules: {
-          farmId: [{required: true, message: '牧场不能为空', trigger: 'change'}],
-          farmZoneCode: [{required: true, message: '圈舍编号不能为空', trigger: 'change'}],
-          cattleCode: [{required: true, message: '耳牌号不能为空', trigger: 'change'}],
-          breed: [{required: true, message: '品种不能为空', trigger: 'change'}],
-          sex: [{required: true, message: '性别不能为空', trigger: 'change'}]
-        }
       }
     };
   },
   created() {
-    listSysConfig('pregnancyResult').then(res => this.listPregnancyResult = res);
+    this.power = getPageActionPower('breedPregnancyResult');
+    this.currentFarmCode = this.$store.state.user.currentFarmCode;
+    listFarmZone(this.currentFarmCode).then(res => this.listFarmZone = res);
     listSysConfig('cattleBreed').then(res => this.cattleBreedList = res);
-    listSysConfig('cattleSex').then(res => this.cattleSexList = res);
     listUser().then(res => this.listUser = res);
-    listFarm().then(res => this.listFarm = res);
     this.getData();
   },
-  computed:{
-    queryParams(){
+  computed: {
+    queryParams() {
       let params = {...this.query.form};
       if (params.resultDay && params.resultDay.length) {
         params.resultDayStart = params.resultDay[0];
         params.resultDayEnd = params.resultDay[1];
         params.resultDay = undefined;
       }
+      params.farmCode = this.currentFarmCode;
       return params;
     }
   },
   methods: {
-    selectFarmZone() {
-      if (!this.addCattleDialog.form.farmId) {
-        this.listFarmZone = [];
-        return;
-      }
-      listFarmZone(this.addCattleDialog.form.farmId).then(res => this.listFarmZone = res);
-    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
@@ -356,6 +277,13 @@ export default {
     },
     // 获取 easy-mock 的模拟数据
     getData() {
+      if (!this.currentFarmCode) {
+        this.$message.error("请在页面右上角先选择牧场权限");
+        this.tableData = [];
+        this.pageTotal = 0;
+        this.multipleSelection = [];
+        return;
+      }
       this.loading = true;
       pageBreedPregnancyResult(this.queryParams).then(res => {
         this.tableData = res.list;
@@ -370,47 +298,21 @@ export default {
       this.getData();
     },
     addInfo() {
-      this.saveDialog.form = {children: []};
+      this.saveDialog.form = {};
       this.saveDialog.visible = true;
-    },
-    addCattle() {
-      this.addCattleDialog.form = {};
-      this.addCattleDialog.visible = true;
-    },
-    addCattleInfo() {
-      this.$refs['addCattleDialog.form'].validate((valid) => {
-        if (!valid) {
-          return false;
-        }
-        let cattleObj = {id: new Date().getTime(), ...this.addCattleDialog.form};
-        cattleObj.farmName = this.listFarm.filter(item => item.farmId === cattleObj.farmId)[0].farmName;
-        cattleObj.breedValue = this.cattleBreedList.filter(item => item.key === cattleObj.breed)[0].value;
-        cattleObj.sexValue = this.cattleSexList.filter(item => item.key === cattleObj.sex)[0].value;
-        let children = this.saveDialog.form.children && [...this.saveDialog.form.children] || [];
-        children.push(cattleObj);
-        this.saveDialog.form.children = children;
-        this.addCattleDialog.visible = false;
-        this.addCattleDialog.form = {children: []};
-      });
-    },
-    delCattle(row) {
-      let children = this.saveDialog.form.children && [...this.saveDialog.form.children] || [];
-      children = children.filter(item => item.id !== row.id);
-      this.saveDialog.form.children = children;
     },
     saveInfo() {
       this.$refs['saveDialog.form'].validate((valid) => {
         if (!valid) {
           return false;
         }
-        let body = {...this.saveDialog.form};
-        if (body.children) {
-          body.children.forEach(item => {
-            item.id = '';
-            item.birthday = body.resultDay;
-          });
+        let data = {...this.saveDialog.form};
+        data.farmCode = this.currentFarmCode;
+        if (data.result !== '死胎' && (!data.childFarmZoneCode || !data.childCattleCode || !data.breed || !data.sex)) {
+          this.$message.error('结果不是死胎时，牛犊子圈舍编号/耳牌号/品种/性别必填');
+          return false;
         }
-        addBreedPregnancyResult(body).then(res => {
+        addBreedPregnancyResult(data).then(res => {
           if (res > 0) {
             this.saveDialog.visible = false;
             this.saveDialog.form = {};

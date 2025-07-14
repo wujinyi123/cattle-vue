@@ -5,8 +5,8 @@
         <el-form :model="query.form">
           <el-row :gutter="20" class="handle-el-row">
             <el-col :span="8">
-              <el-form-item label="牧场" :label-width="formLabelWidth">
-                <el-input v-model="query.form.farmName" placeholder="请输入"></el-input>
+              <el-form-item label="登记号" :label-width="formLabelWidth">
+                <el-input v-model="query.form.registerId" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -21,11 +21,6 @@
             </el-col>
           </el-row>
           <el-row :gutter="20" class="handle-el-row">
-            <el-col :span="8">
-              <el-form-item label="登记号" :label-width="formLabelWidth">
-                <el-input v-model="query.form.registerId" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
             <el-col :span="8">
               <el-form-item label="检查日期" :label-width="formLabelWidth">
                 <el-date-picker
@@ -45,8 +40,6 @@
                 <el-input v-model="query.form.checkUser" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row :gutter="20" class="handle-el-row">
             <el-col :span="8">
               <el-form-item label="检查结果" :label-width="formLabelWidth">
                 <el-input v-model="query.form.result" placeholder="请输入"></el-input>
@@ -60,9 +53,8 @@
           </el-row>
         </el-form>
         <div>
-          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
-          <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
-          <import-export :template-code="'breedPregnancyCheck'" :params="queryParams" :hasImport="false"></import-export>
+          <el-button v-if="power.insert" type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
+          <el-button v-if="power.delete" type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
         </div>
       </div>
       <el-table
@@ -143,6 +135,7 @@
 </template>
 
 <script>
+import {getPageActionPower} from '@/components/common/base'
 import ImportExport from "@/components/common/ImportExport";
 import UserInfo from "@/components/common/UserInfo";
 import CattleInfo from "@/components/common/CattleInfo";
@@ -158,6 +151,12 @@ export default {
   },
   data() {
     return {
+      power:{
+        insert:false,
+        update:false,
+        delete:false
+      },
+      currentFarmCode:'',
       listUser: [],
       query: {
         form: {
@@ -183,6 +182,8 @@ export default {
     };
   },
   created() {
+    this.power = getPageActionPower('breedPregnancyCheck');
+    this.currentFarmCode = this.$store.state.user.currentFarmCode;
     listUser().then(res => this.listUser = res);
     this.getData();
   },
@@ -194,6 +195,7 @@ export default {
         params.checkDayEnd = params.checkDay[1];
         params.checkDay = undefined;
       }
+      params.farmCode = this.currentFarmCode;
       return params;
     }
   },
@@ -211,6 +213,13 @@ export default {
     },
     // 获取 easy-mock 的模拟数据
     getData() {
+      if (!this.currentFarmCode) {
+        this.$message.error("请在页面右上角先选择牧场权限");
+        this.tableData = [];
+        this.pageTotal = 0;
+        this.multipleSelection = [];
+        return;
+      }
       this.loading = true;
       pageBreedPregnancyCheck(this.queryParams).then(res => {
         this.tableData = res.list;
@@ -233,7 +242,9 @@ export default {
         if (!valid) {
           return false;
         }
-        addBreedPregnancyCheck(this.saveDialog.form).then(res => {
+        let data = {...this.saveDialog.form};
+        data.farmCode = this.currentFarmCode;
+        addBreedPregnancyCheck(data).then(res => {
           if (res > 0) {
             this.saveDialog.visible = false;
             this.saveDialog.form = {};

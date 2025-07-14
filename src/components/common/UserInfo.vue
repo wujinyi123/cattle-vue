@@ -11,20 +11,24 @@
         <el-col :span="14" class="user-el-col-value">{{ userInfo.name }}</el-col>
       </el-row>
       <el-row class="user-el-row">
-        <el-col :span="10" class="user-el-col-label">工种：</el-col>
-        <el-col :span="14" class="user-el-col-value">{{ userInfo.job }}</el-col>
+        <el-col :span="10" class="user-el-col-label">性别：</el-col>
+        <el-col :span="14" class="user-el-col-value">{{ userInfo.sex }}</el-col>
+      </el-row>
+      <el-row class="user-el-row">
+        <el-col :span="10" class="user-el-col-label">是否系统管理员：</el-col>
+        <el-col :span="14" class="user-el-col-value">{{ userInfo.isSysAdmin }}</el-col>
+      </el-row>
+      <el-row class="user-el-row">
+        <el-col :span="10" class="user-el-col-label">岗位：</el-col>
+        <el-col :span="14" class="user-el-col-value">{{ userInfo.jobName }}</el-col>
+      </el-row>
+      <el-row class="user-el-row">
+        <el-col :span="10" class="user-el-col-label">所在牧场：</el-col>
+        <el-col :span="14" class="user-el-col-value">{{ userInfo.farmName }}</el-col>
       </el-row>
       <el-row class="user-el-row">
         <el-col :span="10" class="user-el-col-label">联系方式：</el-col>
         <el-col :span="14" class="user-el-col-value">{{ userInfo.phone }}</el-col>
-      </el-row>
-      <el-row class="user-el-row">
-        <el-col :span="10" class="user-el-col-label">是否系统管理员：</el-col>
-        <el-col :span="14" class="user-el-col-value">{{ userInfo.isSysAdminValue }}</el-col>
-      </el-row>
-      <el-row class="user-el-row">
-        <el-col :span="10" class="user-el-col-label">状态：</el-col>
-        <el-col :span="14" class="user-el-col-value">{{ userInfo.statusValue }}</el-col>
       </el-row>
       <div slot="footer" class="dialog-footer">
         <el-button @click="userDialogVisible = false">取消</el-button>
