@@ -24,6 +24,17 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
+              <el-form-item label="性别" :label-width="formLabelWidth">
+                <el-select v-model="query.form.sex" style="width:100%" placeholder="请选择">
+                  <el-option label="全部" value=""></el-option>
+                  <el-option label="男" value="男"></el-option>
+                  <el-option label="女" value="女"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20" class="handle-el-row">
+            <el-col :span="6">
               <el-form-item label="岗位" :label-width="formLabelWidth">
                 <el-select v-model="query.form.jobCode" style="width:100%" placeholder="请选择">
                   <el-option key="all" label="全部" value=""></el-option>
@@ -35,8 +46,6 @@
                 </el-select>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row :gutter="20" class="handle-el-row">
             <el-col :span="6">
               <el-form-item label="所在牧场" :label-width="formLabelWidth">
                 <el-select v-model="query.form.farmCode" style="width:100%" placeholder="请选择">
@@ -96,6 +105,7 @@
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="username" label="账号"></el-table-column>
         <el-table-column prop="name" label="姓名"></el-table-column>
+        <el-table-column prop="sex" label="性别"></el-table-column>
         <el-table-column prop="isSysAdmin" label="是否系统管理员"></el-table-column>
         <el-table-column prop="jobName" label="岗位"></el-table-column>
         <el-table-column prop="farmName" label="所在牧场"></el-table-column>
@@ -118,6 +128,11 @@
                 class="red"
                 @click="delInfo(scope.row.username)"
             >删除
+            </el-button>
+            <el-button
+                icon="el-icon-refresh"
+                @click="reloadPassword(scope.row.username)"
+            >重置密码
             </el-button>
           </template>
         </el-table-column>
@@ -147,6 +162,12 @@
         </el-form-item>
         <el-form-item label="姓名" :label-width="formLabelWidth" prop="name">
           <el-input v-model="saveDialog.form.name" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="性别" :label-width="formLabelWidth" prop="sex">
+          <el-select v-model="saveDialog.form.sex" style="width:100%" placeholder="请选择">
+            <el-option label="男" value="男"></el-option>
+            <el-option label="女" value="女"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="是否系统管理员" :label-width="formLabelWidth" prop="isSysAdmin">
           <el-select v-model="saveDialog.form.isSysAdmin" style="width:100%" placeholder="请选择">
@@ -207,7 +228,7 @@
 import ImportExport from "@/components/common/ImportExport";
 import {listSysJob} from "@/api/sys";
 import {listFarm} from '@/api/farm'
-import {pageUser, getUser, saveUser, delUser} from '@/api/user';
+import {pageUser, getUser, saveUser, delUser, reloadPassword} from '@/api/user';
 
 export default {
   name: 'EmployeeInfoManage',
@@ -239,6 +260,7 @@ export default {
           password: [{required: true, message: '密码不能为空', trigger: 'change'}],
           rePassword: [{required: true, message: '再次输入密码不能为空', trigger: 'change'}],
           name: [{required: true, message: '姓名不能为空', trigger: 'change'}],
+          sex: [{required: true, message: '性别不能为空', trigger: 'change'}],
           isSysAdmin: [{required: true, message: '是否系统管理员不能为空', trigger: 'change'}],
           jobCode: [{required: true, message: '岗位不能为空', trigger: 'change'}],
           phone: [{required: true, message: '联系方式不能为空', trigger: 'change'}],
@@ -341,6 +363,22 @@ export default {
             this.getData();
           } else {
             this.$message.error('删除失败');
+          }
+        });
+      });
+    },
+    reloadPassword(username) {
+      this.$confirm('此操作将重置密码为：123456, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        reloadPassword(username).then(res => {
+          if (res > 0) {
+            this.$message.success('重置成功，请联系用户尽快到个人中心修改密码');
+            this.getData();
+          } else {
+            this.$message.error('重置失败');
           }
         });
       });

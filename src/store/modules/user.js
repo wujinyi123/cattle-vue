@@ -15,6 +15,7 @@ const mutations = {
         }
         state.currentFarmCode = currentFarmCode;
         localStorage.setItem('currentFarmCode', currentFarmCode);
+        setTimeout(()=>{},1000);
     },
     SET_CURRENT_FARM_CODE(state, farmCode) {
         state.currentFarmCode = farmCode;

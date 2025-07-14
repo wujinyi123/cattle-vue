@@ -174,7 +174,7 @@ import ImportExport from "@/components/common/ImportExport";
 import UserInfo from "@/components/common/UserInfo";
 import CattleInfo from "@/components/common/CattleInfo";
 import {pageInventoryBuy, addInventoryBuy, delInventoryBuy} from '@/api/inventory';
-import {listSysConfig} from "@/api/common";
+import {listSysConfig} from "@/api/sys";
 import {listFarm, listFarmZone} from '@/api/farm';
 
 export default {

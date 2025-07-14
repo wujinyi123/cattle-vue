@@ -86,17 +86,14 @@
 </template>
 
 <script>
-import {pageSysConfig, addSysConfig, delSysConfig} from '@/api/common';
+import {pageSysConfig, addSysConfig, delSysConfig} from '@/api/sys';
 
 export default {
   name: 'SysConfig',
   data() {
     return {
       mapConfigType: {
-        isSysAdmin: '是否管理员',
-        userStatus: '员工状态',
         cattleBreed: '牛只品种',
-        cattleSex: '牛只性别',
         breedingMethod: '配种方式',
         pregnancyResult: '妊娠结果'
       },

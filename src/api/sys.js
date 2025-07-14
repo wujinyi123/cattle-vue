@@ -15,3 +15,19 @@ export const saveSysJob = (type, data) => {
 export const delSysJob = jobCode => {
     return service.post("/sys/delSysJob?jobCode=" + jobCode);
 };
+
+export const pageSysConfig = params => {
+    return service.get("/sys/pageSysConfig", {params});
+};
+
+export const listSysConfig = code => {
+    return service.get("/sys/listSysConfig", {params:{code}});
+};
+
+export const addSysConfig = data => {
+    return service.post("/sys/addSysConfig", data);
+};
+
+export const delSysConfig = data => {
+    return service.post("/sys/delSysConfig", data);
+};

@@ -86,6 +86,10 @@ export default {
               title: '员工档案管理',
             },
             {
+              index: 'sysConfig',
+              title: '系统配置管理',
+            },
+            {
               index: 'cattleInfoManage',
               title: '牛只档案管理',
             }

@@ -31,11 +31,6 @@ const router = new Router({
                     meta: {title: '个人中心'}
                 },
                 {
-                    path: '/sysConfig',
-                    component: () => import('@/components/page/baseInfoManage/SysConfig.vue'),
-                    meta: {title: '系统配置'}
-                },
-                {
                     path: '/farmInfoManage',
                     component: () => import('@/components/page/baseInfoManage/FarmInfoManage.vue'),
                     meta: {title: '牧场基础信息', onlySysAdmin: true}
@@ -54,6 +49,11 @@ const router = new Router({
                     path: '/employeeInfoManage',
                     component: () => import('@/components/page/baseInfoManage/EmployeeInfoManage.vue'),
                     meta: {title: '员工档案管理', onlySysAdmin: true}
+                },
+                {
+                    path: '/sysConfig',
+                    component: () => import('@/components/page/baseInfoManage/SysConfig.vue'),
+                    meta: {title: '系统配置', onlySysAdmin: true}
                 },
                 {
                     path: '/cattleInfoManage',

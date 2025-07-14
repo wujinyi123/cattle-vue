@@ -43,3 +43,7 @@ export const updatePhone = data => {
 export const delUser = data => {
     return service.post("/user/delUser", data);
 };
+
+export const reloadPassword = username => {
+    return service.post("/user/reloadPassword?username=" + username);
+}

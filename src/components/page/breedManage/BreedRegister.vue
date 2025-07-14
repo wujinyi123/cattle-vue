@@ -191,7 +191,7 @@ import UserInfo from "@/components/common/UserInfo";
 import CattleInfo from "@/components/common/CattleInfo";
 import {pageBreedRegister, addBreedRegister, delBreedRegister} from '@/api/breed';
 import {listUser} from '@/api/user';
-import {listSysConfig} from "@/api/common";
+import {listSysConfig} from "@/api/sys";
 
 export default {
   name: 'BreedRegister',

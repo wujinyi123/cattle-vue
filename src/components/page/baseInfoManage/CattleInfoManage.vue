@@ -190,7 +190,7 @@
 
 <script>
 import ImportExport from "@/components/common/ImportExport";
-import {listSysConfig} from "@/api/common";
+import {listSysConfig} from "@/api/sys";
 import {listFarm, listFarmZone} from '@/api/farm';
 import {pageCattle, getCattle, saveCattle, delCattle} from '@/api/cattle';
 

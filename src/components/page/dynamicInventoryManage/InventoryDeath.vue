@@ -127,7 +127,7 @@ import ImportExport from "@/components/common/ImportExport";
 import UserInfo from "@/components/common/UserInfo";
 import CattleInfo from "@/components/common/CattleInfo";
 import {pageInventoryDeath, addInventoryDeath, delInventoryDeath} from '@/api/inventory';
-import {listSysConfig} from "@/api/common";
+import {listSysConfig} from "@/api/sys";
 
 export default {
   name: 'InventoryDeath',
