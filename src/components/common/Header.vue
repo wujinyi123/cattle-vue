@@ -8,6 +8,16 @@
     <div class="logo">牛只管理系统</div>
     <div class="header-right">
       <div class="header-user-con">
+        <div style="margin-right: 20px">
+          <span style="font-size: 18px">牧场权限：</span>
+          <el-select v-model="currentFarmCode" @change="changeFarmCode">
+            <el-option v-for="item in $store.state.user.userInfo.farmPowerList"
+                       :key="item.farmCode"
+                       :label="item.farmName"
+                       :value="item.farmCode">
+            </el-option>
+          </el-select>
+        </div>
         <!-- 全屏显示 -->
         <div class="btn-fullscreen" @click="handleFullScreen">
           <el-tooltip effect="dark" :content="fullscreen?`取消全屏`:`全屏`" placement="bottom">
@@ -41,14 +51,19 @@ import tokenUtil from '@/utils/tokenUtil'
 export default {
   data() {
     return {
+      currentFarmCode: '',
       collapse: false,
       fullscreen: false
     };
   },
   created() {
-
+    this.currentFarmCode = this.$store.state.user.currentFarmCode;
   },
   methods: {
+    changeFarmCode(val) {
+      this.$store.commit('user/SET_CURRENT_FARM_CODE', val);
+      window.location.reload();
+    },
     // 用户名下拉菜单选择事件
     handleCommand(command) {
       if (command === 'loginout') {

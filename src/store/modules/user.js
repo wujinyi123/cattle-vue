@@ -1,12 +1,24 @@
 import {getCurrentUser} from "@/api/user";
 
 const state = () => ({
-    userInfo: {}
+    userInfo: {},
+    currentFarmCode:''
 });
 
 const mutations = {
     SET_CURRENT_USER(state, userInfo) {
         state.userInfo = userInfo;
+        let farmCodeList = userInfo.farmPowerList && userInfo.farmPowerList.map(item=>item.farmCode) || [];
+        let currentFarmCode = localStorage.getItem('currentFarmCode');
+        if (!currentFarmCode || !farmCodeList.includes(currentFarmCode)) {
+            currentFarmCode = farmCodeList.length>0?farmCodeList[0]:'';
+        }
+        state.currentFarmCode = currentFarmCode;
+        localStorage.setItem('currentFarmCode', currentFarmCode);
+    },
+    SET_CURRENT_FARM_CODE(state, farmCode) {
+        state.currentFarmCode = farmCode;
+        localStorage.setItem('currentFarmCode', farmCode);
     }
 };
 

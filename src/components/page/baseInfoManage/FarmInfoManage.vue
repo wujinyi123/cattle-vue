@@ -15,12 +15,17 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="地址" :label-width="formLabelWidth">
-                <el-input v-model="query.form.address" placeholder="请输入"></el-input>
+              <el-form-item label="牧场负责人" :label-width="formLabelWidth">
+                <el-input v-model="query.form.farmOwner" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20" class="handle-el-row">
+            <el-col :span="8">
+              <el-form-item label="地址" :label-width="formLabelWidth">
+                <el-input v-model="query.form.address" placeholder="请输入"></el-input>
+              </el-form-item>
+            </el-col>
             <el-col :span="8">
               <el-form-item label="面积" :label-width="formLabelWidth">
                 <el-input v-model="query.form.area" placeholder="请输入"></el-input>
@@ -59,6 +64,7 @@
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="farmCode" label="牧场代码"></el-table-column>
         <el-table-column prop="farmName" label="牧场名称"></el-table-column>
+        <el-table-column prop="farmOwner" label="牧场负责人"></el-table-column>
         <el-table-column prop="address" label="地址"></el-table-column>
         <el-table-column prop="area" label="面积"></el-table-column>
         <el-table-column prop="scale" label="养殖规模"></el-table-column>
@@ -102,6 +108,15 @@
         <el-form-item label="牧场名称" :label-width="formLabelWidth" prop="farmName">
           <el-input v-model="saveDialog.form.farmName" placeholder="请输入"></el-input>
         </el-form-item>
+        <el-form-item label="牧场负责人" :label-width="formLabelWidth" prop="farmOwner">
+          <el-select v-model="saveDialog.form.farmOwner" filterable style="width:100%" placeholder="请选择">
+            <el-option v-for="item in listUser"
+                       :key="item.username"
+                       :label="item.title"
+                       :value="item.username">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="地址" :label-width="formLabelWidth" prop="address">
           <el-input v-model="saveDialog.form.address" placeholder="请输入"></el-input>
         </el-form-item>
@@ -122,11 +137,13 @@
 
 <script>
 import {pageFarm, getFarm, saveFarm, delFarm} from '@/api/farm';
+import {listUser} from '@/api/user';
 
 export default {
   name: 'FarmInfoManage',
   data() {
     return {
+      listUser: [],
       query: {
         form: {
           pageNum: 1,
@@ -146,6 +163,7 @@ export default {
         rules: {
           farmCode: [{required: true, message: '牧场代码不能为空', trigger: 'change'}],
           farmName: [{required: true, message: '牧场名称不能为空', trigger: 'change'}],
+          farmOwner: [{required: true, message: '牧场负责人不能为空', trigger: 'change'}],
           address: [{required: true, message: '地址不能为空', trigger: 'change'}],
           area: [{required: true, message: '面积不能为空', trigger: 'change'}],
           scale: [{required: true, message: '养殖规模不能为空', trigger: 'change'}]
@@ -154,6 +172,7 @@ export default {
     };
   },
   created() {
+    listUser().then(res => this.listUser = res);
     this.getData();
   },
   methods: {

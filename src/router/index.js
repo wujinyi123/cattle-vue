@@ -46,6 +46,11 @@ const router = new Router({
                     meta: {title: '牛舍分区管理', onlySysAdmin: true}
                 },
                 {
+                    path: '/sysJob',
+                    component: () => import('@/components/page/baseInfoManage/SysJob.vue'),
+                    meta: {title: '岗位信息配置', onlySysAdmin: true}
+                },
+                {
                     path: '/employeeInfoManage',
                     component: () => import('@/components/page/baseInfoManage/EmployeeInfoManage.vue'),
                     meta: {title: '员工档案管理', onlySysAdmin: true}

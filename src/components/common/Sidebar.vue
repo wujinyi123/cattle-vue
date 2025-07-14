@@ -78,6 +78,10 @@ export default {
               title: '牛舍分区管理'
             },
             {
+              index: 'sysJob',
+              title: '岗位信息配置'
+            },
+            {
               index: 'employeeInfoManage',
               title: '员工档案管理',
             },
