@@ -5,11 +5,6 @@
         <el-form :model="query.form">
           <el-row :gutter="20" class="handle-el-row">
             <el-col :span="6">
-              <el-form-item label="牧场" :label-width="formLabelWidth">
-                <el-input v-model="query.form.farmName" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
               <el-form-item label="圈舍编号" :label-width="formLabelWidth">
                 <el-input v-model="query.form.farmZoneCode" placeholder="请输入"></el-input>
               </el-form-item>
@@ -24,8 +19,6 @@
                 <el-input v-model="query.form.cattleName" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row :gutter="20" class="handle-el-row">
             <el-col :span="6">
               <el-form-item label="品种" :label-width="formLabelWidth">
                 <el-select v-model="query.form.breed" filterable placeholder="请选择" style="width:100%">
@@ -39,17 +32,20 @@
                 </el-select>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row :gutter="20" class="handle-el-row">
             <el-col :span="6">
               <el-form-item label="性别" :label-width="formLabelWidth">
                 <el-select v-model="query.form.sex" filterable placeholder="请选择" style="width:100%">
-                  <el-option key="all" label="全部" value=""></el-option>
-                  <el-option
-                      v-for="item in cattleSexList"
-                      :key="item.key"
-                      :label="item.value"
-                      :value="item.key">
-                  </el-option>
+                  <el-option label="全部" value=""></el-option>
+                  <el-option label="公" value="公"></el-option>
+                  <el-option label="母" value="母"></el-option>
                 </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="颜色" :label-width="formLabelWidth">
+                <el-input v-model="query.form.color" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -77,10 +73,8 @@
           </el-row>
         </el-form>
         <div>
-          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
-          <el-button type="primary" icon="el-icon-edit" @click="updateInfo">修改</el-button>
-          <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
-          <import-export :template-code="'cattle'" :params="query.form"></import-export>
+          <el-button v-if="power.insert" type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
+          <el-button v-if="power.delete" type="primary" icon="el-icon-delete" @click="batchDelInfo">批量删除</el-button>
         </div>
       </div>
       <el-table
@@ -94,19 +88,38 @@
           @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="farmName" label="牧场"></el-table-column>
+        <el-table-column prop="farmName" label="牧场名称"></el-table-column>
         <el-table-column prop="farmOwner" label="牧场负责人"></el-table-column>
-        <el-table-column prop="farmAdmin" label="牧场管理员"></el-table-column>
         <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
         <el-table-column prop="cattleCode" label="耳牌号"></el-table-column>
         <el-table-column prop="cattleName" label="牛只名称"></el-table-column>
         <el-table-column prop="breedValue" label="品种"></el-table-column>
-        <el-table-column prop="sexValue" label="性别"></el-table-column>
+        <el-table-column prop="sex" label="性别"></el-table-column>
+        <el-table-column prop="color" label="颜色"></el-table-column>
         <el-table-column prop="birthday" label="出生日期"></el-table-column>
         <el-table-column prop="age" label="年龄"></el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
         <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
         <el-table-column prop="updateUser" label="修改人"></el-table-column>
+        <el-table-column label="操作" width="200" align="center">
+          <template slot-scope="scope">
+            <el-button
+                v-if="power.update"
+                type="primary"
+                icon="el-icon-edit"
+                @click="updateInfo(scope.row.cattleCode)"
+            >编辑
+            </el-button>
+            <el-button
+                v-if="power.delete"
+                type="danger"
+                icon="el-icon-delete"
+                class="red"
+                @click="delInfo(scope.row.cattleCode)"
+            >删除
+            </el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination
@@ -122,16 +135,6 @@
     </div>
     <el-dialog :destroy-on-close="true" :title="saveDialog.title" :visible.sync="saveDialog.visible">
       <el-form :model="saveDialog.form" ref="saveDialog.form" :rules="saveDialog.rules">
-        <el-form-item label="牧场" :label-width="formLabelWidth" prop="farmId">
-          <el-select v-model="saveDialog.form.farmId" filterable placeholder="请选择" style="width:100%" @change="selectFarmZone" :disabled="saveDialog.type === 'update'">
-            <el-option
-                v-for="item in listFarm"
-                :key="item.farmId"
-                :label="item.farmName"
-                :value="item.farmId">
-            </el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="圈舍编号" :label-width="formLabelWidth" prop="farmZoneCode">
           <el-select v-model="saveDialog.form.farmZoneCode" filterable placeholder="请选择" style="width:100%" :disabled="saveDialog.type === 'update'">
             <el-option
@@ -159,12 +162,12 @@
         </el-form-item>
         <el-form-item label="性别" :label-width="formLabelWidth" prop="sex">
           <el-select v-model="saveDialog.form.sex" style="width:100%" placeholder="请选择">
-            <el-option v-for="item in cattleSexList"
-                       :key="item.key"
-                       :label="item.value"
-                       :value="item.key">
-            </el-option>
+            <el-option label="公" value="公"></el-option>
+            <el-option label="母" value="母"></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="颜色" :label-width="formLabelWidth">
+          <el-input v-model="saveDialog.form.color" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="出生日期" :label-width="formLabelWidth" prop="birthday">
           <el-date-picker
@@ -189,9 +192,10 @@
 </template>
 
 <script>
+import {getPageActionPower} from '@/components/common/base'
 import ImportExport from "@/components/common/ImportExport";
 import {listSysConfig} from "@/api/sys";
-import {listFarm, listFarmZone} from '@/api/farm';
+import {listFarmZone} from '@/api/farm';
 import {pageCattle, getCattle, saveCattle, delCattle} from '@/api/cattle';
 
 export default {
@@ -201,10 +205,14 @@ export default {
   },
   data() {
     return {
-      listFarm: [],
+      power:{
+        insert:false,
+        update:false,
+        delete:false
+      },
+      currentFarmCode:'',
       listFarmZone: [],
       cattleBreedList: [],
-      cattleSexList: [],
       query: {
         form: {
           farmName: '',
@@ -230,7 +238,6 @@ export default {
         visible: false,
         form: {},
         rules: {
-          farmId: [{required: true, message: '牧场不能为空', trigger: 'change'}],
           farmZoneCode: [{required: true, message: '圈舍编号不能为空', trigger: 'change'}],
           cattleCode: [{required: true, message: '耳牌号不能为空', trigger: 'change'}],
           breed: [{required: true, message: '品种不能为空', trigger: 'change'}],
@@ -241,19 +248,13 @@ export default {
     };
   },
   created() {
-    listFarm().then(res => this.listFarm = res);
+    this.power = getPageActionPower('cattleInfoManage');
+    this.currentFarmCode = this.$store.state.user.currentFarmCode;
+    listFarmZone(this.currentFarmCode).then(res => this.listFarmZone = res);
     listSysConfig('cattleBreed').then(res => this.cattleBreedList = res);
-    listSysConfig('cattleSex').then(res => this.cattleSexList = res);
     this.getData();
   },
   methods: {
-    selectFarmZone() {
-      if (!this.saveDialog.form.farmId) {
-        this.listFarmZone = [];
-        return;
-      }
-      listFarmZone(this.saveDialog.form.farmId).then(res => this.listFarmZone = res);
-    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
@@ -267,8 +268,17 @@ export default {
     },
     // 获取 easy-mock 的模拟数据
     getData() {
+      if (!this.currentFarmCode) {
+        this.$message.error("请在页面右上角先选择牧场权限");
+        this.tableData = [];
+        this.pageTotal = 0;
+        this.multipleSelection = [];
+        return;
+      }
       this.loading = true;
-      pageCattle(this.query.form).then(res => {
+      let params = {...this.query.form};
+      params.farmCode = this.currentFarmCode;
+      pageCattle(params).then(res => {
         this.tableData = res.list;
         this.pageTotal = res.total;
         this.multipleSelection = [];
@@ -286,17 +296,12 @@ export default {
       this.saveDialog.form = {};
       this.saveDialog.visible = true;
     },
-    updateInfo() {
-      if (this.multipleSelection.length !== 1) {
-        this.$message.error('仅请选择一条数据');
-        return;
-      }
+    updateInfo(cattleCode) {
+      getCattle(cattleCode).then(res => {
+        this.saveDialog.form = res;
+      });
       this.saveDialog.title = '修改';
       this.saveDialog.type = 'update';
-      getCattle(this.multipleSelection[0].cattleCode).then(res => {
-        this.saveDialog.form = res;
-        this.selectFarmZone();
-      });
       this.saveDialog.visible = true;
     },
     saveInfo() {
@@ -316,8 +321,14 @@ export default {
         });
       });
     },
-    delInfo() {
-      if (this.multipleSelection.length === 0) {
+    delInfo(cattleCode) {
+      this.delInfoFunc([cattleCode]);
+    },
+    batchDelInfo() {
+      this.delInfoFunc(this.multipleSelection.map(item => item.cattleCode));
+    },
+    delInfoFunc(cattleCodeList) {
+      if (cattleCodeList.length === 0) {
         this.$message.error('至少选择一条数据');
         return;
       }
@@ -326,7 +337,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delCattle(this.multipleSelection.map(item => item.cattleCode)).then(res => {
+        delCattle(cattleCodeList).then(res => {
           if (res > 0) {
             this.$message.success('删除成功');
             this.getData();
