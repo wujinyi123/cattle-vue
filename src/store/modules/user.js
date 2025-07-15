@@ -1,5 +1,3 @@
-import {getCurrentUser} from "@/api/user";
-
 const state = () => ({
     userInfo: {},
     currentFarmCode:''
@@ -15,7 +13,6 @@ const mutations = {
         }
         state.currentFarmCode = currentFarmCode;
         localStorage.setItem('currentFarmCode', currentFarmCode);
-        setTimeout(()=>{},1000);
     },
     SET_CURRENT_FARM_CODE(state, farmCode) {
         state.currentFarmCode = farmCode;
@@ -24,9 +21,9 @@ const mutations = {
 };
 
 const actions = {
-    setCurrentUser({commit}) {
+    /*setCurrentUser({commit}) {
         getCurrentUser().then(res => commit('SET_CURRENT_USER', res));
-    }
+    }*/
 };
 
 export default {

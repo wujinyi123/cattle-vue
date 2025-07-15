@@ -125,6 +125,7 @@ export default {
           updatePhone({phone: value}).then(res => {
             if (res > 0) {
               this.$message.success('修改成功');
+              this.$store.commit('user/SET_CURRENT_USER', {});
               window.location.reload();
             } else {
               this.$message.error('修改失败');

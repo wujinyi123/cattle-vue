@@ -111,6 +111,23 @@
         </el-table-column>
         <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
         <el-table-column prop="updateUser" label="修改人"></el-table-column>
+        <el-table-column label="操作" width="200" align="center">
+          <template slot-scope="scope">
+            <el-link
+                type="primary"
+                :underline="false"
+                @click="$router.push({ path: '/breedPregnancyCheck', query: {registerId:scope.row.registerId }})">
+              妊检登记
+            </el-link>
+            <el-link
+                type="primary"
+                :underline="false"
+                style="margin-left: 20px"
+                @click="$router.push({ path: '/breedPregnancyResult', query: {registerId:scope.row.registerId }})">
+              产犊登记
+            </el-link>
+          </template>
+        </el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination
@@ -201,7 +218,6 @@ export default {
         update:false,
         delete:false
       },
-      currentFarmCode:'',
       listBreed: [],
       listMethod: [],
       listUser: [],
@@ -232,7 +248,6 @@ export default {
   },
   created() {
     this.power = getPageActionPower('breedRegister');
-    this.currentFarmCode = this.$store.state.user.currentFarmCode;
     listUser().then(res => this.listUser = res);
     listSysConfig('cattleBreed').then(res => this.listBreed = res);
     listSysConfig('breedingMethod').then(res => this.listMethod = res);
@@ -252,7 +267,7 @@ export default {
     },
     // 获取 easy-mock 的模拟数据
     getData() {
-      if (!this.currentFarmCode) {
+      if (!this.$store.state.user.currentFarmCode) {
         this.$message.error("请在页面右上角先选择牧场权限");
         this.tableData = [];
         this.pageTotal = 0;
@@ -261,7 +276,7 @@ export default {
       }
       this.loading = true;
       let params = {...this.query.form};
-      params.farmCode = this.currentFarmCode;
+      params.farmCode = this.$store.state.user.currentFarmCode;
       pageBreedRegister(params).then(res => {
         this.tableData = res.list;
         this.pageTotal = res.total;
@@ -284,7 +299,7 @@ export default {
           return false;
         }
         let data = {...this.saveDialog.form};
-        data.farmCode = this.currentFarmCode;
+        data.farmCode = this.$store.state.user.currentFarmCode;
         addBreedRegister(data).then(res => {
           if (res > 0) {
             this.saveDialog.visible = false;

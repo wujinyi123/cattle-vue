@@ -151,12 +151,11 @@ export default {
   },
   data() {
     return {
-      power:{
-        insert:false,
-        update:false,
-        delete:false
+      power: {
+        insert: false,
+        update: false,
+        delete: false
       },
-      currentFarmCode:'',
       listUser: [],
       query: {
         form: {
@@ -182,20 +181,20 @@ export default {
     };
   },
   created() {
+    this.query.form.registerId = this.$route.query.registerId;
     this.power = getPageActionPower('breedPregnancyCheck');
-    this.currentFarmCode = this.$store.state.user.currentFarmCode;
     listUser().then(res => this.listUser = res);
     this.getData();
   },
-  computed:{
-    queryParams(){
+  computed: {
+    queryParams() {
       let params = {...this.query.form};
       if (params.checkDay && params.checkDay.length) {
         params.checkDayStart = params.checkDay[0];
         params.checkDayEnd = params.checkDay[1];
         params.checkDay = undefined;
       }
-      params.farmCode = this.currentFarmCode;
+      params.farmCode = this.$store.state.user.currentFarmCode;
       return params;
     }
   },
@@ -213,7 +212,7 @@ export default {
     },
     // 获取 easy-mock 的模拟数据
     getData() {
-      if (!this.currentFarmCode) {
+      if (!this.$store.state.user.currentFarmCode) {
         this.$message.error("请在页面右上角先选择牧场权限");
         this.tableData = [];
         this.pageTotal = 0;
@@ -243,7 +242,7 @@ export default {
           return false;
         }
         let data = {...this.saveDialog.form};
-        data.farmCode = this.currentFarmCode;
+        data.farmCode = this.$store.state.user.currentFarmCode;
         addBreedPregnancyCheck(data).then(res => {
           if (res > 0) {
             this.saveDialog.visible = false;

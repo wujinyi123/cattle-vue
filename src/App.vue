@@ -5,11 +5,15 @@
 </template>
 <script>
 import tokenUtil from "@/utils/tokenUtil";
+import {getCurrentUser} from "@/api/user";
 
 export default {
   beforeCreate() {
     if (tokenUtil.getToken() && (!this.$store.state.user.userInfo || !this.$store.state.user.userInfo.username)) {
-      this.$store.dispatch('user/setCurrentUser');
+      let userInfo = getCurrentUser();
+      if (userInfo) {
+        this.$store.commit('user/SET_CURRENT_USER', userInfo);
+      }
     }
   }
 }

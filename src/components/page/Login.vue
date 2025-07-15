@@ -27,15 +27,15 @@
 </template>
 
 <script>
-import {login} from '@/api/user';
+import {login, getCurrentUser} from '@/api/user';
 import tokenUtil from '@/utils/tokenUtil'
 
 export default {
   data: function () {
     return {
       param: {
-        username: '',
-        password: '',
+        username: 'admin',
+        password: '123456',
       },
       rules: {
         username: [{required: true, message: '请输入用户名', trigger: 'blur'}],
@@ -51,7 +51,10 @@ export default {
             if (res && res.token) {
               this.$message.success('登录成功');
               tokenUtil.setToken(res.token);
-              this.$store.dispatch('user/setCurrentUser');
+              let userInfo = getCurrentUser();
+              if (userInfo) {
+                this.$store.commit('user/SET_CURRENT_USER', userInfo);
+              }
               this.$router.push('/');
             }
           });

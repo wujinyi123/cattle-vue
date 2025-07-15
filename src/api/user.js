@@ -1,12 +1,36 @@
 import service from '@/utils/request';
+import tokenUtil from "@/utils/tokenUtil";
+import {Message} from "element-ui";
 
 export const login = data => {
     return service.post("/user/login", data);
 };
 
-export const getCurrentUser = async () => {
-    return await service.get("/user/getCurrentUser");
-};
+export function getCurrentUser() {
+    let xhr = new XMLHttpRequest();
+    let data;
+    xhr.open("GET", "/api/user/getCurrentUser", false); // 第三个参数设置为false表示同步请求
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            data = xhr.responseText;
+        }
+    };
+    xhr.send();
+    data = data && JSON.parse(data) || {};
+    if (data.statusCodeValue == 200) {
+        return data.body || {};
+    }
+    if (data.statusCodeValue == 401) {
+        Message.error(data.body || '登录过期');
+        tokenUtil.removeToken();
+        window.app.$router.push('/login');
+        return null;
+    } else {
+        Message.error(data.body || '系统异常');
+        return null;
+    }
+
+}
 
 export const pageUser = params => {
     return service.get("/user/pageUser", {params});

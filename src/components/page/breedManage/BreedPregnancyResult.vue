@@ -215,7 +215,6 @@ export default {
         update: false,
         delete: false
       },
-      currentFarmCode: '',
       listUser: [],
       listFarmZone: [],
       cattleBreedList: [],
@@ -244,9 +243,9 @@ export default {
     };
   },
   created() {
+    this.query.form.registerId = this.$route.query.registerId;
     this.power = getPageActionPower('breedPregnancyResult');
-    this.currentFarmCode = this.$store.state.user.currentFarmCode;
-    listFarmZone(this.currentFarmCode).then(res => this.listFarmZone = res);
+    listFarmZone(this.$store.state.user.currentFarmCode).then(res => this.listFarmZone = res);
     listSysConfig('cattleBreed').then(res => this.cattleBreedList = res);
     listUser().then(res => this.listUser = res);
     this.getData();
@@ -259,7 +258,7 @@ export default {
         params.resultDayEnd = params.resultDay[1];
         params.resultDay = undefined;
       }
-      params.farmCode = this.currentFarmCode;
+      params.farmCode = this.$store.state.user.currentFarmCode;
       return params;
     }
   },
@@ -277,7 +276,7 @@ export default {
     },
     // 获取 easy-mock 的模拟数据
     getData() {
-      if (!this.currentFarmCode) {
+      if (!this.$store.state.user.currentFarmCode) {
         this.$message.error("请在页面右上角先选择牧场权限");
         this.tableData = [];
         this.pageTotal = 0;
@@ -307,7 +306,7 @@ export default {
           return false;
         }
         let data = {...this.saveDialog.form};
-        data.farmCode = this.currentFarmCode;
+        data.farmCode = this.$store.state.user.currentFarmCode;
         if (data.result !== '死胎' && (!data.childFarmZoneCode || !data.childCattleCode || !data.breed || !data.sex)) {
           this.$message.error('结果不是死胎时，牛犊子圈舍编号/耳牌号/品种/性别必填');
           return false;

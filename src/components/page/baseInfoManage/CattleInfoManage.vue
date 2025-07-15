@@ -210,7 +210,6 @@ export default {
         update:false,
         delete:false
       },
-      currentFarmCode:'',
       listFarmZone: [],
       cattleBreedList: [],
       query: {
@@ -249,8 +248,7 @@ export default {
   },
   created() {
     this.power = getPageActionPower('cattleInfoManage');
-    this.currentFarmCode = this.$store.state.user.currentFarmCode;
-    listFarmZone(this.currentFarmCode).then(res => this.listFarmZone = res);
+    listFarmZone(this.$store.state.user.currentFarmCode).then(res => this.listFarmZone = res);
     listSysConfig('cattleBreed').then(res => this.cattleBreedList = res);
     this.getData();
   },
@@ -268,7 +266,7 @@ export default {
     },
     // 获取 easy-mock 的模拟数据
     getData() {
-      if (!this.currentFarmCode) {
+      if (!this.$store.state.user.currentFarmCode) {
         this.$message.error("请在页面右上角先选择牧场权限");
         this.tableData = [];
         this.pageTotal = 0;
@@ -277,7 +275,7 @@ export default {
       }
       this.loading = true;
       let params = {...this.query.form};
-      params.farmCode = this.currentFarmCode;
+      params.farmCode = this.$store.state.user.currentFarmCode;
       pageCattle(params).then(res => {
         this.tableData = res.list;
         this.pageTotal = res.total;
