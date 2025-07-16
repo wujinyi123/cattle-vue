@@ -12,7 +12,7 @@ const router = new Router({
         },
         {
             path: '/',
-            component: () => import('@/components/common/Home.vue'),
+            component: () => import('@/components/common/System.vue'),
             meta: {title: '自述文件'},
             children: [
                 {
