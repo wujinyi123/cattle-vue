@@ -21,6 +21,8 @@ import vHead from './Header.vue';
 import vSidebar from './Sidebar.vue';
 import vTags from './Tags.vue';
 import bus from './bus';
+import tokenUtil from "@/utils/tokenUtil";
+import {getCurrentUser} from "@/api/user";
 
 export default {
   data() {
@@ -33,6 +35,14 @@ export default {
     vHead,
     vSidebar,
     vTags
+  },
+  beforeCreate() {
+    if (tokenUtil.getToken() && (!this.$store.state.user.userInfo || !this.$store.state.user.userInfo.username)) {
+      let userInfo = getCurrentUser();
+      if (userInfo) {
+        this.$store.commit('user/SET_CURRENT_USER', userInfo);
+      }
+    }
   },
   created() {
     bus.$on('collapse-content', msg => {
