@@ -58,37 +58,37 @@ const router = new Router({
                 {
                     path: '/cattleInfoManage',
                     component: () => import('@/components/page/baseInfoManage/CattleInfoManage.vue'),
-                    meta: {title: '牛只档案管理'}
+                    meta: {title: '牛只档案管理', pageCode: 'cattleInfoManage'}
                 },
                 {
                     path: '/breedRegister',
                     component: () => import('@/components/page/breedManage/BreedRegister.vue'),
-                    meta: {title: '配种登记'}
+                    meta: {title: '配种登记', pageCode: 'breedRegister'}
                 },
                 {
                     path: '/breedPregnancyCheck',
                     component: () => import('@/components/page/breedManage/BreedPregnancyCheck.vue'),
-                    meta: {title: '妊检登记'}
+                    meta: {title: '妊检登记', pageCode: 'breedPregnancyCheck'}
                 },
                 {
                     path: '/breedPregnancyResult',
                     component: () => import('@/components/page/breedManage/BreedPregnancyResult.vue'),
-                    meta: {title: '产犊登记'}
+                    meta: {title: '产犊登记', pageCode: 'breedPregnancyResult'}
                 },
                 {
                     path: '/inventoryBuy',
                     component: () => import('@/components/page/dynamicInventoryManage/InventoryBuy.vue'),
-                    meta: {title: '外购牛只登记'}
+                    meta: {title: '外购牛只登记', pageCode: 'inventoryBuy'}
                 },
                 {
                     path: '/inventorySell',
                     component: () => import('@/components/page/dynamicInventoryManage/InventorySell.vue'),
-                    meta: {title: '出售记录'}
+                    meta: {title: '出售记录', pageCode: 'inventorySell'}
                 },
                 {
                     path: '/inventoryDeath',
                     component: () => import('@/components/page/dynamicInventoryManage/InventoryDeath.vue'),
-                    meta: {title: '死亡登记'}
+                    meta: {title: '死亡登记', pageCode: 'inventoryDeath'}
                 },
                 {
                     path: '/diseaseMonitor',
@@ -219,8 +219,24 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to, from) => {
     const currentUserInfo = window.app.$store.state.user.userInfo || {};
-    if (to.meta.onlySysAdmin && currentUserInfo.isSysAdmin!=='Y') {
+    if (to.meta.onlySysAdmin && currentUserInfo.isSysAdmin !== 'Y') {
         window.app.$router.push('/403');
+        return;
+    }
+    if (to.meta.pageCode) {
+        if (currentUserInfo.isSysAdmin == 'Y') {
+            return;
+        }
+        let jobPower = currentUserInfo.jobObj && currentUserInfo.jobObj.jobPower || '{}';
+        let jobPowerObj;
+        try {
+            jobPowerObj = JSON.parse(jobPower);
+        } catch (e) {
+            jobPowerObj = {};
+        }
+        if (!(jobPowerObj[to.meta.pageCode] || []).includes('select')) {
+            window.app.$router.push('/403');
+        }
     }
 });
 

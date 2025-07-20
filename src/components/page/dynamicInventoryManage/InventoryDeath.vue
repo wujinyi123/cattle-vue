@@ -4,29 +4,22 @@
       <div class="handle-box">
         <el-form :model="query.form">
           <el-row :gutter="20" class="handle-el-row">
-            <el-col :span="8">
-              <el-form-item label="牧场" :label-width="formLabelWidth">
-                <el-input v-model="query.form.farmName" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
+            <el-col :span="6">
               <el-form-item label="牛只耳牌号" :label-width="formLabelWidth">
                 <el-input v-model="query.form.cattleCode" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="6">
               <el-form-item label="原因" :label-width="formLabelWidth">
                 <el-input v-model="query.form.reason" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row :gutter="20" class="handle-el-row">
-            <el-col :span="8">
+            <el-col :span="6">
               <el-form-item label="处理方式" :label-width="formLabelWidth">
                 <el-input v-model="query.form.handleMethod" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="6">
               <el-form-item label="日期" :label-width="formLabelWidth">
                 <el-date-picker
                     v-model="query.form.deathDay"
@@ -48,9 +41,8 @@
           </el-row>
         </el-form>
         <div>
-          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
-          <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
-          <import-export :template-code="'inventoryDeath'" :params="queryParams" :hasImport="false"></import-export>
+          <el-button v-if="power.insert" type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
+          <el-button v-if="power.delete" type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
         </div>
       </div>
       <el-table
@@ -128,6 +120,7 @@ import UserInfo from "@/components/common/UserInfo";
 import CattleInfo from "@/components/common/CattleInfo";
 import {pageInventoryDeath, addInventoryDeath, delInventoryDeath} from '@/api/inventory';
 import {listSysConfig} from "@/api/sys";
+import {getPageActionPower} from "@/components/common/base";
 
 export default {
   name: 'InventoryDeath',
@@ -138,6 +131,11 @@ export default {
   },
   data() {
     return {
+      power: {
+        insert: false,
+        update: false,
+        delete: false
+      },
       query: {
         form: {
           pageNum: 1,
@@ -162,6 +160,7 @@ export default {
     };
   },
   created() {
+    this.power = getPageActionPower('inventoryDeath');
     this.getData();
   },
   computed:{
@@ -172,6 +171,7 @@ export default {
         params.deathDayEnd = params.deathDay[1];
         params.deathDay = undefined;
       }
+      params.farmCode = this.$store.state.user.currentFarmCode;
       return params;
     }
   },
@@ -211,7 +211,9 @@ export default {
         if (!valid) {
           return false;
         }
-        addInventoryDeath(this.saveDialog.form).then(res => {
+        let data = {...this.saveDialog.form};
+        data.farmCode = this.$store.state.user.currentFarmCode;
+        addInventoryDeath(data).then(res => {
           if (res > 0) {
             this.saveDialog.visible = false;
             this.saveDialog.form = {};

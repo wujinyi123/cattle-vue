@@ -158,6 +158,9 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="牛犊子耳牌号" :label-width="formLabelWidth">
+          <el-input v-model="saveDialog.form.childCattleCode" placeholder="请输入"></el-input>
+        </el-form-item>
         <el-form-item label="牛犊子品种" :label-width="formLabelWidth">
           <el-select v-model="saveDialog.form.breed" style="width:100%" placeholder="请选择">
             <el-option v-for="item in cattleBreedList"
@@ -172,9 +175,6 @@
             <el-option label="公" value="公"></el-option>
             <el-option label="母" value="母"></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="牛犊子耳牌号" :label-width="formLabelWidth">
-          <el-input v-model="saveDialog.form.childCattleCode" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="颜色" :label-width="formLabelWidth">
           <el-input v-model="saveDialog.form.color" placeholder="请输入"></el-input>

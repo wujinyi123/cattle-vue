@@ -4,22 +4,17 @@
       <div class="handle-box">
         <el-form :model="query.form">
           <el-row :gutter="20" class="handle-el-row">
-            <el-col :span="6">
-              <el-form-item label="牧场" :label-width="formLabelWidth">
-                <el-input v-model="query.form.farmName" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
+            <el-col :span="8">
               <el-form-item label="牛只耳牌号" :label-width="formLabelWidth">
                 <el-input v-model="query.form.cattleCode" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="8">
               <el-form-item label="来源" :label-width="formLabelWidth">
                 <el-input v-model="query.form.source" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="8">
               <el-form-item label="入场时间" :label-width="formLabelWidth">
                 <el-date-picker
                     v-model="query.form.buyDay"
@@ -41,9 +36,8 @@
           </el-row>
         </el-form>
         <div>
-          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
-          <el-button type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
-          <import-export :template-code="'inventoryBuy'" :params="queryParams" :hasImport="false"></import-export>
+          <el-button v-if="power.insert" type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
+          <el-button v-if="power.delete" type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
         </div>
       </div>
       <el-table
@@ -87,16 +81,6 @@
     </div>
     <el-dialog :destroy-on-close="true" title="新增" :visible.sync="saveDialog.visible">
       <el-form :model="saveDialog.form" ref="saveDialog.form" :rules="saveDialog.rules">
-        <el-form-item label="牧场" :label-width="formLabelWidth" prop="farmId">
-          <el-select v-model="saveDialog.form.farmId" filterable placeholder="请选择" style="width:100%" @change="selectFarmZone">
-            <el-option
-                v-for="item in listFarm"
-                :key="item.farmId"
-                :label="item.farmName"
-                :value="item.farmId">
-            </el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="圈舍编号" :label-width="formLabelWidth" prop="farmZoneCode">
           <el-select v-model="saveDialog.form.farmZoneCode" filterable placeholder="请选择" style="width:100%">
             <el-option
@@ -124,12 +108,12 @@
         </el-form-item>
         <el-form-item label="性别" :label-width="formLabelWidth" prop="sex">
           <el-select v-model="saveDialog.form.sex" style="width:100%" placeholder="请选择">
-            <el-option v-for="item in cattleSexList"
-                       :key="item.key"
-                       :label="item.value"
-                       :value="item.key">
-            </el-option>
+            <el-option label="公" value="公"></el-option>
+            <el-option label="母" value="母"></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="颜色" :label-width="formLabelWidth">
+          <el-input v-model="saveDialog.form.color" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="出生日期" :label-width="formLabelWidth" prop="birthday">
           <el-date-picker
@@ -175,7 +159,8 @@ import UserInfo from "@/components/common/UserInfo";
 import CattleInfo from "@/components/common/CattleInfo";
 import {pageInventoryBuy, addInventoryBuy, delInventoryBuy} from '@/api/inventory';
 import {listSysConfig} from "@/api/sys";
-import {listFarm, listFarmZone} from '@/api/farm';
+import {listFarmZone} from '@/api/farm';
+import {getPageActionPower} from "@/components/common/base";
 
 export default {
   name: 'InventoryBuy',
@@ -186,7 +171,11 @@ export default {
   },
   data() {
     return {
-      listFarm: [],
+      power: {
+        insert: false,
+        update: false,
+        delete: false
+      },
       listFarmZone: [],
       cattleBreedList: [],
       cattleSexList: [],
@@ -205,7 +194,6 @@ export default {
         visible: false,
         form: {},
         rules: {
-          farmId: [{required: true, message: '牧场不能为空', trigger: 'change'}],
           farmZoneCode: [{required: true, message: '圈舍编号不能为空', trigger: 'change'}],
           cattleCode: [{required: true, message: '耳牌号不能为空', trigger: 'change'}],
           breed: [{required: true, message: '品种不能为空', trigger: 'change'}],
@@ -219,9 +207,9 @@ export default {
     };
   },
   created() {
-    listFarm().then(res => this.listFarm = res);
+    this.power = getPageActionPower('inventoryBuy');
+    listFarmZone(this.$store.state.user.currentFarmCode).then(res => this.listFarmZone = res);
     listSysConfig('cattleBreed').then(res => this.cattleBreedList = res);
-    listSysConfig('cattleSex').then(res => this.cattleSexList = res);
     this.getData();
   },
   computed:{
@@ -232,17 +220,11 @@ export default {
         params.buyDayEnd = params.buyDay[1];
         params.buyDay = undefined;
       }
+      params.farmCode = this.$store.state.user.currentFarmCode;
       return params;
     }
   },
   methods: {
-    selectFarmZone() {
-      if (!this.saveDialog.form.farmId) {
-        this.listFarmZone = [];
-        return;
-      }
-      listFarmZone(this.saveDialog.form.farmId).then(res => this.listFarmZone = res);
-    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
@@ -278,7 +260,9 @@ export default {
         if (!valid) {
           return false;
         }
-        addInventoryBuy(this.saveDialog.form).then(res => {
+        let data = {...this.saveDialog.form};
+        data.farmCode = this.$store.state.user.currentFarmCode;
+        addInventoryBuy(data).then(res => {
           if (res > 0) {
             this.saveDialog.visible = false;
             this.saveDialog.form = {};

@@ -14,5 +14,17 @@ export default [
     {
         code:'breedPregnancyResult',
         name:'产犊登记'
+    },
+    {
+        code:'inventoryBuy',
+        name:'外购牛只登记'
+    },
+    {
+        code:'inventorySell',
+        name:'出售记录'
+    },
+    {
+        code:'inventoryDeath',
+        name:'死亡登记'
     }
 ]

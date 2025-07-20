@@ -31,6 +31,10 @@
         <el-col :span="14" class="cattle-el-col-value">{{ cattleInfo.color }}</el-col>
       </el-row>
       <el-row class="cattle-el-row">
+        <el-col :span="10" class="cattle-el-col-label">颜色：</el-col>
+        <el-col :span="14" class="cattle-el-col-value">{{ cattleInfo.color }}</el-col>
+      </el-row>
+      <el-row class="cattle-el-row">
         <el-col :span="10" class="cattle-el-col-label">出生日期：</el-col>
         <el-col :span="14" class="cattle-el-col-value">{{ cattleInfo.birthday }}</el-col>
       </el-row>
