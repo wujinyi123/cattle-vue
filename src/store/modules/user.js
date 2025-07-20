@@ -1,18 +1,20 @@
 const state = () => ({
     userInfo: {},
-    currentFarmCode:''
+    currentFarmCode: ''
 });
 
 const mutations = {
     SET_CURRENT_USER(state, userInfo) {
         state.userInfo = userInfo;
-        let farmCodeList = userInfo.farmPowerList && userInfo.farmPowerList.map(item=>item.farmCode) || [];
+        let farmCodeList = userInfo.farmPowerList && userInfo.farmPowerList.map(item => item.farmCode) || [];
         let currentFarmCode = localStorage.getItem('currentFarmCode');
         if (!currentFarmCode || !farmCodeList.includes(currentFarmCode)) {
-            currentFarmCode = farmCodeList.length>0?farmCodeList[0]:'';
+            currentFarmCode = farmCodeList.length > 0 ? farmCodeList[0] : '';
         }
-        state.currentFarmCode = currentFarmCode;
-        localStorage.setItem('currentFarmCode', currentFarmCode);
+        if (currentFarmCode) {
+            state.currentFarmCode = currentFarmCode;
+            localStorage.setItem('currentFarmCode', currentFarmCode);
+        }
     },
     SET_CURRENT_FARM_CODE(state, farmCode) {
         state.currentFarmCode = farmCode;
@@ -27,7 +29,7 @@ const actions = {
 };
 
 export default {
-    namespaced:true,
+    namespaced: true,
     state,
     mutations,
     actions
