@@ -219,6 +219,9 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to, from) => {
     const currentUserInfo = window.app.$store.state.user.userInfo || {};
+    if (!currentUserInfo.username) {
+        return;
+    }
     if (to.meta.onlySysAdmin && currentUserInfo.isSysAdmin !== 'Y') {
         window.app.$router.push('/403');
         return;
