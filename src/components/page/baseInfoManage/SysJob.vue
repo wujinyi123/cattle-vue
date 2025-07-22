@@ -122,7 +122,14 @@ export default {
           this.pageCodeList.forEach(pc => {
             if (jobPower[pc.code] && jobPower[pc.code].length > 0) {
               let name = pc.name;
-              let value = jobPower[pc.code].map(curd => this.curdMap[curd] || '').join(',')
+              let powerList = jobPower[pc.code] || [];
+              let valueList = [];
+              Object.keys(this.curdMap).forEach(key => {
+                if (powerList.includes(key)) {
+                  valueList.push(this.curdMap[key]);
+                }
+              });
+              let value = valueList.join(',')
               jobPowerList.push({
                 name,
                 value,
