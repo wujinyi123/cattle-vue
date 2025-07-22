@@ -48,6 +48,7 @@
           <template v-if="$store.state.user.userInfo.isSysAdmin==='Y'">
             <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
             <el-button type="primary" icon="el-icon-delete" @click="batchDelInfo">批量删除</el-button>
+            <import-export :template-code="'farm'" :params="query.form"></import-export>
           </template>
         </div>
       </div>
@@ -138,9 +139,13 @@
 <script>
 import {pageFarm, getFarm, saveFarm, delFarm} from '@/api/farm';
 import {listUser} from '@/api/user';
+import ImportExport from "@/components/common/ImportExport";
 
 export default {
   name: 'FarmInfoManage',
+  components: {
+    ImportExport
+  },
   data() {
     return {
       listUser: [],

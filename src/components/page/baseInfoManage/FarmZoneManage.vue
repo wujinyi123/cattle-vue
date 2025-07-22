@@ -44,6 +44,7 @@
           <template v-if="$store.state.user.userInfo.isSysAdmin==='Y'">
             <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
             <el-button type="primary" icon="el-icon-delete" @click="batchDelInfo">批量删除</el-button>
+            <import-export :template-code="'farmZone'" :params="query.form"></import-export>
           </template>
         </div>
       </div>
@@ -59,6 +60,7 @@
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="farmName" label="牧场名称"></el-table-column>
+        <el-table-column prop="farmOwner" label="牧场负责人"></el-table-column>
         <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
         <el-table-column prop="farmZoneName" label="圈舍名称"></el-table-column>
         <el-table-column prop="farmZoneRemark" label="圈舍备注"></el-table-column>
@@ -131,14 +133,19 @@
 
 <script>
 import {listFarm, pageFarmZone, getFarmZone, saveFarmZone, delFarmZone} from '@/api/farm';
+import ImportExport from "@/components/common/ImportExport";
 
 export default {
   name: 'FarmZoneManage',
+  components: {
+    ImportExport
+  },
   data() {
     return {
       listFarm: [],
       query: {
         form: {
+          farmCode: this.$store.state.user.currentFarmCode,
           pageNum: 1,
           pageSize: 10
         }

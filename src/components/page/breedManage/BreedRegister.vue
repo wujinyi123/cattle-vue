@@ -44,10 +44,12 @@
               <el-form-item label="配种日期" :label-width="formLabelWidth">
                 <el-date-picker
                     v-model="query.form.breedingDay"
-                    type="date"
+                    type="daterange"
                     format="yyyy-MM-dd"
                     value-format="yyyy-MM-dd"
-                    placeholder="选择日期"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
                     style="width:100%">
                 </el-date-picker>
               </el-form-item>
@@ -253,6 +255,18 @@ export default {
     listSysConfig('breedingMethod').then(res => this.listMethod = res);
     this.getData();
   },
+  computed: {
+    queryParams() {
+      let params = {...this.query.form};
+      if (params.breedingDay && params.breedingDay.length) {
+        params.breedingDayStart = params.breedingDay[0];
+        params.breedingDayEnd = params.breedingDay[1];
+        params.breedingDay = undefined;
+      }
+      params.farmCode = this.$store.state.user.currentFarmCode;
+      return params;
+    }
+  },
   methods: {
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -275,9 +289,7 @@ export default {
         return;
       }
       this.loading = true;
-      let params = {...this.query.form};
-      params.farmCode = this.$store.state.user.currentFarmCode;
-      pageBreedRegister(params).then(res => {
+      pageBreedRegister(this.queryParams).then(res => {
         this.tableData = res.list;
         this.pageTotal = res.total;
         this.multipleSelection = [];

@@ -69,7 +69,7 @@ export default {
     },
     hasImport: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   data() {
@@ -80,7 +80,8 @@ export default {
       importAction: '',
       headers: {},
       importDialogVisible: false,
-      importResult: {}
+      importResult: {},
+      uploadLoading:null
     };
   },
   created() {
@@ -93,7 +94,7 @@ export default {
     });
     this.exportUrl = `/api/common/export?${paramsList.join('&')}`;
     this.templateUrl = `/api/common/template?templateCode=${this.templateCode}`;
-    this.importAction = `/api/common/importFile?templateCode=${this.templateCode}`;
+    this.importAction = `/api/common/importFile?templateCode=${this.templateCode}&farmCode=${this.$store.state.user.currentFarmCode}`;
     this.headers = {token: tokenUtil.getToken()}
     if (this.hasImport) {
       importRequireField(this.templateCode).then(res => this.requireFields = res.join(','));
@@ -105,13 +106,27 @@ export default {
         this.$message.error('请上传xlsx文件');
         return false;
       }
+      this.uploadLoading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       return true;
     },
     uploadSuccess(response, file) {
+      if (this.uploadLoading) {
+        this.uploadLoading.close();
+        this.uploadLoading = null;
+      }
       this.$message.success(`执行成功，文件：${file.name}，请查看结果`);
       this.importResult = response.body || {};
     },
     uploadError(err) {
+      if (this.uploadLoading) {
+        this.uploadLoading.close();
+        this.uploadLoading = null;
+      }
       let obj = typeof (err) == 'string' ? JSON.parse(err) : err;
       this.$message.error(obj.body || '系统异常');
     }

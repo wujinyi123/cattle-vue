@@ -52,10 +52,12 @@
               <el-form-item label="出生日期" :label-width="formLabelWidth">
                 <el-date-picker
                     v-model="query.form.birthday"
-                    type="date"
+                    type="daterange"
                     format="yyyy-MM-dd"
                     value-format="yyyy-MM-dd"
-                    placeholder="选择日期"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
                     style="width:100%">
                 </el-date-picker>
               </el-form-item>
@@ -75,6 +77,7 @@
         <div>
           <el-button v-if="power.insert" type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
           <el-button v-if="power.delete" type="primary" icon="el-icon-delete" @click="batchDelInfo">批量删除</el-button>
+          <import-export :template-code="'cattle'" :params="queryParams" :hasImport="power.insert"></import-export>
         </div>
       </div>
       <el-table
@@ -252,6 +255,18 @@ export default {
     listSysConfig('cattleBreed').then(res => this.cattleBreedList = res);
     this.getData();
   },
+  computed: {
+    queryParams() {
+      let params = {...this.query.form};
+      if (params.birthday && params.birthday.length) {
+        params.birthdayStart = params.birthday[0];
+        params.birthdayEnd = params.birthday[1];
+        params.birthday = undefined;
+      }
+      params.farmCode = this.$store.state.user.currentFarmCode;
+      return params;
+    }
+  },
   methods: {
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -274,9 +289,7 @@ export default {
         return;
       }
       this.loading = true;
-      let params = {...this.query.form};
-      params.farmCode = this.$store.state.user.currentFarmCode;
-      pageCattle(params).then(res => {
+      pageCattle(this.queryParams).then(res => {
         this.tableData = res.list;
         this.pageTotal = res.total;
         this.multipleSelection = [];
