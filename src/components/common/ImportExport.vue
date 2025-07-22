@@ -46,7 +46,7 @@
         </p>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="importDialogVisible = false">取消</el-button>
+        <el-button @click="importDialogVisible=false;importResult={};">取消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -81,7 +81,7 @@ export default {
       headers: {},
       importDialogVisible: false,
       importResult: {},
-      uploadLoading:null
+      uploadLoading: null
     };
   },
   created() {
