@@ -76,6 +76,11 @@ const router = new Router({
                     meta: {title: '产犊登记', pageCode: 'breedPregnancyResult'}
                 },
                 {
+                    path: '/cattleTransfer',
+                    component: () => import('@/components/page/dynamicInventoryManage/CattleTransfer.vue'),
+                    meta: {title: '转场管理'}
+                },
+                {
                     path: '/inventoryBuy',
                     component: () => import('@/components/page/dynamicInventoryManage/InventoryBuy.vue'),
                     meta: {title: '外购牛只登记', pageCode: 'inventoryBuy'}

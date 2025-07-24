@@ -57,7 +57,7 @@ export default {
   props: {
     cattleCode: {
       type: String,
-      default: 'NA'
+      default: ''
     },
     cattleJson: {
       type: String,

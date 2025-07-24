@@ -120,6 +120,10 @@ export default {
           title: '动态库存管理',
           subs: [
             {
+              index: 'cattleTransfer',
+              title: '转场管理',
+            },
+            {
               index: 'inventoryBuy',
               title: '外购牛只登记',
             },

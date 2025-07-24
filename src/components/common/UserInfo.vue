@@ -45,7 +45,7 @@ export default {
   props: {
     username: {
       type: String,
-      default: 'NA'
+      default: ''
     }
   },
   data() {
