@@ -120,6 +120,10 @@ export default {
           title: '动态库存管理',
           subs: [
             {
+              index: 'cattleChangeZone',
+              title: '转舍管理',
+            },
+            {
               index: 'cattleTransfer',
               title: '转场管理',
             },
@@ -143,12 +147,12 @@ export default {
           title: '健康与疾病管理',
           subs: [
             {
-              index: 'diseaseMonitor',
-              title: '疾病监控',
+              index: 'quarantineRegister',
+              title: '检疫登记',
             },
             {
-              index: 'epidemicPreventionPlan',
-              title: '防疫计划',
+              index: 'immunityRegister',
+              title: '免疫登记',
             }
           ]
         },

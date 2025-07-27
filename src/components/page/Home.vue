@@ -74,9 +74,10 @@ export default {
     };
   },
   created() {
-    getCattleTransferNum().then(res => this.cattleTransferNum = res);
+    const currentFarmCode = this.$store.state.user.currentFarmCode;
+    getCattleTransferNum(currentFarmCode).then(res => this.cattleTransferNum = res);
     hasHelpFile().then(res => this.hasHelpFile = res);
-    homeStat(this.$store.state.user.currentFarmCode).then(res => {
+    homeStat(currentFarmCode).then(res => {
       this.farmCattleStat.labels = res.farmCattleList.map(item => item.label);
       this.farmCattleStat.datasets = [{
         label: '牛只数',

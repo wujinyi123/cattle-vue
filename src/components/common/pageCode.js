@@ -26,5 +26,13 @@ export default [
     {
         code:'inventoryDeath',
         name:'死亡登记'
+    },
+    {
+        code:'quarantineRegister',
+        name:'检疫登记'
+    },
+    {
+        code:'immunityRegister',
+        name:'免疫登记'
     }
 ]

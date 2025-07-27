@@ -76,6 +76,11 @@ const router = new Router({
                     meta: {title: '产犊登记', pageCode: 'breedPregnancyResult'}
                 },
                 {
+                    path: '/cattleChangeZone',
+                    component: () => import('@/components/page/dynamicInventoryManage/CattleChangeZone.vue'),
+                    meta: {title: '转舍管理'}
+                },
+                {
                     path: '/cattleTransfer',
                     component: () => import('@/components/page/dynamicInventoryManage/CattleTransfer.vue'),
                     meta: {title: '转场管理'}
@@ -96,14 +101,14 @@ const router = new Router({
                     meta: {title: '死亡登记', pageCode: 'inventoryDeath'}
                 },
                 {
-                    path: '/diseaseMonitor',
-                    component: () => import('@/components/page/healthDiseaseManage/diseaseMonitor.vue'),
-                    meta: {title: '疾病监控'}
+                    path: '/quarantineRegister',
+                    component: () => import('@/components/page/healthDiseaseManage/QuarantineRegister.vue'),
+                    meta: {title: '检疫登记', pageCode: 'quarantineRegister'}
                 },
                 {
-                    path: '/epidemicPreventionPlan',
-                    component: () => import('@/components/page/healthDiseaseManage/epidemicPreventionPlan.vue'),
-                    meta: {title: '防疫计划'}
+                    path: '/immunityRegister',
+                    component: () => import('@/components/page/healthDiseaseManage/ImmunityRegister.vue'),
+                    meta: {title: '免疫登记', pageCode: 'immunityRegister'}
                 },
                 {
                     path: '/realTimeBoard',

@@ -94,7 +94,11 @@ export default {
     return {
       mapConfigType: {
         cattleBreed: '牛只品种',
-        breedingMethod: '配种方式'
+        breedingMethod: '配种方式',
+        quarantineType: '检疫类型',
+        quarantineMethod: '检疫方式',
+        immunityName: '免疫名称',
+        immunityMethod: '免疫方式'
       },
       listConfigType: [],
       query: {

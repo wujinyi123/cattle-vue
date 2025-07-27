@@ -309,6 +309,7 @@ export default {
     },
     updateInfo(username) {
       getUser(username).then(res => {
+        res.farmPower = res.farmPower && res.farmPower.split(',') || [];
         this.saveDialog.form = res;
       });
       this.saveDialog.title = '修改';
@@ -328,6 +329,7 @@ export default {
           }
           delete data['rePassword'];
         }
+        console.log(data);
         data.farmPower = data.farmPower && data.farmPower.join(',');
         saveUser(this.saveDialog.type, data).then(res => {
           if (res > 0) {
