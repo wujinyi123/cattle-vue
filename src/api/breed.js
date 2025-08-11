@@ -20,6 +20,10 @@ export const addBreedPregnancyCheck = data => {
     return service.post("/breed/addBreedPregnancyCheck", data);
 };
 
+export const addBreedPregnancyCheckByCattle = data => {
+    return service.post("/breed/addBreedPregnancyCheckByCattle", data);
+};
+
 export const delBreedPregnancyCheck = data => {
     return service.post("/breed/delBreedPregnancyCheck", data);
 };

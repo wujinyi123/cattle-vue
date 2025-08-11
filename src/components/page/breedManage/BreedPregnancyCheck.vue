@@ -53,7 +53,8 @@
           </el-row>
         </el-form>
         <div>
-          <el-button v-if="power.insert" type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
+          <el-button v-if="power.insert" type="primary" icon="el-icon-circle-plus-outline" @click="addInfo('cattleCode')">按耳牌号添加</el-button>
+          <el-button v-if="power.insert" type="primary" icon="el-icon-circle-plus-outline" @click="addInfo('registerId')">按登记号添加</el-button>
           <el-button v-if="power.delete" type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
         </div>
       </div>
@@ -100,7 +101,10 @@
     </div>
     <el-dialog :destroy-on-close="true" title="新增" :visible.sync="saveDialog.visible">
       <el-form :model="saveDialog.form" ref="saveDialog.form" :rules="saveDialog.rules">
-        <el-form-item label="登记号" :label-width="formLabelWidth" prop="registerId">
+        <el-form-item v-if="saveDialog.type==='cattleCode'" label="耳牌号" :label-width="formLabelWidth" prop="cattleCodeList">
+          <el-input type="textarea" :rows="2" v-model="saveDialog.form.cattleCodeList" placeholder="多个请用英文逗号隔开"></el-input>
+        </el-form-item>
+        <el-form-item v-else label="登记号" :label-width="formLabelWidth" prop="registerId">
           <el-input v-model="saveDialog.form.registerId" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="检查日期" :label-width="formLabelWidth" prop="checkDay">
@@ -139,7 +143,7 @@ import {getPageActionPower} from '@/components/common/base'
 import ImportExport from "@/components/common/ImportExport";
 import UserInfo from "@/components/common/UserInfo";
 import CattleInfo from "@/components/common/CattleInfo";
-import {pageBreedPregnancyCheck, addBreedPregnancyCheck, delBreedPregnancyCheck} from '@/api/breed';
+import {pageBreedPregnancyCheck, addBreedPregnancyCheck, addBreedPregnancyCheckByCattle, delBreedPregnancyCheck} from '@/api/breed';
 import {listUser} from '@/api/user';
 
 export default {
@@ -172,6 +176,7 @@ export default {
         visible: false,
         form: {},
         rules: {
+          cattleCodeList: [{required: true, message: '牛只耳牌号不能为空', trigger: 'change'}],
           registerId: [{required: true, message: '登记号不能为空', trigger: 'change'}],
           checkDay: [{required: true, message: '检查日期不能为空', trigger: 'change'}],
           checkUser: [{required: true, message: '检查员不能为空', trigger: 'change'}],
@@ -232,7 +237,8 @@ export default {
       this.query.form.pageNum = 1;
       this.getData();
     },
-    addInfo() {
+    addInfo(type) {
+      this.saveDialog.type = type;
       this.saveDialog.form = {};
       this.saveDialog.visible = true;
     },
@@ -243,7 +249,14 @@ export default {
         }
         let data = {...this.saveDialog.form};
         data.farmCode = this.$store.state.user.currentFarmCode;
-        addBreedPregnancyCheck(data).then(res => {
+        let func;
+        if (this.saveDialog.type === 'cattleCode') {
+          data.cattleCodeList = data.cattleCodeList.split(',').filter(item => item).map(item => item.trim());
+          func = addBreedPregnancyCheckByCattle;
+        } else {
+          func = addBreedPregnancyCheck;
+        }
+        func(data).then(res => {
           if (res > 0) {
             this.saveDialog.visible = false;
             this.saveDialog.form = {};

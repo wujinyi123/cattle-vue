@@ -105,6 +105,9 @@
         <el-table-column prop="frozenSemenCode" label="冻精号"></el-table-column>
         <el-table-column prop="frozenSemenBreedValue" label="冻精品种"></el-table-column>
         <el-table-column prop="breedingDay" label="配种日期"></el-table-column>
+        <el-table-column prop="firstCheckDay" label="计划初检日期"></el-table-column>
+        <el-table-column prop="reCheckDay" label="计划复检日期"></el-table-column>
+        <el-table-column prop="expectedDay" label="预产日期"></el-table-column>
         <el-table-column prop="breedingMethodValue" label="配种方式"></el-table-column>
         <el-table-column label="输配员">
           <template slot-scope="scope">
@@ -145,8 +148,8 @@
     </div>
     <el-dialog :destroy-on-close="true" title="新增" :visible.sync="saveDialog.visible">
       <el-form :model="saveDialog.form" ref="saveDialog.form" :rules="saveDialog.rules">
-        <el-form-item label="牛只耳牌号" :label-width="formLabelWidth" prop="cattleCode">
-          <el-input v-model="saveDialog.form.cattleCode" placeholder="请输入"></el-input>
+        <el-form-item label="耳牌号" :label-width="formLabelWidth" prop="cattleCodeList">
+          <el-input type="textarea" :rows="2" v-model="saveDialog.form.cattleCodeList" placeholder="多个请用英文逗号隔开"></el-input>
         </el-form-item>
         <el-form-item label="冻精号" :label-width="formLabelWidth" prop="frozenSemenCode">
           <el-input v-model="saveDialog.form.frozenSemenCode" placeholder="请输入"></el-input>
@@ -169,6 +172,15 @@
               placeholder="选择日期"
               style="width:100%">
           </el-date-picker>
+        </el-form-item>
+        <el-form-item label="计划初检日期" :label-width="formLabelWidth">
+          {{ planDay.firstCheckDay }}
+        </el-form-item>
+        <el-form-item label="计划复检日期" :label-width="formLabelWidth">
+          {{ planDay.reCheckDay }}
+        </el-form-item>
+        <el-form-item label="预产日期" :label-width="formLabelWidth">
+          {{ planDay.expectedDay }}
         </el-form-item>
         <el-form-item label="配种方式" :label-width="formLabelWidth" prop="breedingMethod">
           <el-select v-model="saveDialog.form.breedingMethod" style="width:100%" placeholder="请选择">
@@ -198,6 +210,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import {getPageActionPower} from '@/components/common/base'
 import ImportExport from "@/components/common/ImportExport";
 import UserInfo from "@/components/common/UserInfo";
@@ -215,10 +228,10 @@ export default {
   },
   data() {
     return {
-      power:{
-        insert:false,
-        update:false,
-        delete:false
+      power: {
+        insert: false,
+        update: false,
+        delete: false
       },
       listBreed: [],
       listMethod: [],
@@ -238,7 +251,7 @@ export default {
         visible: false,
         form: {},
         rules: {
-          cattleCode: [{required: true, message: '牛只耳牌号不能为空', trigger: 'change'}],
+          cattleCodeList: [{required: true, message: '牛只耳牌号不能为空', trigger: 'change'}],
           frozenSemenCode: [{required: true, message: '冻精号不能为空', trigger: 'change'}],
           frozenSemenBreed: [{required: true, message: '冻精品种不能为空', trigger: 'change'}],
           breedingDay: [{required: true, message: '配种日期不能为空', trigger: 'change'}],
@@ -265,6 +278,16 @@ export default {
       }
       params.farmCode = this.$store.state.user.currentFarmCode;
       return params;
+    },
+    planDay() {
+      if (!this.saveDialog.form.breedingDay) {
+        return {};
+      }
+      let breedingDay = new Date(this.saveDialog.form.breedingDay);
+      let firstCheckDay = moment(breedingDay).add(60, 'days').format('YYYY-MM-DD');
+      let reCheckDay = moment(breedingDay).add(90, 'days').format('YYYY-MM-DD');
+      let expectedDay = moment(breedingDay).add(270, 'days').format('YYYY-MM-DD');
+      return {firstCheckDay, reCheckDay, expectedDay};
     }
   },
   methods: {
@@ -312,6 +335,7 @@ export default {
         }
         let data = {...this.saveDialog.form};
         data.farmCode = this.$store.state.user.currentFarmCode;
+        data.cattleCodeList = data.cattleCodeList.split(',').filter(item => item).map(item => item.trim());
         addBreedRegister(data).then(res => {
           if (res > 0) {
             this.saveDialog.visible = false;
