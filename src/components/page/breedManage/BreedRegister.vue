@@ -83,6 +83,8 @@
         <div>
           <el-button v-if="power.insert" type="primary" icon="el-icon-circle-plus-outline" @click="addInfo">添加</el-button>
           <el-button v-if="power.delete" type="primary" icon="el-icon-delete" @click="delInfo">批量删除</el-button>
+          <el-button type="primary" icon="el-icon-download" @click="downloadRegisterCattle(60)">导出配种超过60天的牛只</el-button>
+          <el-button type="primary" icon="el-icon-download" @click="downloadRegisterCattle(90)">导出配种超过90天的牛只</el-button>
         </div>
       </div>
       <el-table
@@ -370,6 +372,13 @@ export default {
           }
         });
       });
+    },
+    downloadRegisterCattle(overDays) {
+      let paramsList = ['templateCode=downloadRegisterCattle'];
+      paramsList.push(`fileName=配种超过${overDays}天的牛只.xlsx`);
+      paramsList.push(`farmCode=${this.$store.state.user.currentFarmCode}`);
+      paramsList.push(`overDays=${overDays}`);
+      window.open(`/api/common/export?${paramsList.join('&')}`);
     }
   }
 };
