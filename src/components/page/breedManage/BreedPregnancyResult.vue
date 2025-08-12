@@ -5,13 +5,15 @@
         <el-form :model="query.form">
           <el-row :gutter="20" class="handle-el-row">
             <el-col :span="8">
-              <el-form-item label="登记号" :label-width="formLabelWidth">
-                <el-input v-model="query.form.registerId" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="圈舍" :label-width="formLabelWidth">
-                <el-input v-model="query.form.farmZoneCode" placeholder="请输入"></el-input>
+              <el-form-item label="圈舍编号" :label-width="formLabelWidth">
+                <el-select v-model="query.form.farmZoneCode" style="width:100%" placeholder="请选择">
+                  <el-option key="all" label="全部" value=""></el-option>
+                  <el-option v-for="item in listFarmZone"
+                             :key="item.farmZoneCode"
+                             :label="item.farmZoneCode"
+                             :value="item.farmZoneCode">
+                  </el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -78,8 +80,6 @@
           @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="registerId" label="登记号"></el-table-column>
-        <el-table-column prop="farmName" label="牧场"></el-table-column>
         <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
         <el-table-column label="牛只耳牌号">
           <template slot-scope="scope">
@@ -117,8 +117,8 @@
     </div>
     <el-dialog :destroy-on-close="true" title="新增" :visible.sync="saveDialog.visible" :width="'1000px'">
       <el-form :model="saveDialog.form" ref="saveDialog.form" :rules="saveDialog.rules">
-        <el-form-item label="登记号" :label-width="formLabelWidth" prop="registerId">
-          <el-input v-model="saveDialog.form.registerId" placeholder="请输入"></el-input>
+        <el-form-item label="牛只耳牌号" :label-width="formLabelWidth" prop="cattleCode">
+          <el-input v-model="saveDialog.form.cattleCode" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="日期" :label-width="formLabelWidth" prop="resultDay">
           <el-date-picker
@@ -220,6 +220,8 @@ export default {
       cattleBreedList: [],
       query: {
         form: {
+          cattleCode:'',
+          resultDay:[],
           pageNum: 1,
           pageSize: 10
         }
@@ -234,7 +236,7 @@ export default {
         visible: false,
         form: {},
         rules: {
-          registerId: [{required: true, message: '登记号不能为空', trigger: 'change'}],
+          cattleCode: [{required: true, message: '牛只耳牌号', trigger: 'change'}],
           resultDay: [{required: true, message: '日期不能为空', trigger: 'change'}],
           operaUser: [{required: true, message: '操作员不能为空', trigger: 'change'}],
           result: [{required: true, message: '结果不能为空', trigger: 'change'}]
@@ -243,7 +245,13 @@ export default {
     };
   },
   created() {
-    this.query.form.registerId = this.$route.query.registerId;
+    let query = {...this.$route.query};
+    if (query.cattleCode) {
+      this.query.form.cattleCode = query.cattleCode;
+    }
+    if (query.breedingDay && query.expectedDay) {
+      this.query.form.resultDay = [query.breedingDay, query.expectedDay];
+    }
     this.power = getPageActionPower('breedPregnancyResult');
     listFarmZone(this.$store.state.user.currentFarmCode).then(res => this.listFarmZone = res);
     listSysConfig('cattleBreed').then(res => this.cattleBreedList = res);

@@ -5,13 +5,15 @@
         <el-form :model="query.form">
           <el-row :gutter="20" class="handle-el-row">
             <el-col :span="8">
-              <el-form-item label="登记号" :label-width="formLabelWidth">
-                <el-input v-model="query.form.registerId" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="圈舍" :label-width="formLabelWidth">
-                <el-input v-model="query.form.farmZoneCode" placeholder="请输入"></el-input>
+              <el-form-item label="圈舍编号" :label-width="formLabelWidth">
+                <el-select v-model="query.form.farmZoneCode" style="width:100%" placeholder="请选择">
+                  <el-option key="all" label="全部" value=""></el-option>
+                  <el-option v-for="item in listFarmZone"
+                             :key="item.farmZoneCode"
+                             :label="item.farmZoneCode"
+                             :value="item.farmZoneCode">
+                  </el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -94,8 +96,6 @@
           @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="registerId" label="登记号"></el-table-column>
-        <el-table-column prop="farmName" label="牧场"></el-table-column>
         <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
         <el-table-column label="牛只耳牌号">
           <template slot-scope="scope">
@@ -121,14 +121,14 @@
             <el-link
                 type="primary"
                 :underline="false"
-                @click="$router.push({ path: '/breedPregnancyCheck', query: {registerId:scope.row.registerId }})">
+                @click="$router.push({ path: '/breedPregnancyCheck', query: {cattleCode:scope.row.cattleCode,breedingDay:scope.row.breedingDay,expectedDay:scope.row.expectedDay }})">
               妊检登记
             </el-link>
             <el-link
                 type="primary"
                 :underline="false"
                 style="margin-left: 20px"
-                @click="$router.push({ path: '/breedPregnancyResult', query: {registerId:scope.row.registerId }})">
+                @click="$router.push({ path: '/breedPregnancyResult', query: {cattleCode:scope.row.cattleCode,breedingDay:scope.row.breedingDay,expectedDay:scope.row.expectedDay }})">
               产犊登记
             </el-link>
           </template>
@@ -218,6 +218,7 @@ import CattleInfo from "@/components/common/CattleInfo";
 import {pageBreedRegister, addBreedRegister, delBreedRegister} from '@/api/breed';
 import {listUser} from '@/api/user';
 import {listSysConfig} from "@/api/sys";
+import {listFarmZone} from "@/api/farm";
 
 export default {
   name: 'BreedRegister',
@@ -233,6 +234,7 @@ export default {
         update: false,
         delete: false
       },
+      listFarmZone: [],
       listBreed: [],
       listMethod: [],
       listUser: [],
@@ -263,6 +265,7 @@ export default {
   },
   created() {
     this.power = getPageActionPower('breedRegister');
+    listFarmZone(this.$store.state.user.currentFarmCode).then(res => this.listFarmZone = res);
     listUser().then(res => this.listUser = res);
     listSysConfig('cattleBreed').then(res => this.listBreed = res);
     listSysConfig('breedingMethod').then(res => this.listMethod = res);
