@@ -146,23 +146,8 @@
     </div>
     <el-dialog :destroy-on-close="true" title="新增" :visible.sync="saveDialog.visible">
       <el-form :model="saveDialog.form" ref="saveDialog.form" :rules="saveDialog.rules">
-        <el-form-item label="圈舍编号" :label-width="formLabelWidth" prop="farmZoneCode">
-          <el-select v-model="saveDialog.form.farmZoneCode" @change="getCattleList" filterable style="width:100%" placeholder="请选择">
-            <el-option v-for="item in listFarmZone"
-                       :key="item.farmZoneCode"
-                       :label="item.farmZoneCode"
-                       :value="item.farmZoneCode">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="牛只耳牌号" :label-width="formLabelWidth" prop="cattleCodeList">
-          <el-select v-model="saveDialog.form.cattleCodeList" multiple filterable style="width:100%" placeholder="请选择">
-            <el-option v-for="item in listCattle"
-                       :key="item.cattleCode"
-                       :label="item.cattleCode"
-                       :value="item.cattleCode">
-            </el-option>
-          </el-select>
+        <el-form-item label="耳牌号" :label-width="formLabelWidth" prop="cattleCodeList">
+          <el-input type="textarea" :rows="2" v-model="saveDialog.form.cattleCodeList" placeholder="多个请用英文逗号隔开"></el-input>
         </el-form-item>
         <el-form-item label="登记日期" :label-width="formLabelWidth" prop="registerDay">
           <el-date-picker
@@ -334,14 +319,6 @@ export default {
       this.saveDialog.form = {};
       this.saveDialog.visible = true;
     },
-    getCattleList() {
-      let farmZoneCode = this.saveDialog.form.farmZoneCode;
-      if (!farmZoneCode) {
-        this.listCattle = [];
-      } else {
-        listCattle({farmZoneCode}).then(res => this.listCattle = res);
-      }
-    },
     saveInfo() {
       this.$refs['saveDialog.form'].validate((valid) => {
         if (!valid) {
@@ -349,6 +326,7 @@ export default {
         }
         let data = {...this.saveDialog.form};
         data.farmCode = this.$store.state.user.currentFarmCode;
+        data.cattleCodeList = data.cattleCodeList.split(',').filter(item => item).map(item => item.trim());
         addQuarantineRegister(data).then(res => {
           if (res > 0) {
             this.saveDialog.visible = false;
