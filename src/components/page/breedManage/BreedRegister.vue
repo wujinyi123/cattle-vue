@@ -154,14 +154,11 @@
           <el-input type="textarea" :rows="2" v-model="saveDialog.form.cattleCodeList" placeholder="多个请用英文逗号隔开"></el-input>
         </el-form-item>
         <el-form-item label="冻精号" :label-width="formLabelWidth" prop="frozenSemenCode">
-          <el-input v-model="saveDialog.form.frozenSemenCode" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="冻精品种" :label-width="formLabelWidth" prop="frozenSemenBreed">
-          <el-select v-model="saveDialog.form.frozenSemenBreed" style="width:100%" placeholder="请选择">
-            <el-option v-for="item in listBreed"
-                       :key="item.key"
-                       :label="item.value"
-                       :value="item.key">
+          <el-select v-model="saveDialog.form.frozenSemenCode" style="width:100%" placeholder="请选择">
+            <el-option v-for="item in listBreedFrozenSemen"
+                       :key="item.frozenSemenCode"
+                       :label="item.frozenSemenCode"
+                       :value="item.frozenSemenCode">
             </el-option>
           </el-select>
         </el-form-item>
@@ -217,7 +214,7 @@ import {getPageActionPower} from '@/components/common/base'
 import ImportExport from "@/components/common/ImportExport";
 import UserInfo from "@/components/common/UserInfo";
 import CattleInfo from "@/components/common/CattleInfo";
-import {pageBreedRegister, addBreedRegister, delBreedRegister} from '@/api/breed';
+import {listBreedFrozenSemen, pageBreedRegister, addBreedRegister, delBreedRegister} from '@/api/breed';
 import {listUser} from '@/api/user';
 import {listSysConfig} from "@/api/sys";
 import {listFarmZone} from "@/api/farm";
@@ -237,6 +234,7 @@ export default {
         delete: false
       },
       listFarmZone: [],
+      listBreedFrozenSemen: [],
       listBreed: [],
       listMethod: [],
       listUser: [],
@@ -269,6 +267,7 @@ export default {
     this.power = getPageActionPower('breedRegister');
     listFarmZone(this.$store.state.user.currentFarmCode).then(res => this.listFarmZone = res);
     listUser().then(res => this.listUser = res);
+    listBreedFrozenSemen({}).then(res => this.listBreedFrozenSemen = res);
     listSysConfig('cattleBreed').then(res => this.listBreed = res);
     listSysConfig('breedingMethod').then(res => this.listMethod = res);
     this.getData();

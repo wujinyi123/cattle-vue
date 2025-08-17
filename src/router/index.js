@@ -61,6 +61,11 @@ const router = new Router({
                     meta: {title: '牛只档案管理', pageCode: 'cattleInfoManage'}
                 },
                 {
+                    path: '/breedFrozenSemen',
+                    component: () => import('@/components/page/breedManage/BreedFrozenSemen.vue'),
+                    meta: {title: '冻精信息', pageCode: 'breedFrozenSemen'}
+                },
+                {
                     path: '/breedRegister',
                     component: () => import('@/components/page/breedManage/BreedRegister.vue'),
                     meta: {title: '配种登记', pageCode: 'breedRegister'}

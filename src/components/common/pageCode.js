@@ -4,6 +4,10 @@ export default [
         name:'牛只信息管理'
     },
     {
+        code:'breedFrozenSemen',
+        name:'冻精信息'
+    },
+    {
         code:'breedRegister',
         name:'配种登记'
     },

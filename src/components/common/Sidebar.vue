@@ -101,6 +101,10 @@ export default {
           title: '繁殖管理',
           subs: [
             {
+              index: 'breedFrozenSemen',
+              title: '冻精信息',
+            },
+            {
               index: 'breedRegister',
               title: '配种登记',
             },
