@@ -21,8 +21,6 @@
                 <el-input v-model="query.form.cattleCode" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row :gutter="20" class="handle-el-row">
             <el-col :span="8">
               <el-form-item label="日期" :label-width="formLabelWidth">
                 <el-date-picker
@@ -37,6 +35,8 @@
                 </el-date-picker>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row :gutter="20" class="handle-el-row">
             <el-col :span="8">
               <el-form-item label="操作员" :label-width="formLabelWidth">
                 <el-input v-model="query.form.operaUser" placeholder="请输入"></el-input>
