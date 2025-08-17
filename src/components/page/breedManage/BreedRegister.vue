@@ -106,6 +106,7 @@
         </el-table-column>
         <el-table-column prop="frozenSemenCode" label="冻精号"></el-table-column>
         <el-table-column prop="frozenSemenBreedValue" label="冻精品种"></el-table-column>
+        <el-table-column prop="sexControl" label="性控类型"></el-table-column>
         <el-table-column prop="breedingDay" label="配种日期"></el-table-column>
         <el-table-column prop="firstCheckDay" label="计划初检日期"></el-table-column>
         <el-table-column prop="reCheckDay" label="计划复检日期"></el-table-column>
