@@ -253,7 +253,7 @@ export default {
       this.query.form.resultDay = [query.breedingDay, query.expectedDay];
     }
     this.power = getPageActionPower('breedPregnancyResult');
-    listFarmZone(this.$store.state.user.currentFarmCode).then(res => this.listFarmZone = res);
+    listFarmZone({farmCode: this.$store.state.user.currentFarmCode}).then(res => this.listFarmZone = res);
     listSysConfig('cattleBreed').then(res => this.cattleBreedList = res);
     listUser().then(res => this.listUser = res);
     this.getData();

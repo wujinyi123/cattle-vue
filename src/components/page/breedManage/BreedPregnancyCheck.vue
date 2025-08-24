@@ -193,7 +193,7 @@ export default {
       this.query.form.checkDay = [query.breedingDay, query.expectedDay];
     }
     this.power = getPageActionPower('breedPregnancyCheck');
-    listFarmZone(this.$store.state.user.currentFarmCode).then(res => this.listFarmZone = res);
+    listFarmZone({farmCode: this.$store.state.user.currentFarmCode}).then(res => this.listFarmZone = res);
     listUser().then(res => this.listUser = res);
     this.getData();
   },

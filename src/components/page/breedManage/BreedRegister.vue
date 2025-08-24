@@ -266,7 +266,7 @@ export default {
   },
   created() {
     this.power = getPageActionPower('breedRegister');
-    listFarmZone(this.$store.state.user.currentFarmCode).then(res => this.listFarmZone = res);
+    listFarmZone({farmCode: this.$store.state.user.currentFarmCode}).then(res => this.listFarmZone = res);
     listUser().then(res => this.listUser = res);
     listBreedFrozenSemen({}).then(res => this.listBreedFrozenSemen = res);
     listSysConfig('cattleBreed').then(res => this.listBreed = res);

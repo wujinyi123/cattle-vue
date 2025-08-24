@@ -208,7 +208,7 @@ export default {
   },
   created() {
     this.power = getPageActionPower('inventoryBuy');
-    listFarmZone(this.$store.state.user.currentFarmCode).then(res => this.listFarmZone = res);
+    listFarmZone({farmCode: this.$store.state.user.currentFarmCode}).then(res => this.listFarmZone = res);
     listSysConfig('cattleBreed').then(res => this.cattleBreedList = res);
     this.getData();
   },

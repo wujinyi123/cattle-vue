@@ -4,22 +4,24 @@
       <div class="handle-box">
         <el-form :model="query.form">
           <el-row :gutter="20" class="handle-el-row">
-            <el-col :span="6">
+            <el-col :span="8">
               <el-form-item label="圈舍编号" :label-width="formLabelWidth">
                 <el-input v-model="query.form.farmZoneCode" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="8">
               <el-form-item label="耳牌号" :label-width="formLabelWidth">
                 <el-input v-model="query.form.cattleCode" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="8">
               <el-form-item label="牛只名称" :label-width="formLabelWidth">
                 <el-input v-model="query.form.cattleName" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+          </el-row>
+          <el-row :gutter="20" class="handle-el-row">
+            <el-col :span="8">
               <el-form-item label="品种" :label-width="formLabelWidth">
                 <el-select v-model="query.form.breed" filterable placeholder="请选择" style="width:100%">
                   <el-option key="all" label="全部" value=""></el-option>
@@ -32,9 +34,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row :gutter="20" class="handle-el-row">
-            <el-col :span="6">
+            <el-col :span="8">
               <el-form-item label="性别" :label-width="formLabelWidth">
                 <el-select v-model="query.form.sex" filterable placeholder="请选择" style="width:100%">
                   <el-option label="全部" value=""></el-option>
@@ -43,12 +43,14 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="8">
               <el-form-item label="颜色" :label-width="formLabelWidth">
                 <el-input v-model="query.form.color" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+          </el-row>
+          <el-row :gutter="20" class="handle-el-row">
+            <el-col :span="8">
               <el-form-item label="出生日期" :label-width="formLabelWidth">
                 <el-date-picker
                     v-model="query.form.birthday"
@@ -62,9 +64,19 @@
                 </el-date-picker>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="8">
               <el-form-item label="备注" :label-width="formLabelWidth">
                 <el-input v-model="query.form.remark" placeholder="请输入"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="来源" :label-width="formLabelWidth">
+                <el-select v-model="query.form.source" filterable placeholder="请选择" style="width:100%">
+                  <el-option label="全部" value=""></el-option>
+                  <el-option label="购入" value="购入"></el-option>
+                  <el-option label="自产" value="自产"></el-option>
+                  <el-option label="现有" value="现有"></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -102,6 +114,7 @@
         <el-table-column prop="birthday" label="出生日期"></el-table-column>
         <el-table-column prop="age" label="年龄"></el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
+        <el-table-column prop="source" label="来源"></el-table-column>
         <el-table-column prop="updateTime" label="最后修改时间"></el-table-column>
         <el-table-column prop="updateUser" label="修改人"></el-table-column>
         <el-table-column label="操作" width="200" align="center">
@@ -185,6 +198,13 @@
         <el-form-item label="备注" :label-width="formLabelWidth">
           <el-input type="textarea" :rows="2" v-model="saveDialog.form.remark" placeholder="请输入"></el-input>
         </el-form-item>
+        <el-form-item label="来源" :label-width="formLabelWidth" prop="source">
+          <el-select v-model="saveDialog.form.source" style="width:100%" placeholder="请选择">
+            <el-option label="购入" value="购入"></el-option>
+            <el-option label="自产" value="自产"></el-option>
+            <el-option label="现有" value="现有"></el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="saveDialog.visible = false">取 消</el-button>
@@ -208,10 +228,10 @@ export default {
   },
   data() {
     return {
-      power:{
-        insert:false,
-        update:false,
-        delete:false
+      power: {
+        insert: false,
+        update: false,
+        delete: false
       },
       listFarmZone: [],
       cattleBreedList: [],
@@ -244,14 +264,15 @@ export default {
           cattleCode: [{required: true, message: '耳牌号不能为空', trigger: 'change'}],
           breed: [{required: true, message: '品种不能为空', trigger: 'change'}],
           sex: [{required: true, message: '性别不能为空', trigger: 'change'}],
-          birthday: [{required: true, message: '出生日期不能为空', trigger: 'change'}]
+          birthday: [{required: true, message: '出生日期不能为空', trigger: 'change'}],
+          source: [{required: true, message: '来源不能为空', trigger: 'change'}]
         }
       }
     };
   },
   created() {
     this.power = getPageActionPower('cattleInfoManage');
-    listFarmZone(this.$store.state.user.currentFarmCode).then(res => this.listFarmZone = res);
+    listFarmZone({farmCode: this.$store.state.user.currentFarmCode}).then(res => this.listFarmZone = res);
     listSysConfig('cattleBreed').then(res => this.cattleBreedList = res);
     this.getData();
   },
