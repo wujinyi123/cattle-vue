@@ -4,7 +4,7 @@
       <div class="handle-box">
         <el-form :model="query.form">
           <el-row :gutter="20" class="handle-el-row">
-            <el-col :span="6">
+            <el-col :span="8">
               <el-form-item label="牧场名称" :label-width="formLabelWidth">
                 <el-select v-model="query.form.farmCode" filterable placeholder="请选择" style="width:100%">
                   <el-option key="all" label="全部" value=""></el-option>
@@ -17,17 +17,12 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="8">
               <el-form-item label="圈舍编号" :label-width="formLabelWidth">
                 <el-input v-model="query.form.farmZoneCode" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
-              <el-form-item label="圈舍名称" :label-width="formLabelWidth">
-                <el-input v-model="query.form.farmZoneName" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
+            <el-col :span="8">
               <el-form-item label="圈舍备注" :label-width="formLabelWidth">
                 <el-input v-model="query.form.farmZoneRemark" placeholder="请输入"></el-input>
               </el-form-item>
@@ -62,7 +57,6 @@
         <el-table-column prop="farmName" label="牧场名称"></el-table-column>
         <el-table-column prop="farmOwner" label="牧场负责人"></el-table-column>
         <el-table-column prop="farmZoneCode" label="圈舍编号"></el-table-column>
-        <el-table-column prop="farmZoneName" label="圈舍名称"></el-table-column>
         <el-table-column prop="farmZoneRemark" label="圈舍备注"></el-table-column>
         <el-table-column prop="size" label="容量"></el-table-column>
         <el-table-column prop="currentSize" label="当前容量"></el-table-column>
@@ -113,9 +107,6 @@
         <el-form-item label="圈舍编号" :label-width="formLabelWidth" prop="farmZoneCode">
           <el-input v-model="saveDialog.form.farmZoneCode" placeholder="请输入" :disabled="saveDialog.type === 'update'"></el-input>
         </el-form-item>
-        <el-form-item label="圈舍名称" :label-width="formLabelWidth" prop="farmZoneName">
-          <el-input v-model="saveDialog.form.farmZoneName" placeholder="请输入"></el-input>
-        </el-form-item>
         <el-form-item label="圈舍备注" :label-width="formLabelWidth">
           <el-input type="textarea" :rows="2" v-model="saveDialog.form.farmZoneRemark" placeholder="请输入"></el-input>
         </el-form-item>
@@ -163,7 +154,6 @@ export default {
         rules: {
           farmCode: [{required: true, message: '牧场不能为空', trigger: 'change'}],
           farmZoneCode: [{required: true, message: '圈舍编号不能为空', trigger: 'change'}],
-          farmZoneName: [{required: true, message: '圈舍名称不能为空', trigger: 'change'}],
           size: [{required: true, message: '容量不能为空', trigger: 'blur'}]
         }
       }
